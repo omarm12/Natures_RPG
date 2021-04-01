@@ -7,51 +7,17 @@ from ..src import TypeAssign
 def test():
     numPassed = 0
     numFailed = 0
-    # test that bottom of accuracy curve is always below 100
-
-    # test that top of accuracy curve is always above or at 100
-
-    # test that accuracy randomization always lands within curve
-
-    # test that attack and defense are calculated correctly
-
-    # test that minimum of attack calculation is 1
-
-    # test that attack calculation subtracts properly from health
-
-    # test that faster observation moves first
-
-    # test that in a tie, either observation may move first
-
-    # test that standard range for base stats is 70-130
-
-    # test that type + modifier works correctly
-
-    # test that type - modifier works correctly
-
-    # test that minimum base stat is 70 without modifiers
-
-    # test that maximum base stat is 130 without modifiers
-
-    # test that minimum base stat is 52 with modifiers
-
-    # test that maximum base stat is 162 with modifiers
-
-    # test that quality modifier for base stats does not exceed range 100-130
-
-    # test that quality modifier for base stats does not go below range 70-130
-
     # test that unassigned observations return an error
     uType = TypeAssign.Type(0)
-    if(uType.AssignType == -1):
+    if(uType.AssignType() == 'Undefined'):
         numPassed += 1
     else:
         numFailed += 1
-        print("Error: unassigned observation did not return error code -1")
+        print("Error: unassigned observation did not return \'Undefined\'")
 
     # test that Mammalia is properly assigned
     mType = TypeAssign.Type(40151)
-    if(mType.AssignType == 'Mammalia'):
+    if(mType.AssignType() == 'Mammalia'):
         numPassed += 1
     else:
         numFailed += 1
@@ -61,7 +27,7 @@ def test():
 
     # test that Actinopterygii (fish) is properly assigned
     aType = TypeAssign.Type(47178)
-    if(aType.AssignType == 'Actinopterygii'):
+    if(aType.AssignType() == 'Actinopterygii'):
         numPassed += 1
     else:
         numFailed += 1
@@ -71,7 +37,7 @@ def test():
 
     # test that Fungi is properly assigned
     fType = TypeAssign.Type(47170)
-    if(fType.AssignType == 'Fungi'):
+    if(fType.AssignType() == 'Fungi'):
         numPassed += 1
     else:
         numFailed += 1
@@ -81,7 +47,7 @@ def test():
 
     # test that Reptilia is properly assigned 
     rType = TypeAssign.Type(26036)
-    if(rType.AssignType == 'Reptilia'):
+    if(rType.AssignType() == 'Reptilia'):
         numPassed += 1
     else:
         numFailed += 1
@@ -91,7 +57,7 @@ def test():
 
     # test that Chromista is properly assigned
     cType = TypeAssign.Type(48222)
-    if(cType.AssignType == 'Chromista'):
+    if(cType.AssignType() == 'Chromista'):
         numPassed += 1
     else:
         numFailed += 1
@@ -101,7 +67,7 @@ def test():
 
     # test that Plantae is properly assigned
     pType = TypeAssign.Type(47126)
-    if(pType.AssignType == 'Plantae'):
+    if(pType.AssignType() == 'Plantae'):
         numPassed += 1
     else:
         numFailed += 1
@@ -111,7 +77,7 @@ def test():
 
     # test that Animalia is properly assigned
     anType = TypeAssign.Type(1)
-    if(anType.AssignType == 'Animalia'):
+    if(anType.AssignType() == 'Animalia'):
         numPassed += 1
     else:
         numFailed += 1
@@ -121,7 +87,7 @@ def test():
 
     # test that Mollusca is properly assigned
     moType = TypeAssign.Type(47115)
-    if(moType.AssignType == 'Mollusca'):
+    if(moType.AssignType() == 'Mollusca'):
         numPassed += 1
     else:
         numFailed += 1
@@ -131,7 +97,7 @@ def test():
 
     # test that Insecta is properly assigned
     iType = TypeAssign.Type(47158)
-    if(iType.AssignType == 'Insecta'):
+    if(iType.AssignType() == 'Insecta'):
         numPassed += 1
     else:
         numFailed += 1
@@ -141,7 +107,7 @@ def test():
 
     # test that Aves (birds) is properly assigned
     avType = TypeAssign.Type(3)
-    if(avType.AssignType == 'Aves'):
+    if(avType.AssignType() == 'Aves'):
         numPassed += 1
     else:
         numFailed += 1
@@ -151,7 +117,7 @@ def test():
 
     # test that Amphibia is properly assigned
     amType = TypeAssign.Type(20978)
-    if(amType.AssignType == 'Amphibia'):
+    if(amType.AssignType() == 'Amphibia'):
         numPassed += 1
     else:
         numFailed += 1
@@ -161,7 +127,7 @@ def test():
 
     # test that Arachnida is properly assigned
     arType = TypeAssign.Type(47119)
-    if(arType.AssignType == 'Arachnida'):
+    if(arType.AssignType() == 'Arachnida'):
         numPassed += 1
     else:
         numFailed += 1
@@ -171,7 +137,7 @@ def test():
 
     # test that Protozoa is properly assigned 
     prType = TypeAssign.Type(47686)
-    if(prType.AssignType == 'Protozoa'):
+    if(prType.AssignType() == 'Protozoa'):
         numPassed += 1
     else:
         numFailed += 1
@@ -181,11 +147,14 @@ def test():
 
     # test ancestor ids
     ancestorType = TypeAssign.Type(0, {0, 47686})
-    if(prType.AssignType == 'Protozoa'):
+    if(prType.AssignType() == 'Protozoa'):
         numPassed += 1
     else:
         numFailed += 1
         print("Error: ancestor key mismatch")
 
     # print results
-    print(numPassed, "tests passed!", '\n', numFailed, "tests failed.\n")
+    print(numPassed, "tests passed!")
+    print(numFailed, "tests failed.")
+
+test()
