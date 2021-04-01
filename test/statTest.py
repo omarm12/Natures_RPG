@@ -4,7 +4,7 @@
 
 import unittest
 
-from StatsAssign import FLOOR, CEILING, INCREASE_MOD, DECREASE_MOD, Stats
+from ..src.StatsAssign import FLOOR, CEILING, INCREASE_MOD, DECREASE_MOD, Stats
 
 class TestStats(unittest.TestCase):
 
