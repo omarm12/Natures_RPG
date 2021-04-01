@@ -1,8 +1,5 @@
 # Placeholder UI
 
-
-# Placeholder UI
-
 This UI is used to test displaying content from the iNaturalist API
 
 You can view the current build of the website [Click Me](https://raw.githack.com/omarm12/Natures_RPG/placeholder-ui/placeholder_ui/build/index.html).
