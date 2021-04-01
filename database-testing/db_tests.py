@@ -20,10 +20,9 @@ class ModifyValuesTest(unittest.TestCase):
         self.assertRaises(Exception)
         self.assertNotEqual(check, compare)
 
-con = psycopg2.connect("""dbname=dfkhicfte5npdp 
-    user=mcrhzpfvlfjgka 
-    password=0088068da279097a4339028eb697696f4494fd6744369782d1e07f31ca6adbbb 
-    host=ec2-3-224-251-47.compute-1.amazonaws.com""")
+print("Please enter password:")
+keyword = input()
+con = psycopg2.connect(dbname="dfkhicfte5npdp", user="mcrhzpfvlfjgka", password=keyword, host="ec2-3-224-251-47.compute-1.amazonaws.com")
 cur = con.cursor()
 
 def read_values():
