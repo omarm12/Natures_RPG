@@ -43,24 +43,50 @@ async function getiNatUser (access_token) {
             Authorization: `Bearer ${access_token}`
         }
     })
-    console.log(req)
     const data = await req.json()
     return data
     //v1/users/me
 }
 
+async function pullObs (login) {
+
+    const req = await fetch(`https://api.inaturalist.org/v1/observations?user_login=${login}.json`, {
+        method: 'GET',
+        headers: {
+            "Content-Type": "application/json",
+        }
+    })
+    console.log(req.json())
+    const data = await req.json()
+    return data
+}
+
+
+
 app.get('/login/iNat/callback', async (req, res) => {
     const code = req.query.code;
     const token = await getAccessToken(code);
     const iNatData = await getiNatUser(token);
-    //res.json({token})
-    //console.log(token)
-    res.json(iNatData);
+    
+    const params = new URLSearchParams(iNatData)
+    const id = params.get('login')
+
+    const obs = await pullObs(id)
+    res.json(id)
+    //res.json(iNatData);
+    // res.redirect('http://localhost:9000/home')
 } );
 
-app.get('/home', (req, res) => {
-    console.log(token)
-})
+// app.get('/home', (req, res) => {
+//     res.send("HOME")
+//     const req = await fetch(`https://www.inaturalist.org/users/edit.json`, {
+//         method: 'GET',
+//         headers: {
+//             Authorization: `Bearer ${access_token}`
+//         }
+//     })
+//     const data = await req.json()
+// })
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => console.log('Listening http://localhost:' + PORT))
