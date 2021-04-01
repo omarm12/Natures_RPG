@@ -33,19 +33,18 @@ STAT_LIST = ["Attack", "Defense", "Health", "Speed", "Evasion", "Accuracy"]
 
 # Dictionary to keep track of which stats are modified for each type
 STAT_MOD_DICT = {
-    "Mammalia+": "Speed", "Mammalia-": "Defense",
-    "Actinopterygii+": "Speed", "Actinopterygii-": "Defense",
-    "Fungi+": "Speed", "Fungi-": "Defense",
-    "Reptilia+": "Speed", "Reptilia-": "Defense",
-    "Chromista+": "Speed", "Chromista-": "Defense",
-    "Plantae+": "Speed", "Plantae-": "Defense",
-    "Animalia+": "Speed", "Animalia-": "Defense",
-    "Mollusca+": "Speed", "Mollusca-": "Defense",
+    "Mammalia+": "Evasion", "Mammalia-": "Accuracy",
+    "Actinopterygii+": "Speed", "Actinopterygii-": "Attack",
+    "Fungi+": "Health", "Fungi-": "Evasion",
+    "Reptilia+": "Accuracy", "Reptilia-": "Evasion",
+    "Chromista+": "Health", "Chromista-": "Speed",
+    "Plantae+": "Defense", "Plantae-": "Attack",
+    "Mollusca+": "Defense", "Mollusca-": "Speed",
     "Insecta+": "Speed", "Insecta-": "Defense",
-    "Aves+": "Speed", "Aves-": "Defense",
-    "Amphibia+": "Speed", "Amphibia-": "Defense",
-    "Arachnida+": "Speed", "Arachnida-": "Defense",
-    "Protozoa+": "Speed", "Protozoa-": "Defense"
+    "Aves+": "Accuracy", "Aves-": "Health",
+    "Amphibia+": "Attack", "Amphibia-": "Accuracy",
+    "Arachnida+": "Attack", "Arachnida-": "Defense",
+    "Protozoa+": "Evasion", "Protozoa-": "Health"
 }
 
 # sort by taxon ID and ancestor IDs
