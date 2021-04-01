@@ -43,11 +43,11 @@ def test():
 
     # test that unassigned observations return an error
     uType = TypeAssign.Type(0)
-    if(uType.AssignType == -1):
+    if(uType.AssignType == 'Undefined'):
         numPassed += 1
     else:
         numFailed += 1
-        print("Error: unassigned observation did not return error code -1")
+        print("Error: unassigned observation did not return \'Undefined\'")
 
     # test that Mammalia is properly assigned
     mType = TypeAssign.Type(40151)
