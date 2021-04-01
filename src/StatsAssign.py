@@ -3,7 +3,7 @@
 # Description: Allows the assignment of stats to an observation based on
 #       the type and the quality of the observation
 
-import random
+from random import randrange
 
 #Constants
 FLOOR = 70
@@ -45,14 +45,15 @@ class Stats:
 
         # iterate through the list of stats to assign each
         for stat in STAT_LIST:
-            # sets the stat as a random integer between the floor and 130
-            stat_dict[stat] = random.randrange(self.floor, CEILING)
-
             # apply modifier if the stat should be modified
             if STAT_MOD_DICT.get(self.type + "+") == stat:
-                stat_dict[stat] = round(stat_dict[stat] * INCREASE_MOD)
-            if STAT_MOD_DICT.get(self.type + "-") == stat:
-                stat_dict[stat] = round(stat_dict[stat] * DECREASE_MOD)
+                stat_dict[stat] = randrange(round(self.floor * INCREASE_MOD), round(CEILING * INCREASE_MOD))
+            elif STAT_MOD_DICT.get(self.type + "-") == stat:
+                stat_dict[stat] = randrange(round(self.floor * DECREASE_MOD), round(CEILING * DECREASE_MOD))
+            else:
+                stat_dict[stat] = randrange(self.floor, CEILING)
 
         # return the complete dictionary of stats
+        print(self.type)
+        print(stat_dict)
         return stat_dict
