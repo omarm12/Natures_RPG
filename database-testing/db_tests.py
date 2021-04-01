@@ -1,3 +1,4 @@
+import sys
 import psycopg2
 import unittest
 
@@ -22,8 +23,13 @@ class ModifyValuesTest(unittest.TestCase):
 
 print("Please enter password:")
 keyword = input()
-con = psycopg2.connect(dbname="dfkhicfte5npdp", user="mcrhzpfvlfjgka", password=keyword, host="ec2-3-224-251-47.compute-1.amazonaws.com")
-cur = con.cursor()
+try:
+    con = psycopg2.connect(dbname="dfkhicfte5npdp", user="mcrhzpfvlfjgka", password=keyword, host="ec2-3-224-251-47.compute-1.amazonaws.com")
+    cur = con.cursor()
+
+except:
+    print("Login failed\nInvalid Password")
+    sys.exit()
 
 def read_values():
     cur.execute("SELECT USER_ID, USERNAME, LEVEL FROM ACCOUNT")
