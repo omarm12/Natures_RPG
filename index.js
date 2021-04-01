@@ -45,23 +45,19 @@ async function getiNatUser (access_token) {
     })
     const data = await req.json()
     return data
-    //v1/users/me
 }
 
-async function pullObs (login) {
+async function pullObs (username) {
 
-    const req = await fetch(`https://api.inaturalist.org/v1/observations?user_login=${login}.json`, {
-        method: 'GET',
+    const res = await fetch(`https://api.inaturalist.org/v1/observations/?page=1&per_page=100&user_id=${username}`, {
         headers: {
-            "Content-Type": "application/json",
+            'Accept': 'application/json',
+            "Content-Type": "application/json"
         }
     })
-    console.log(req.json())
-    const data = await req.json()
+    const data = res.json()
     return data
 }
-
-
 
 app.get('/login/iNat/callback', async (req, res) => {
     const code = req.query.code;
@@ -71,22 +67,17 @@ app.get('/login/iNat/callback', async (req, res) => {
     const params = new URLSearchParams(iNatData)
     const id = params.get('login')
 
-    const obs = await pullObs(id)
-    res.json(id)
-    //res.json(iNatData);
-    // res.redirect('http://localhost:9000/home')
+    res.redirect(`http://localhost:9000/home?username=${id}`)
 } );
 
-// app.get('/home', (req, res) => {
-//     res.send("HOME")
-//     const req = await fetch(`https://www.inaturalist.org/users/edit.json`, {
-//         method: 'GET',
-//         headers: {
-//             Authorization: `Bearer ${access_token}`
-//         }
-//     })
-//     const data = await req.json()
-// })
+app.get('/home', async (req, res) => {
+    res.send("HOME")
+
+    //later this will pull username from url parameter
+    const username = "kai_vilbig"
+    const obs = await pullObs(username)
+    console.log(obs)
+})
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => console.log('Listening http://localhost:' + PORT))
