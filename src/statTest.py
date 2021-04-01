@@ -16,15 +16,17 @@ class TestStats(unittest.TestCase):
         mammal = Stats('Mammalia', 0)
         mammalStats = mammal.AssignStats()
         for stat in mammalStats:
-            stat = mammalStats.get(stat)
+            statValue = mammalStats.get(stat)
             if (stat != "Evasion") and (stat != "Accuracy"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Evasion":
-                if (stat < round(FLOOR * INCREASE_MOD)) or round(stat > (CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
+                    print("+")
                     flag = False
             elif stat == "Accuracy":
-                if (stat < round(FLOOR * DECREASE_MOD)) or round(stat > (CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
+                    print("-")
                     flag = False
         self.assertTrue(flag)
 
@@ -36,15 +38,17 @@ class TestStats(unittest.TestCase):
         fish = Stats('Actinopterygii', 0)
         fishStats = fish.AssignStats()
         for stat in fishStats:
-            stat = fishStats.get(stat)
+            statValue = fishStats.get(stat)
             if (stat != "Speed") and (stat != "Attack"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Speed":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
+                    print("+")
                     flag = False
             elif stat == "Attack":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
+                    print("-")
                     flag = False
         self.assertTrue(flag)
 
@@ -56,15 +60,17 @@ class TestStats(unittest.TestCase):
         fungi = Stats('Fungi', 0)
         fungiStats = fungi.AssignStats()
         for stat in fungiStats:
-            stat = fungiStats.get(stat)
+            statValue = fungiStats.get(stat)
             if (stat != "Health") and (stat != "Evasion"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Health":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
+                    print("+")
                     flag = False
             elif stat == "Evasion":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
+                    print("-")
                     flag = False
         self.assertTrue(flag)
 
@@ -76,15 +82,17 @@ class TestStats(unittest.TestCase):
         reptile = Stats('Reptilia', 0)
         reptileStats = reptile.AssignStats()
         for stat in reptileStats:
-            stat = reptileStats.get(stat)
+            statValue = reptileStats.get(stat)
             if (stat != "Accuracy") and (stat != "Evasion"):
-                if (stat <= FLOOR) or (stat >= CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Accuracy":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
+                    print("+")
                     flag = False
             elif stat == "Evasion":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
+                    print("-")
                     flag = False
         self.assertTrue(flag)
 
@@ -96,15 +104,17 @@ class TestStats(unittest.TestCase):
         chromist = Stats('Chromista', 0)
         chromistStats = chromist.AssignStats()
         for stat in chromistStats:
-            stat = chromistStats.get(stat)
+            statValue = chromistStats.get(stat)
             if (stat != "Health") and (stat != "Speed"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Health":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
+                    print("+")
                     flag = False
             elif stat == "Speed":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
+                    print("-")
                     flag = False
         self.assertTrue(flag)
 
@@ -116,15 +126,17 @@ class TestStats(unittest.TestCase):
         plant = Stats('Plantae', 0)
         plantStats = plant.AssignStats()
         for stat in plantStats:
-            stat = plantStats.get(stat)
+            statValue = plantStats.get(stat)
             if (stat != "Defense") and (stat != "Attack"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Defense":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
+                    print("+")
                     flag = False
             elif stat == "Attack":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
+                    print("-")
                     flag = False
         self.assertTrue(flag)
 
@@ -136,8 +148,8 @@ class TestStats(unittest.TestCase):
         animal = Stats('Animalia', 0)
         animalStats = animal.AssignStats()
         for stat in animalStats:
-            stat = animalStats.get(stat)
-            if (stat < FLOOR) or (stat > CEILING):
+            statValue = animalStats.get(stat)
+            if (statValue < FLOOR) or (statValue > CEILING):
                 flag = False
         self.assertTrue(flag)
 
@@ -149,15 +161,17 @@ class TestStats(unittest.TestCase):
         mollusc = Stats('Mollusca', 0)
         molluscStats = mollusc.AssignStats()
         for stat in molluscStats:
-            stat = molluscStats.get(stat)
+            statValue = molluscStats.get(stat)
             if (stat != "Defense") and (stat != "Speed"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Defense":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
+                    print("+")
                     flag = False
             elif stat == "Speed":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
+                    print("-")
                     flag = False
         self.assertTrue(flag)
 
@@ -169,15 +183,17 @@ class TestStats(unittest.TestCase):
         insect = Stats('Insecta', 0)
         insectStats = insect.AssignStats()
         for stat in insectStats:
-            stat = insectStats.get(stat)
+            statValue = insectStats.get(stat)
             if (stat != "Speed") and (stat != "Defense"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Speed":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
+                    print("+")
                     flag = False
             elif stat == "Defense":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
+                    print("-")
                     flag = False
         self.assertTrue(flag)
 
@@ -189,15 +205,17 @@ class TestStats(unittest.TestCase):
         bird = Stats('Aves', 0)
         birdStats = bird.AssignStats()
         for stat in birdStats:
-            stat = birdStats.get(stat)
+            statValue = birdStats.get(stat)
             if (stat != "Accuracy") and (stat != "Health"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Accuracy":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
+                    print("+")
                     flag = False
             elif stat == "Health":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
+                    print("-")
                     flag = False
         self.assertTrue(flag)
 
@@ -209,15 +227,17 @@ class TestStats(unittest.TestCase):
         amphibian = Stats('Amphibia', 0)
         amphibianStats = amphibian.AssignStats()
         for stat in amphibianStats:
-            stat = amphibianStats.get(stat)
+            statValue = amphibianStats.get(stat)
             if (stat != "Attack") and (stat != "Accuracy"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Attack":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
+                    print("+")
                     flag = False
             elif stat == "Accuracy":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
+                    print("-")
                     flag = False
         self.assertTrue(flag)
 
@@ -229,15 +249,15 @@ class TestStats(unittest.TestCase):
         arachnid = Stats('Arachnida', 0)
         arachnidStats = arachnid.AssignStats()
         for stat in arachnidStats:
-            stat = arachnidStats.get(stat)
+            statValue = arachnidStats.get(stat)
             if (stat != "Attack") and (stat != "Defense"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Attack":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
                     flag = False
             elif stat == "Defense":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
                     flag = False
         self.assertTrue(flag)
 
@@ -249,15 +269,15 @@ class TestStats(unittest.TestCase):
         protozoa = Stats('Protozoa', 0)
         protozoaStats = protozoa.AssignStats()
         for stat in protozoaStats:
-            stat = protozoaStats.get(stat)
+            statValue = protozoaStats.get(stat)
             if (stat != "Evasion") and (stat != "Health"):
-                if (stat < FLOOR) or (stat > CEILING):
+                if (statValue < FLOOR) or (statValue > CEILING):
                     flag = False
             elif stat == "Evasion":
-                if (stat < round(FLOOR * INCREASE_MOD)) or (stat > round(CEILING * INCREASE_MOD)):
+                if (statValue < round(FLOOR * INCREASE_MOD)) or (statValue > round(CEILING * INCREASE_MOD)):
                     flag = False
             elif stat == "Health":
-                if (stat < round(FLOOR * DECREASE_MOD)) or (stat > round(CEILING * DECREASE_MOD)):
+                if (statValue < round(FLOOR * DECREASE_MOD)) or (statValue > round(CEILING * DECREASE_MOD)):
                     flag = False
         self.assertTrue(flag)
 

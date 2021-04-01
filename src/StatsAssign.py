@@ -54,6 +54,4 @@ class Stats:
                 stat_dict[stat] = randrange(self.floor, CEILING)
 
         # return the complete dictionary of stats
-        print(self.type)
-        print(stat_dict)
         return stat_dict
