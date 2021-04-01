@@ -1,5 +1,5 @@
 # file: TypeAssign.py
-# author: colin seifer
+# author: colin seifer, Danielle Dishop
 # description: assigns type and stat modifiers
 
 # create static dict to keep track of taxa
