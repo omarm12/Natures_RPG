@@ -44,6 +44,15 @@ function Observation(props) {
   );
 }
 
+function convertToLarge(url){
+  var position = url.search("square");
+  if(position != -1){
+    return url.substring(0, position) + "large" + url.substring(position + 6);
+  } else {
+    return url;
+  }
+}
+
 
 // Essentially the app in its entirety, returning JSX to be rendered in the browser
 function App() {
@@ -105,7 +114,7 @@ function App() {
         <Observation
           key={observation.key}
           title={observation.taxon.name}
-          image={observation.photos[0].url}
+          image={convertToLarge(observation.photos[0].url)}
           body={observation.place_guess}
         />
       ); 
