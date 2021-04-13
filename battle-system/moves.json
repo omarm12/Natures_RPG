@@ -2,52 +2,623 @@
     "description":"contains all moves and effects",
     "moves":[
         {
-            "name":"",
+            "name":"Nature's Wrath",
+            "flavor_text":"",
             "priority":0,
-            "bp":0,
+            "hp_mod":0.2,
+            "atk_mod":0.2,
+            "def_mod":0.2,
+            "acc_mod":0.2,
+            "eva_mod":0.2,
+            "spd_mod":0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Autotomy",
+            "flavor_text":"",
+            "priority":0,
+            "eva_mod":1,
+            "user_dmg":0.25,
+            "sure_hit":1
+        },
+        {
+            "name":"Spine Shield",
+            "flavor_text":"",
+            "priority":3,
+            "miss_rate":0.5,
+            "opp_dmg":0.25,
+            "sure_hit":1,
+            "require_opp_contact":1
+        },
+        {
+            "name":"Foul Odor",
+            "flavor_text":"",
+            "priority":0,
+            "opp_atk_mod":-0.2,
+            "opp_acc_mod":-0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Run Away",
+            "flavor_text":"",
+            "priority":3,
+            "spd_mod":0.2,
+            "miss_rate":0.5,
+            "sure_hit":1
+        },
+        {
+            "name":"Fly Off",
+            "flavor_text":"",
+            "priority":3,
+            "miss_rate":0.6,
+            "sure_hit":1
+        },
+        {
+            "name":"Play Dead",
+            "flavor_text":"",
+            "priority":3,
+            "spd_mod":0.2,
+            "miss_rate":1,
+            "user_dmg":0.25,
+            "sure_hit":1
+        },
+        {
+            "name":"Bristle Coat",
+            "flavor_text":"",
+            "priority":3,
+            "opp_atk_mod":-0.3,
+            "reduce_dmg":0.5,
+            "sure_hit":1,
+            "require_opp_contact":1
+        },
+        {
+            "name":"Warning Colors",
+            "flavor_text":"",
+            "priority":0,
+            "opp_atk_mod":-0.2,
+            "opp_def_mod":-0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Irritant Compound",
+            "flavor_text":"",
+            "priority":0,
+            "acc":130,
+            "opp_dot":0.125
+        },
+        {
+            "name":"Mimesis",
+            "flavor_text":"",
+            "priority":0,
+            "bp":60,
+            "acc":120
+        },
+        {
+            "name":"Chemical Spray",
+            "flavor_text":"",
+            "priority":0,
+            "bp":80,
+            "acc":100
+        },
+        {
+            "name":"Explosive Reaction",
+            "flavor_text":"",
+            "priority":0,
+            "bp":120,
+            "acc":100,
+            "user_dmg":0.5
+        },
+        {
+            "name":"Sticky Compound",
+            "flavor_text":"",
+            "priority":0,
+            "bp":40,
+            "acc":100,
+            "opp_spd_mod":-0.1
+        },
+        {
+            "name":"Urticating Hairs",
+            "flavor_text":"",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Stinging Venom",
+            "flavor_text":"",
+            "priority":0,
+            "bp":100,
+            "acc":80
+        },
+        {
+            "name":"Hiss",
+            "flavor_text":"",
+            "priority":0,
+            "opp_hp_mod":-0.1,
+            "opp_atk_mod":-0.1,
+            "opp_def_mod":-0.1,
+            "opp_acc_mod":-0.1,
+            "opp_eva_mod":-0.1,
+            "opp_spd_mod":-0.1,
+            "sure_hit":1
+        },
+        {
+            "name":"Embiggen",
+            "flavor_text":"",
+            "priority":0,
+            "opp_atk_mod":-0.2,
+            "opp_def_mod":-0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Sacrificial Tail",
+            "flavor_text":"",
+            "priority":3,
+            "user_dmg":0.25,
+            "free_switch":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Tail Whap",
+            "flavor_text":"",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Spines",
+            "flavor_text":"",
+            "priority":0,
+            "bp":80,
+            "acc":100
+        },
+        {
+            "name":"Element of Surprise",
+            "flavor_text":"",
+            "priority":0,
+            "bp":60,
+            "acc":120
+        },
+        {
+            "name":"Rapid Lunge",
+            "flavor_text":"",
+            "priority":0,
+            "bp":40,
+            "acc":100,
+            "spd_mod":0.2
+        },
+        {
+            "name":"Cold Blooded",
+            "flavor_text":"",
+            "priority":0,
+            "bp":100,
+            "acc":80
+        },
+        {
+            "name":"Daily Migration",
+            "flavor_text":"",
+            "priority":0,
+            "eva_mod":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Cognitive Mapping",
+            "flavor_text":"",
+            "priority":0,
+            "acc_mod":0.6,
+            "eva_mod":0.6,
+            "sure_hit":1
+        },
+        {
+            "name":"Benthic Camouflage",
+            "flavor_text":"",
+            "priority":0,
+            "atk_mod":0.2,
+            "def_mod":0.2,
+            "spd_mod":0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Shoal Up",
+            "flavor_text":"",
+            "priority":1,
+            "hp_mod":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Territory Defense",
+            "flavor_text":"",
+            "priority":0,
+            "bp":100,
+            "acc":80
+        },
+        {
+            "name":"Wrassling",
+            "flavor_text":"",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Loud Roar",
+            "flavor_text":"",
+            "priority":0,
+            "opp_atk_mod":-0.3,
+            "opp_def_mod":-0.3,
+            "sure_hit":1
+        },
+        {
+            "name":"Night Vision",
+            "flavor_text":"",
+            "priority":0,
+            "next_sure_hit":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Passive Aggression",
+            "flavor_text":"",
+            "priority":0,
+            "force_switch":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Prehensile Tail",
+            "flavor_text":"",
+            "priority":0,
+            "eva_mod":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Multiply",
+            "flavor_text":"",
+            "priority":0,
+            "bp":60,
+            "acc":100
+        },
+        {
+            "name":"Nail Scratch",
+            "flavor_text":"",
+            "priority":0,
+            "bp":100,
+            "acc":80
+        },
+        {
+            "name":"Sharp Teeth",
+            "flavor_text":"",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Develop Tools",
+            "flavor_text":"",
+            "priority":0,
             "acc":0,
-            "hp_mod":0,
-            "atk_mod":0,
-            "def_mod":0,
-            "acc_mod":0,
-            "eva_mod":0,
-            "spd_mod":0,
-            "team_hp_mod":0,
-            "team_atk_mod":0,
-            "team_def_mod":0,
-            "team_acc_mod":0,
-            "team_eva_mod":0,
-            "team_spd_mod":0,
-            "opp_hp_mod":0,
-            "opp_atk_mod":0,
-            "opp_def_mod":0,
-            "opp_acc_mod":0,
-            "opp_eva_mod":0,
-            "opp_spd_mod":0,
-            "miss_rate":0,
-            "user_dmg":0,
-            "reduce_dmg":0,
-            "opp_dot":0,
-            "free_switch":0,
-            "next_sure_hit":0,
-            "force_switch":0,
-            "heal_ot":0,
-            "next_atk_lock":0,
-            "ignore_def":0,
-            "sure_hit":0,
-            "rand_move":0,
-            "next_reduce_dmg":0,
-            "no_retreat":0,
-            "team_heal":0,
-            "require_opp_contact":0,
-            "opp_move1_lock":0,
-            "ko_type":"",
-            "use_opp_atk":0,
-            "revive_with_hp":0,
-            "reduce_dmg_type":"",
-            "single_move":0,
-            "opp_single_move":0,
-            "learn_opp_move":0
+            "opp_dmg":1
+        },
+        {
+            "name":"Strong Kick",
+            "flavor_text":"",
+            "priority":0,
+            "bp":140,
+            "acc":70
+        },
+        {
+            "name":"Secrete Mucous",
+            "flavor_text":"",
+            "priority":0,
+            "heal_ot":0.25,
+            "sure_hit":1
+        },
+        {
+            "name":"Poison Skin",
+            "flavor_text":"",
+            "priority":0,
+            "opp_dot":0.125,
+            "sure_hit":1
+        },
+        {
+            "name":"Regenerate",
+            "flavor_text":"",
+            "priority":0,
+            "user_dmg":-1,
+            "sure_hit":1,
+            "require_move":"Autotomy"
+        },
+        {
+            "name":"Neurotoxin",
+            "flavor_text":"",
+            "priority":1,
+            "bp":200,
+            "acc":100,
+            "user_dmg":1
+        },
+        {
+            "name":"Writhe",
+            "flavor_text":"",
+            "priority":0,
+            "bp":80,
+            "acc":100
+        },
+        {
+            "name":"Tail Lash",
+            "flavor_text":"",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Venom Glands",
+            "flavor_text":"",
+            "priority":0,
+            "bp":90,
+            "acc":100
+        },
+        {
+            "name":"Sclerotised Pharynx",
+            "flavor_text":"",
+            "priority":0,
+            "bp":100,
+            "acc":90
+        },
+        {
+            "name":"Stinger",
+            "flavor_text":"",
+            "priority":0,
+            "bp":120,
+            "acc":80
+        },
+        {
+            "name":"Leap On",
+            "flavor_text":"",
+            "priority":0,
+            "bp":140,
+            "acc":70
+        },
+        {
+            "name":"Hide and Strike",
+            "flavor_text":"",
+            "priority":2,
+            "bp":40,
+            "acc":100
+        },
+        {
+            "name":"Spidey Sense",
+            "flavor_text":"",
+            "priority":0,
+            "bp":20,
+            "acc":100,
+            "miss_rate":1
+        },
+        {
+            "name":"Den Trap",
+            "flavor_text":"",
+            "priority":0,
+            "bp":150,
+            "acc":100,
+            "require_opp_contact":1,
+            "require_priority":1
+        },
+        {
+            "name":"Tail Feathers",
+            "flavor_text":"",
+            "priority":0,
+            "acc_mod":0.6,
+            "sure_hit":1
+        },
+        {
+            "name":"Flight Feathers",
+            "flavor_text":"",
+            "priority":0,
+            "spd_mod":0.6,
+            "sure_hit":1
+        },
+        {
+            "name":"Sustained Flight",
+            "flavor_text":"",
+            "priority":0,
+            "heal_ot":0.125,
+            "sure_hit":1
+        },
+        {
+            "name":"Talon Grab",
+            "flavor_text":"",
+            "priority":0,
+            "next_atk_lock":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Drop",
+            "flavor_text":"",
+            "priority":0,
+            "bp":100,
+            "acc":100,
+            "require_move":"Talon Grab"
+        },
+        {
+            "name":"Puncture",
+            "flavor_text":"",
+            "priority":0,
+            "bp":60,
+            "acc":100,
+            "ignore_def":1
+        },
+        {
+            "name":"Swoop In",
+            "flavor_text":"",
+            "priority":0,
+            "bp":60,
+            "sure_hit":1
+        },
+        {
+            "name":"Hard Shell",
+            "flavor_text":"",
+            "priority":0,
+            "def_mod":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Seafood Surprise",
+            "flavor_text":"",
+            "priority":0,
+            "acc_mod":0.2,
+            "rand_move":1
+        },
+        {
+            "name":"Jet Propulsion",
+            "flavor_text":"",
+            "priority":2,
+            "bp":40,
+            "acc":100
+        },
+        {
+            "name":"Extra Membrane",
+            "flavor_text":"",
+            "priority":3,
+            "reduce_dmg":1,
+            "sure_hit":1,
+            "next_reduce_dmg":1,
+            "require_first_turn":1
+        },
+        {
+            "name":"Chlorophyll c",
+            "flavor_text":"",
+            "priority":0,
+            "user_dmg":-1,
+            "sure_hit":1
+        },
+        {
+            "name":"Cilia",
+            "flavor_text":"",
+            "priority":0,
+            "team_spd_mod":0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Avoid Detection",
+            "flavor_text":"",
+            "priority":0,
+            "reduce_dmg":0.5,
+            "sure_hit":1,
+            "next_reduce_dmg":0.5
+        },
+        {
+            "name":"Dazzle",
+            "flavor_text":"",
+            "priority":0,
+            "opp_atk_mod":-0.3,
+            "opp_def_mod":-0.3,
+            "sure_hit":1
+        },
+        {
+            "name":"Nature's Beauty",
+            "flavor_text":"",
+            "priority":0,
+            "team_atk_mod":0.2,
+            "team_def_mod":0.2,
+            "user_dmg":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Cell Wall",
+            "flavor_text":"",
+            "priority":0,
+            "def_mod":0.4,
+            "sure_hit":1
+        },
+        {
+            "name":"Deep Roots",
+            "flavor_text":"",
+            "priority":0,
+            "opp_dot":0.25,
+            "sure_hit":1,
+            "no_retreat":1
+        },
+        {
+            "name":"Tap Root",
+            "flavor_text":"",
+            "priority":0,
+            "user_dmg":-0.5,
+            "sure_hit":1
+        },
+        {
+            "name":"Edible Arrangement",
+            "flavor_text":"",
+            "priority":0,
+            "user_dmg":1,
+            "sure_hit":1,
+            "team_heal":1
+        },
+        {
+            "name":"Thorns",
+            "flavor_text":"",
+            "priority":0,
+            "bp":100,
+            "acc":100,
+            "require_opp_contact":1
+        },
+        {
+            "name":"Symbiotic Relationship",
+            "flavor_text":"",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Toxic Spores",
+            "flavor_text":"",
+            "priority":0,
+            "sure_hit":1,
+            "opp_move1_lock":1
+        },
+        {
+            "name":"Pathogenic Fungus",
+            "flavor_text":"",
+            "priority":0,
+            "sure_hit":1,
+            "ko_type":"Insecta"
+        },
+        {
+            "name":"Polyketides",
+            "flavor_text":"",
+            "priority":0,
+            "sure_hit":1,
+            "ko_type":"Fungi"
+        },
+        {
+            "name":"Host Control",
+            "flavor_text":"",
+            "priority":0,
+            "use_opp_atk":1
+        },
+        {
+            "name":"Rapid Spread",
+            "flavor_text":"",
+            "priority":0,
+            "sure_hit":1,
+            "revive_with_hp":0.5
+        },
+        {
+            "name":"Odd Mutation",
+            "flavor_text":"",
+            "priority":0,
+            "sure_hit":1,
+            "reduce_dmg_type":"Opponent"
+        },
+        {
+            "name":"Yeast",
+            "flavor_text":"",
+            "priority":0,
+            "sure_hit":1,
+            "single_move":1,
+            "opp_single_move":1
+        },
+        {
+            "name":"Adaptation",
+            "flavor_text":"",
+            "priority":0,
+            "sure_hit":1,
+            "learn_opp_move":1
         }
     ]
 }
