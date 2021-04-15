@@ -281,5 +281,17 @@ class TestStats(unittest.TestCase):
                     flag = False
         self.assertTrue(flag)
 
+    def test_Undefined_no_Quality(self):
+        # Undefined observations have no increased or decreased stats
+        # Uses a flag to ensure all stats are assigned correctly
+        flag = True
+        undef = Stats('Undefined', 0)
+        undefStats = undef.AssignStats()
+        for stat in undefStats:
+            statValue = undefStats.get(stat)
+            if (statValue < FLOOR) or (statValue > CEILING):
+                flag = False
+        self.assertTrue(flag)
+
 if __name__ == '__main__':
     unittest.main()
