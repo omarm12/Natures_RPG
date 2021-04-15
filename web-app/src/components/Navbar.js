@@ -37,9 +37,7 @@ const Navbar = () => {
         <>
             <div id="navbar">
                 <ProSidebar collapsed={false}>
-                <SidebarHeader>
                    <ProfileCard image={prof_photo} username="Ben_Johnson" level="12"/>
-                </SidebarHeader>
                 <SidebarContent>
                     <Menu iconShape="square">
                         <div className="home-menuItem">

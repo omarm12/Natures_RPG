@@ -1,7 +1,7 @@
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
 body {
-  background-color: green;
+  background-color: #f5f3f3;
 }
 
 * {
@@ -14,7 +14,6 @@ body {
 .mobile,
 .tablet,
 .desktop,
-.dashboard,
 .observations,
 .battle {
   width: 100%;

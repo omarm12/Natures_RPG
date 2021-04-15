@@ -1,0 +1,47 @@
+#dashboard{
+    padding: 50px;
+}
+
+#dashboard .dashboard-header{
+    box-shadow: 2px 2px 20px 5px rgba(0, 0, 0, 0.08);
+    display: inline-flex;
+    overflow: hidden;
+    background-color: white;
+    margin-left:15px;
+    margin-bottom: 35px;
+    width: calc(100% - 30px);
+    border-radius: 20px;
+}
+
+#dashboard .dashboard-header-text{
+    width: 50%;
+    padding-left: 7%; 
+    padding-right: 7%;
+    padding-top: 5%; 
+    padding-bottom: 5%;
+}
+
+#dashboard .dashboard-header-text-header{
+    font-size: 35px;
+    position: relative;
+    width: calc(100%);
+    height: calc(50% - 20px);
+}
+
+#dashboard .dashboard-header-text-text{
+    overflow: hidden;
+    position: relative;
+    width: calc(100%);
+    top: 20px;
+    height: calc(50%);
+}
+
+#dashboard .dashboard-header-image {
+    width: 50%;
+}
+
+#dashboard .dashboard-card {
+    margin: 15px; 
+    margin-top: 30px;
+    
+}

@@ -1,6 +1,7 @@
 #profile-card{
     box-shadow: 0 0 13px 1px rgba(0, 0, 0, 0.12);
     margin: 20px;
+    margin-bottom: 10px;
     border-radius: 12px;
 }
 
