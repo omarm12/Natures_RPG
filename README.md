@@ -6,6 +6,7 @@
 
 ## Running Tests
 - Danielle Dishop* From Linux/Unix terminal, navigate to parent directory of Natures_RPG and run <code>python -m unittest Natures_RPG/test/statTest.py</code>
+- Danielle Dishop* From Linux/Unix terminal, navigate to parent directory of Natures_RPG and run <code>python -m unittest Natures_RPG/test/levelingTest.py</code>
 - Colin Seifer* from Linux/Unix terminal, navigate to parent directory of Natures_RPG and run <code>python3 -m Natures_RPG.test.cstest</code>
 
 ###### Changelog:
@@ -21,7 +22,7 @@
 - colin seifer* removed some test requirements since battle calculations are out of the scope of this iteration
 - Danielle Dishop* added Undefined type stat generation in testing block (Undefined typed objects were already generating stats correctly by default)
 - Danielle Dishop* implemented better quality scores increasing the floor of the stat generation, including tests
-
+- Danielle Dishop* Added Leveling.py, with an automatic calculation of level from exp
 
 ## Placeholder UI
 
