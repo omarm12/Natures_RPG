@@ -83,34 +83,34 @@ class Battle:
         self.p2_active_obs = 3
         self.p1_move_prev
         self.p2_move_prev
+        self.move_choice = 0
+        self.switch = -1
 
     # handles first player's turn
     def PlayerTurn(self):
-        move_choice = 0 # user selected move
-        switch = -1 # observation the user chose to switch to
-
         # wait for user to select a move
-        threading.Event.wait(move_choice > 0 or switch >= 0)
+        threading.Event.wait(self.move_choice > 0 or self.switch >= 0)
 
         # update p1_active_obs
-        if(self.observations.count = NUM_OBS and switch >= 0):
-            self.p1_active_obs = switch
+        if(self.observations.count = NUM_OBS and self.switch >= 0):
+            self.p1_active_obs = self.switch
 
         # call user selected move
-        if(self.observations.count = NUM_OBS and move_choice > 0):
-            self.p1_move = self.observations[self.p1_active_obs].moves[move_choice - 1]
+        if(self.observations.count = NUM_OBS and self.move_choice > 0):
+            self.p1_move = self.observations[self.p1_active_obs].moves[self.move_choice - 1]
+
+        # reset choices
+        self.move_choice = 0
+        self.switch = -1
 
     # handles second player (or AI turn)
     # TODO give AI sensible choices based on opponent
     def OpponentTurn(self, ai):
-        move_choice = 0 # opponent selected move
-        switch = -1 # observation the user chose to switch to
-
         if(not ai):
             # wait for opponent to select move
-            threading.Event.wait(move_choice > 0 or switch >= 0)
-            if(self.observations.count = NUM_OBS and switch >= 0):
-                self.p2_active_obs = switch
+            threading.Event.wait(self.move_choice > 0 or self.switch >= 0)
+            if(self.observations.count = NUM_OBS and self.switch >= 0):
+                self.p2_active_obs = self.switch
         else:
             # switch on random value
             res = random.randrange(3, RAND_MAX)
@@ -118,11 +118,11 @@ class Battle:
                 self.p2_active_obs = res
             # otherwise, choose a move for current observation
             else:
-                move_choice = random.randrange(4)
+                self.move_choice = random.randrange(4)
 
         # call opponent selected move
-        if(self.observations.count = NUM_OBS and move_choice > 0):
-            self.p2_move = self.observations[self.p2_active_obs].moves[move_choice - 1]
+        if(self.observations.count = NUM_OBS and self.move_choice > 0):
+            self.p2_move = self.observations[self.p2_active_obs].moves[self.move_choice - 1]
 
     # get player priority
     def Priority(self):
@@ -150,7 +150,49 @@ class Battle:
             # player2 has priority
             return 1
 
-    def Attack(self):
+    def PlayerSwitch(self):
+        # if player has a remaining observation left
+        if(self.observations[0].stats[HP_STAT] > 0 or self.observations[1].stats[HP_STAT] > 0\
+            or self.observations[2].stats[HP_STAT] > 0):
+            # wait for user to select a move
+            threading.Event.wait(self.switch >= 0 and self.observations[switch].stats[HP_STAT] > 0)
+        else:
+            return
+
+        # update p1_active_obs
+        if(self.observations.count = NUM_OBS and self.switch >= 0):
+            self.p1_active_obs = self.switch
+
+        # reset value
+        self.switch = -1
+
+    def OpponentSwitch(self, ai):
+        # if opponent is not ai and has an observation left
+        if(not ai and (self.observations[3].stats[HP_STAT] > 0 or self.observations[4].stats[HP_STAT] > 0\
+            or self.observations[5].stats[HP_STAT] > 0)):
+            # wait for opponent to select a move
+            threading.Event.wait(self.switch >= 0 and self.observations[switch].stats[HP_STAT] > 0)
+        # select new observation at random if ai has an observation left
+        elif(self.observations[3].stats[HP_STAT] > 0 or self.observations[4].stats[HP_STAT] > 0\
+            or self.observations[5].stats[HP_STAT] > 0):
+            res = random.randrange(3, NUM_OBS)
+            # keep rolling until we get an observation with HP left
+            while(self.observations[res].stats[HP_STAT] <= 0):
+                res = random.randrange(3, NUM_OBS)
+            
+            # update switch
+            self.switch = res
+        else:
+            return
+
+        # update p1_active_obs
+        if(self.observations.count = NUM_OBS and self.switch >= 0):
+            self.p2_active_obs = self.switch
+
+        # reset value
+        self.switch = -1
+
+    def Attack(self, ai):
         # check priority
         if(self.Priority() == 0):
             # player1 moves first
@@ -197,7 +239,7 @@ class Battle:
                 if(self.observations[self.p2_active_obs].stats[HP_STAT] <= 0):
                     self.PlayerSwitch()
             else:
-                self.OpponentSwitch()
+                self.OpponentSwitch(ai)
         else:
             # player2 moves first
             # TODO handle battle effects
@@ -241,7 +283,7 @@ class Battle:
                 
                 # check to see if opponent was knocked out
                 if(self.observations[self.p2_active_obs].stats[HP_STAT] <= 0):
-                    self.OpponentSwitch()
+                    self.OpponentSwitch(ai)
             else:
                 self.PlayerSwitch()
 
@@ -259,7 +301,7 @@ class Battle:
             # take player turns
             self.PlayerTurn()
             self.OpponentTurn(ai)
-            self.Attack()
+            self.Attack(ai)
 
             # check for winner
             # check hp of each observation
