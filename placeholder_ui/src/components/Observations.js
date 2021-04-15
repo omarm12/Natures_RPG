@@ -12,6 +12,13 @@ import EduInfo from './getObsdata'
 
 function Observations(props) {
 
+    // if no comments were made for the observation, Comment is set to N/A
+    var comment = props.comment
+
+    if (comment === null) {
+        comment = "N/A"
+    }
+
     return (props.trigger) ? (
 
         <Container className="Popup-container">
@@ -31,8 +38,13 @@ function Observations(props) {
                                         <br /><br  />
                                         <h1>{props.name}</h1>
                                         <h4>Taxa name: {props.title}</h4>
-                                        <p>Comment: {props.comment}</p>
+                                        <p>Comment: {comment}</p>
                                         <h4>Stats:</h4>
+                                        <h5>Health: 100</h5>
+                                        <h5>Attack: 90</h5>
+                                        <h5>Defense: 80</h5>
+                                        <h5>Speed: 100</h5>
+                                        <p>Observed on: {props.time}</p>
                                         <EduInfo wiki={props.wiki}/>
                                     </div>
                                 </CardBody>
