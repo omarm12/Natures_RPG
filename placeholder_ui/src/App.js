@@ -6,44 +6,77 @@ import {
 } from "shards-react";
 import { Container, Row, Col} from "shards-react";
 import React, { useEffect, useState } from "react";
+import './App.css';
+import Observations from './components/Observations'
+
+import Popup from 'reactjs-popup'
 
 // Sample observations for testing
 const sampleObservationList = [
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=1", description:"Description", key:1},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=2", description:"Description", key:2},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=3", description:"Description", key:3},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=4", description:"Description", key:4},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=5", description:"Description", key:5},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=6", description:"Description", key:6},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=7", description:"Description", key:7},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=8", description:"Description", key:8},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=9", description:"Description", key:9},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=10", description:"Description", key:10}
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=1", description:"Description", key:1},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=2", description:"Description", key:2},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=3", description:"Description", key:3},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=4", description:"Description", key:4},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=5", description:"Description", key:5},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=6", description:"Description", key:6},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=7", description:"Description", key:7},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=8", description:"Description", key:8},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=9", description:"Description", key:9},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=10", description:"Description", key:10}
 ];
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const username = urlParams.get('username');
+//const username = urlParams.get('username');
+const username = 'kai_vilbig'
 
 // Observation component
 // This is a basic component that gets populated with data
 // to be used in the list of observations
+
 function Observation(props) {
+
+  const [buttonPopup, setButtonPopup] = useState(false);
   return (
     <Col sm="6" md="4" lg="3">
-      <div className="Observation" style={{ paddingBottom: "30px"}}>
-        <Card>
-          <CardImg src={props.image} top="true"/>
-          <CardBody>
-            <CardTitle>{props.title}</CardTitle>
-            <p>{props.body}</p>
-          </CardBody>
-        </Card>
-      </div>
+      <button className="btn" onClick={() => setButtonPopup(true)}>
+        <div className="Observation" style={{ paddingBottom: "30px"}}>
+            <Card>
+                <CardImg src={props.image} top="true" />
+                <CardBody>
+                  <CardTitle>{props.name}</CardTitle>
+                  <p>{props.title}</p>
+                  <p>{props.body}</p>
+                </CardBody>
+            </Card>
+          </div>
+      </button>
+      <Observations 
+        trigger={buttonPopup} 
+        setTrigger={setButtonPopup}
+        image={props.image}
+        name={props.name}
+        title={props.title}
+        body={props.body}
+        quality={props.quality}
+        comment={props.comment}
+        time={props.time}
+        update={props.update}
+        wiki={props.wiki}
+        >
+      </Observations>
     </Col>
   );
 }
 
+function convertToLarge(url){
+  var position = url.search("square");
+  if(position != -1){
+    return url.substring(0, position) + "large" + url.substring(position + 6);
+  } else {
+    return url;
+  }
+}
 
 // Essentially the app in its entirety, returning JSX to be rendered in the browser
 function App() {
@@ -92,6 +125,7 @@ function App() {
       observations = sampleObservationList.map((observation) =>
         <Observation
           key={observation.key}
+          name={observation.species_guess}
           title={observation.title}
           image={observation.image}
           body={observation.description}
@@ -104,9 +138,15 @@ function App() {
       observations = items.results.map(observation =>
         <Observation
           key={observation.key}
+          name={observation.species_guess}
           title={observation.taxon.name}
-          image={observation.photos[0].url}
+          image={convertToLarge(observation.photos[0].url)}
           body={observation.place_guess}
+          quality={observation.quality_grade}
+          comment={observation.description}
+          time={observation.time_observad_at}
+          update={observation.updated_at}
+          wiki={observation.taxon.wikipedia_url}
         />
       ); 
       displayName = username;
