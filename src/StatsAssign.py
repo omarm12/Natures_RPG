@@ -10,6 +10,7 @@ FLOOR = 70
 CEILING = 130
 INCREASE_MOD = 1.25
 DECREASE_MOD = 0.75
+QUALITY_MOD = 15
 
 # List of different stats
 STAT_LIST = ["Attack", "Defense", "Health", "Speed", "Evasion", "Accuracy"]
@@ -30,6 +31,8 @@ STAT_MOD_DICT = {
     "Protozoa+": "Evasion", "Protozoa-": "Health"
 }
 
+QUALITY_TAGS = ["needs_id", "casual", "research"]
+
 # Stats class is used to initialize all of the
 class Stats:
 
@@ -38,7 +41,18 @@ class Stats:
         self.type = type
 
         # Floor value can be modified by the quality score
-        self.floor = FLOOR
+        # If the quality is "needs_id", keep the floor as it should be
+        if (quality == QUALITY_TAGS[0]):
+            self.floor = FLOOR
+        # If the quality is "casual", increase the floor by one mod
+        elif (quality == QUALITY_TAGS[1]):
+            self.floor = FLOOR + QUALITY_MOD
+        # If the quality is "research", increase the floor by two mods
+        elif (quality == QUALITY_TAGS[2]):
+            self.floor = FLOOR + (2 * QUALITY_MOD)
+        # Otherise, keep the original floor so it doesn't crash (should also output to logs if/when we set them up)
+        else:
+            self.floor = FLOOR
 
     def AssignStats(self):
         stat_dict = {}
