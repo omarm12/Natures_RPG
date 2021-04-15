@@ -34,7 +34,7 @@ it("Renders eduLink button", () => {
 })
 
 it("Renders popup", () => {
-  const wrapper = shallow(<Observations />);
+  const wrapper = shallow(<Observations trigger={true}/>);
   const health = <h5>Health: 100</h5>;
   expect(wrapper.contains(health)).toEqual(true);
 })
