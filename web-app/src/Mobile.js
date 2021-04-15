@@ -1,11 +1,27 @@
 import React from 'react';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-function Mobile() {
+import Navbar from './components/Navbar';
+
+import Dashboard from './pages/Dashboard';
+import Observations from './pages/Observations';
+import Battle from './pages/Battle';
+
+function Desktop() {
   return (
-    <div className='mobile'>
-      <h1>Mobile</h1>
+    <div className="desktop-container">
+      <Router>
+        <Navbar collaspe={true}/>
+        <div className="desktop-body">
+          <Switch >
+            <Route path='/' exact component={Battle} />
+            <Route path='/observations' component={Observations} />
+            <Route path='/battle' component={Battle} />
+          </Switch>
+        </div>
+      </Router>
     </div>
   );
 }
 
-export default Mobile;
+export default Desktop;

@@ -11,9 +11,7 @@ function Desktop() {
   return (
     <div className="desktop-container">
       <Router>
-        <div className="desktop-navbar">
-          <Navbar/>
-        </div>
+        <Navbar collaspe={false}/>
         <div className="desktop-body">
           <Switch >
             <Route path='/' exact component={Dashboard} />
