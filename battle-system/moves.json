@@ -83,7 +83,7 @@
             "name":"Irritant Compound",
             "flavor_text":"The observation releases an irritating compound that wears down the opponent. Opponent loses 12.5% of their max HP per turn.",
             "priority":0,
-            "acc":130,
+            "acc":100,
             "opp_dot":0.125
         },
         {
@@ -91,7 +91,7 @@
             "flavor_text":"The observation blends in with its surrounding then strikes.",
             "priority":0,
             "bp":60,
-            "acc":120
+            "acc":100
         },
         {
             "name":"Chemical Spray",
@@ -177,7 +177,7 @@
             "flavor_text":"The observation lowers the opponent’s guard, then strikes.",
             "priority":0,
             "bp":60,
-            "acc":120
+            "acc":100
         },
         {
             "name":"Rapid Lunge",
