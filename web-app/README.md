@@ -1,4 +1,4 @@
-## Placeholder UI
+## Web App
 
 This is the React UI that will be used for our web app
 
