@@ -22,6 +22,7 @@
 }
 
 #dashboard .dashboard-header-text-header{
+    color: rgb(36, 36, 36);
     font-size: 35px;
     position: relative;
     width: calc(100%);
@@ -29,6 +30,7 @@
 }
 
 #dashboard .dashboard-header-text-text{
+    color: rgb(36, 36, 36);
     overflow: hidden;
     position: relative;
     width: calc(100%);

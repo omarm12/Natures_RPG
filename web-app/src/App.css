@@ -14,7 +14,6 @@ body {
 .mobile,
 .tablet,
 .desktop,
-.observations,
 .battle {
   width: 100%;
   display: flex;
@@ -24,12 +23,22 @@ body {
   font-size: 3rem;
 }
 
+.observations{
+  height: 100vh;
+  overflow: hidden;
+}
+
+
+
 .desktop-container {
   display: flex; /* or inline-flex */
   flex-direction: row;
 }
 
 .desktop-body{
+  
   width: 100%;
   background-color: #f5f3f3;
+  height: 100vh;
+  overflow-y: scroll;
 }
