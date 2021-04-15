@@ -24,20 +24,14 @@
 - Danielle Dishop* implemented better quality scores increasing the floor of the stat generation, including tests
 - Danielle Dishop* Added Leveling.py, with an automatic calculation of level from exp
 
-## Placeholder UI
 
-This UI is used to test displaying content from the iNaturalist API
+## Django
 
-You can view the current build of the website [Click Me](https://raw.githack.com/omarm12/Natures_RPG/develop/placeholder_ui/build/index.html)
+This is v1 of the Nature's RPG Django app. It has very limited functionality and is a work in progress.
 
-Add an html parameter to specify the user to be shown. 
-For example, [example](https://raw.githack.com/omarm12/Natures_RPG/develop/placeholder_ui/build/index.html?username=kai_vilbig)
+Included is the actual project directory(natures-rpg/) along with two apps(frontend and backend).
 
+To run, type "pip install -r requirements.txt" and then "python manage.py runserver"app.
 
-## Testing the UI
-
-Install node package manager
-
-While in the placeholder_ui directory, run the command <code>npm install</code>
-
-Then, to start testing, run <code>npm test</code>
+Once this is done, you can visit http://127.0.0.1:8000/ to view the temporary home page or
+http://127.0.0.1:8000/login to view the "login" page.
