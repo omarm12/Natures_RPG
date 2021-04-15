@@ -7,9 +7,9 @@ import Dashboard from './pages/Dashboard';
 import Observations from './pages/Observations';
 import Battle from './pages/Battle';
 
-import Mobile from './Mobile';
-import Tablet from './Tablet';
-import Desktop from './Desktop';
+import Mobile from './pages/Mobile';
+import Tablet from './pages/Tablet';
+import Desktop from './pages/Desktop';
 import {Responsive} from './components/Responsive';
 
 

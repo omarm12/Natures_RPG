@@ -3,7 +3,7 @@
 }
 
 #navbar{
-  width: 250px;
+  width: 275px;
 }
 
 #navbar .closemenu {
@@ -49,11 +49,13 @@
 }
 #navbar .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item {
   color: rgb(141, 141, 141);
-  margin: 10px 0px;
+  margin: 25px 0px; /* Change spacing between menu elements here */ 
   font-weight: bold;
 }
 #navbar .pro-sidebar-inner .pro-sidebar-layout ul .pro-inner-item .pro-icon-wrapper {
-  background-color: #fff;
+  width: 50px;
+  height: 25px;
+  background-color: white;
   color: #000;
   border-radius: 3px;
 }
@@ -61,6 +63,8 @@
 .home-menuText,
 .observation-menuText,
 .battle-menuText{
+  height: 20px; /* Change icon size here */
+  width:30px;
   color: rgb(141, 141, 141);
 }
 
@@ -127,11 +131,10 @@
 }
 
 
-#navbar .pro-sidebar-inner .pro-sidebar-layout .active svg{
-  color:coral;
+#navbar .pro-sidebar-inner .pro-sidebar-layout {
 }
-*/
 
+*/
 
 #navbar .logo {
   padding: 20px;
