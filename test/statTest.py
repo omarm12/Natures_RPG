@@ -1148,6 +1148,5 @@ class TestStats(unittest.TestCase):
                 flag = False
         self.assertTrue(flag)
 
-
 if __name__ == '__main__':
     unittest.main()

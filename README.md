@@ -22,6 +22,7 @@
 - Danielle Dishop* added Undefined type stat generation in testing block (Undefined typed objects were already generating stats correctly by default)
 - Danielle Dishop* implemented better quality scores increasing the floor of the stat generation, including tests
 
+
 ## Placeholder UI
 
 This UI is used to test displaying content from the iNaturalist API
