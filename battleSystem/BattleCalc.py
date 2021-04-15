@@ -39,8 +39,8 @@ def Speed(bspeed, mod_speed, bspeed2, mod_speed2):
         mod_speed2 = 1
 
     # modify base speed
-    bspeed *= mod_speed
-    bspeed2 *= mod_speed2
+    bspeed += bspeed * mod_speed
+    bspeed2 += bspeed2 * mod_speed2
 
     # return diff between bspeed and bspeed2
     return bspeed - bspeed2

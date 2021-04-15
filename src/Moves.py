@@ -9,17 +9,17 @@ class Moves:
         self.ImportJson()
 
     # gets data from moves json by relative path
-    def ImportJson():
+    def ImportJson(self):
         # open file for reading
-        json_file = open("../battle-system/moves.json")
+        json_file = open("Natures_RPG/src/moves.json")
         # parse into a dict called moves
-        self.moves = json.loads(json_file)
+        self.moves = json.load(json_file)
         # close file
         json_file.close()
 
     # returns data for a specific move
-    def RetMove(name):
-        for move in moves["moves"]:
+    def RetMove(self, name):
+        for move in self.moves["moves"]:
             if(move["name"] == name):
                 return move
         # return none if no move matches name
