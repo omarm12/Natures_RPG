@@ -7,6 +7,8 @@ import {
 import { Container, Row, Col} from "shards-react";
 import React, { useEffect, useState } from "react";
 
+import './Observations.css';
+
 // Sample observations for testing
 const sampleObservationList = [
   {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=1", description:"Description", key:1},
@@ -30,8 +32,8 @@ const username = urlParams.get('username');
 // to be used in the list of observations
 function Observation(props) {
   return (
-    <Col sm="6" md="4" lg="3">
-      <div className="Observation" style={{ paddingBottom: "30px"}}>
+    <Col sm="12" md="6" lg="4" xl="3">
+      <div className="observation-card">
         <Card>
           <CardImg src={props.image} top="true"/>
           <CardBody>
@@ -55,7 +57,7 @@ function convertToLarge(url){
 
 
 // Essentially the app in its entirety, returning JSX to be rendered in the browser
-function App() {
+function Observations() {
 
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
@@ -122,30 +124,11 @@ function App() {
     }  
 
     return (
-      <div className="App">
+      <div id="observations">
         <Container className="dr-example-container"  style={{ paddingBottom: "20px"}}>
-
-          {/* User Heading */}
-          <Row>
-            <h1 style={{ paddingBottom: "20px", paddingTop: "40px", paddingLeft: "10px"}}>User</h1>
-          </Row>
-
-          {/* User Card */}
-          <Row>
-            <Col sm="6" md="4" lg="4">
-              <Card>
-                <CardBody style={{marginTop: "10px"}}>
-
-                  {/* displayName is set to "Username" until data is successfully retrived from api */}
-                  <CardTitle>{displayName}</CardTitle>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-
           {/* Observations Heading */}
           <Row>
-            <h1 style={{ paddingBottom: "20px", paddingTop: "60px", paddingLeft: "10px"}}>Observations</h1>
+            <h1 className="observations-header">Observations</h1>
           </Row>
 
           {/* Observation Cards */}
@@ -157,4 +140,4 @@ function App() {
 }
 
 // I don't know what this does but im too scared to delete it
-export default App;
+export default Observations;
