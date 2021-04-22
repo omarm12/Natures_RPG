@@ -13,8 +13,7 @@ body {
 
 .mobile,
 .tablet,
-.desktop,
-.battle {
+.desktop{
   width: 100%;
   display: flex;
   height: 100vh;
@@ -27,8 +26,6 @@ body {
   height: 100vh;
   overflow: hidden;
 }
-
-
 
 .desktop-container {
   display: flex; /* or inline-flex */
