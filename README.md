@@ -25,6 +25,7 @@
 - *colin seifer* added move class
 - *colin seifer* added observation class
 - *colin seifer* added backend battle system
+- *colin seifer* fixed issues with battle calc, move class, observation class, and backend battle system
 
 ###### TODO:
 - *colin seifer* fix bugs in backend battle system

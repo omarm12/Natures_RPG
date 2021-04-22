@@ -3,7 +3,7 @@
 # description: handles battles on the backend.
 
 from ..src import Observation
-import BattleCalc
+from . import BattleCalc
 import time
 import random
 
@@ -95,11 +95,11 @@ class Battle:
             time.sleep(0.1)
 
         # update p1_active_obs
-        if(self.observations.count == NUM_OBS and self.switch >= 0):
+        if(len(self.observations) == NUM_OBS and self.switch >= 0):
             self.p1_active_obs = self.switch
 
         # call user selected move
-        if(self.observations.count == NUM_OBS and self.move_choice > 0):
+        if(len(self.observations) == NUM_OBS and self.move_choice > 0):
             self.p1_move = self.observations[self.p1_active_obs].moves[self.move_choice - 1]
 
         # reset choices
@@ -115,7 +115,7 @@ class Battle:
             while(not (self.move_choice > 0 or (self.switch >= 0 \
                 and self.observations[self.switch].stats[HP_STAT] > 0))):
                 time.sleep(0.1)
-            if(self.observations.count == NUM_OBS and self.switch >= 0):
+            if(len(self.observations) == NUM_OBS and self.switch >= 0):
                 self.p2_active_obs = self.switch
         else:
             # switch on random value
@@ -128,8 +128,12 @@ class Battle:
                 self.move_choice = random.randrange(4)
 
         # call opponent selected move
-        if(self.observations.count == NUM_OBS and self.move_choice > 0):
+        if(len(self.observations) == NUM_OBS and self.move_choice > 0):
             self.p2_move = self.observations[self.p2_active_obs].moves[self.move_choice - 1]
+
+        # reset choices
+        self.move_choice = 0
+        self.switch = -1
 
     # get player priority
     def Priority(self):
@@ -167,10 +171,11 @@ class Battle:
             while(not (self.switch >= 0 and self.observations[self.switch].stats[HP_STAT] > 0)):
                 time.sleep(0.1)
         else:
+            self.switch = -1
             return
 
         # update p1_active_obs
-        if(self.observations.count == NUM_OBS and self.switch >= 0):
+        if(len(self.observations) == NUM_OBS and self.switch >= 0):
             self.p1_active_obs = self.switch
 
         # reset value
@@ -196,10 +201,11 @@ class Battle:
             # update switch
             self.switch = res
         else:
+            self.switch = -1
             return
 
         # update p1_active_obs
-        if(self.observations.count == NUM_OBS and self.switch >= 0):
+        if(len(self.observations) == NUM_OBS and self.switch >= 0):
             self.p2_active_obs = self.switch
 
         # reset value
@@ -219,7 +225,7 @@ class Battle:
                         self.observations[self.p1_active_obs].stats[ATK_STAT]\
                         , self.observations[self.p2_active_obs].stats[DEF_STAT]\
                         , self.p1_move.get("bp"))
-            # if not sure hit, get whether move hits
+            # if not a sure hit, get whether move hits
             elif(self.p1_move.get("acc") != None and BattleCalc.Hit(self.p1_move.get("acc")\
                 , self.observations[self.p1_active_obs].stats[ACC_STAT]\
                 , self.observations[self.p2_active_obs].stats[EVA_STAT])):
@@ -239,7 +245,7 @@ class Battle:
                             self.observations[self.p2_active_obs].stats[ATK_STAT]\
                             , self.observations[self.p1_active_obs].stats[DEF_STAT]\
                             , self.p2_move.get("bp"))
-                # if not sure hit, get whether move hits
+                # if not a sure hit, get whether move hits
                 elif(self.p2_move.get("acc") != None and BattleCalc.Hit(self.p2_move.get("acc")\
                     , self.observations[self.p2_active_obs].stats[ACC_STAT]\
                     , self.observations[self.p1_active_obs].stats[EVA_STAT])):
@@ -319,13 +325,13 @@ class Battle:
 
             # check for winner
             # check hp of each observation
-            if(self.observations.count() == NUM_OBS and self.observations[0].stats[0] == 0\
-                and self.observations[1].stats[0] == 0 and self.observations[2].stats[0] == 0):
+            if(len(self.observations) == NUM_OBS and self.observations[0].stats[HP_STAT] <= 0\
+                and self.observations[1].stats[HP_STAT] <= 0 and self.observations[2].stats[HP_STAT] <= 0):
                 # returns 1 for player 2 win
                 return 1
 
-            elif(self.observations.count() == NUM_OBS and self.observations[3].stats[0] == 0\
-                and self.observations[4].stats[0] == 0 and self.observations[5].stats[0] == 0):
+            elif(len(self.observations) == NUM_OBS and self.observations[3].stats[HP_STAT] <= 0\
+                and self.observations[4].stats[HP_STAT] <= 0 and self.observations[5].stats[HP_STAT] <= 0):
                 # returns 0 for player 1 win
                 return 0
 

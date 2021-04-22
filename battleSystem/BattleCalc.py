@@ -14,7 +14,7 @@ def Hit(move_acc, acc, eva):
     ci = float(move_acc) / float(PERCENT)
 
     # find range max and min
-    range_max = PERCENT + (acc / math.sqrt(eva))
+    range_max = PERCENT
     range_min = PERCENT - (eva / math.sqrt(acc))
 
     # get random value in range

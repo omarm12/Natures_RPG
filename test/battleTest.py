@@ -103,6 +103,12 @@ class TestStats(unittest.TestCase):
         # p1 priority indicated by return of 0
         self.assertEqual(test_battle.Priority(), 0)
 
+        # p2_move should have higher priority
+        test_battle.p1_move = test_battle.observations[1].moves[3]
+        test_battle.p2_move = test_battle.observations[1].moves[2]
+        # p2 priority indicated by return of 1
+        self.assertEqual(test_battle.Priority(), 1)
+
         # test player switch
         test_battle.switch = 2
         test_battle.PlayerSwitch()
@@ -118,6 +124,7 @@ class TestStats(unittest.TestCase):
         self.assertEqual(test_battle.switch, -1)
 
         # test attack not ai
+        self.assertEqual(test_battle.observations[test_battle.p2_active_obs].stats[4], 100)
         test_battle.Attack(False)
         # test that p1 attack reduces HP of p2 observation by 60
         self.assertEqual(test_battle.observations[5].stats[0], 40)
@@ -131,12 +138,15 @@ class TestStats(unittest.TestCase):
         test_battle.Attack(False)
         test_battle.switch = 3
         test_battle.Attack(False)
+        self.assertTrue(test_battle.observations[4].stats[0] <= 0)
+        self.assertEqual(test_battle.p2_active_obs, 3)
         # attack one more time to get p2 final observation to 40hp
         test_battle.Attack(False)
 
         # test final turn in BattleLoop with ai
+        test_battle.move_choice = 4
         # player 1 should win which is returned as a 0
-        self.assertSetEqual(test_battle.BattleLoop(True), 0)
+        self.assertEqual(test_battle.BattleLoop(True), 0)
 
 if __name__ == '__main__':
     unittest.main()
