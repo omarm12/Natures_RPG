@@ -23,7 +23,7 @@ function Dashboard() {
                 <Textfit mode="single"> observations while you were gone.</Textfit>
               </div>
             </div>
-            <img className="dashboard-header-image" src={header_svg} alt="Header image" />
+            <img className="dashboard-header-image" src={header_svg} alt="Adventurous person" />
           </div>
           </Col>
         </Row>

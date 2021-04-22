@@ -1,21 +1,19 @@
 import {
   Card,
-  CardTitle,
-  CardImg,
   CardBody,
   Button
 } from "shards-react";
 import { Container, Row, Col} from "shards-react";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import "./Battle.css";
 import ObservationBattleCard from '../components/ObservationBattleCard';
 
 function getMovetext(value){
-  if(value == -2){
+  if(value === -2){
     return "Please select an option";
-  } else if(value == -1){
+  } else if(value === -1){
     return "So... you would like to leave the match";
-  } else if(value == 0){
+  } else if(value === 0){
     return "Switching to another observation I see...";
   } 
   return "You have chosen move " + value;
@@ -25,7 +23,7 @@ class Battle extends React.Component {
 
   constructor(props){
     super(props);
-    this.state={action: -2}
+    this.state = {action: -2}
   }
 
   handleClick(value) {
@@ -39,7 +37,7 @@ class Battle extends React.Component {
     this.setState(state => {
       return {action: -2}
     })
-    if(value == -2){
+    if(value === -2){
       console.log("No move was selected");
       return
     }

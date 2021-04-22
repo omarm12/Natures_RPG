@@ -1,18 +1,11 @@
 import {
     Card,
-    CardTitle,
-    CardImg,
-    CardBody,
-    Button
+    CardBody
   } from "shards-react";
 import React, { Component } from 'react'
 import ReactRoundedImage from "react-rounded-image";
 
 export default class ObservationBattleCard extends Component {
-
-    constructor(props){
-        super(props);
-    }
 
     render() {
         return (
