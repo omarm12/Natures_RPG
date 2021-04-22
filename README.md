@@ -26,24 +26,22 @@
 - *colin seifer* added observation class
 - *colin seifer* added backend battle system
 - *colin seifer* fixed issues with battle calc, move class, observation class, and backend battle system
+- *Danielle Dishop* added Undefined type stat generation in testing block (Undefined typed objects were already generating stats correctly by default)
+- *Danielle Dishop* implemented better quality scores increasing the floor of the stat generation, including tests
+- *Danielle Dishop* Added Leveling.py, with an automatic calculation of level from exp
 
 ###### TODO:
-- *colin seifer* fix bugs in backend battle system
-
-## Placeholder UI
-
-This UI is used to test displaying content from the iNaturalist API
-
-You can view the current build of the website [Click Me](https://raw.githack.com/omarm12/Natures_RPG/develop/placeholder_ui/build/index.html)
-
-Add an html parameter to specify the user to be shown. 
-For example, [example](https://raw.githack.com/omarm12/Natures_RPG/develop/placeholder_ui/build/index.html?username=kai_vilbig)
+- *colin seifer* implement battle effects
+- *colin seifer* work with *Cameron Miller* to implement front end for battle system
 
 
-## Testing the UI
+## Django
 
-Install node package manager
+This is v1 of the Nature's RPG Django app. It has very limited functionality and is a work in progress.
 
-While in the placeholder_ui directory, run the command <code>npm install</code>
+Included is the actual project directory(natures-rpg/) along with two apps(frontend and backend).
 
-Then, to start testing, run <code>npm test</code>
+To run, type "pip install -r requirements.txt" and then "python manage.py runserver"app.
+
+Once this is done, you can visit http://127.0.0.1:8000/ to view the temporary home page or
+http://127.0.0.1:8000/login to view the "login" page.
