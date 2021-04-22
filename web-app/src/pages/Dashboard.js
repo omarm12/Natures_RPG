@@ -19,7 +19,7 @@ function Dashboard() {
                 <Textfit mode="single">Welcome Back</Textfit>
               </div>
               <div className="dashboard-header-text-text">
-                <Textfit mode="single">It looks like have made <strong>2</strong> new </Textfit>
+                <Textfit mode="single">It looks like you have made <strong>2</strong> new </Textfit>
                 <Textfit mode="single"> observations while you were gone.</Textfit>
               </div>
             </div>
