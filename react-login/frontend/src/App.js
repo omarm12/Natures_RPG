@@ -3,43 +3,14 @@ import {
   BrowserRouter as Router,
   Switch,
   Route,
-  Link
 } from "react-router-dom";
 import './App.css'
-import { Container, Row, Col} from "shards-react";
+
+import Login from './pages/login'
+import Start from './pages/startingScreen'
+import Home from './pages/home'
 
 function App() {
-
-  function Start() {
-    return(
-      <Container className="login-btn">
-        <Row>
-          <Col>
-            <a href="/login">
-              <button  id="loginbtn" className="btn">Login</button>
-            </a>
-          </Col>
-        </Row>
-      </Container>
-    )
-  }
-
-  //redirect to login
-  function Login() {
-    window.location = "http://localhost:9000/login/iNat"
-    return <></>
-  }
-
-  function Home() {
-
-    const queryString = window.location.search;
-    const urlParams = new URLSearchParams(queryString);
-    const username = urlParams.get('username');
-
-    return (
-      <h1>Welcome back, {username}</h1>
-    )
-  }
 
   return (
     <Router>
