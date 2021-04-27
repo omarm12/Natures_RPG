@@ -1,11 +1,9 @@
 from django.test import TestCase
 from random import randrange
-import models
-from TypeAssign import Type
-from StatsAssign import FLOOR, CEILING, INCREASE_MOD, DECREASE_MOD, QUALITY_MOD, Stats
-from Leveling import LEVEL_BREAKPOINTS, CalcLevel
-import Moves
-import Observation
+
+from .TypeAssign import Type
+from .StatsAssign import FLOOR, CEILING, INCREASE_MOD, DECREASE_MOD, QUALITY_MOD, Stats
+from .Leveling import LEVEL_BREAKPOINTS, CalcLevel
 
 class StatsGenTestCase(TestCase):
 
