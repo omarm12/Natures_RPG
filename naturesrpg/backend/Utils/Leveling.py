@@ -2,7 +2,8 @@
 # Author: Danielle Dishop
 # Description: This file contains code to implement and track experience points for observations, as well as update them
 
-from .models import Observation
+from pyinaturalist.node_api import get_observations
+from ..models import Observation
 
 # Level breakpoints based on Dungeons and Dragons, 5th Edition
 LEVEL_BREAKPOINTS = {
@@ -27,7 +28,7 @@ LEVEL_BREAKPOINTS = {
     19:305000,
     20:355000
 }
-CONFRIM_EXP = 500
+CONFIRM_EXP = 500
 
 # The function is passed an amount of experience, and returns the corresponding level of the observation
 def CalcLevel(exp):
@@ -44,8 +45,16 @@ def CalcLevel(exp):
 # been confirmed since it was last checked
 def ConfirmExpGain(o_id):
     # Query the iNaturalist API and get the number of confirmations
-    # Dummy value for now
-    totalConf = 10
+    response = get_observations(id=o_id)
+    results = response.get('results')
+
+    # Make sure only one observation is returned
+    if len(results) != 1:
+        # If/when we implement logging, output an error message
+        totalConf = 0
+    else:
+        obs = results[0]
+        totalConf = obs.get('num_identification_agreements')
 
     # Get the experience and number of previous confirmations from the database
     observation = Observation.objects.get(obs_id=o_id)
@@ -56,11 +65,9 @@ def ConfirmExpGain(o_id):
     # the database
     newConf = totalConf - prevConf
     if (newConf >= 0):
-        xp = xp + (newConf * CONFRIM_EXP)
+        xp = xp + (newConf * CONFIRM_EXP)
 
-        observation.xp = xp
-        observation.num_of_confirmations = totalConf
-        observation.save()
+        Observation.objects.filter(obs_id=o_id).update(total_xp=xp, num_of_confirmations=totalConf)
     else:
         # If/when we implement logging, output an error message here
         xp = xp

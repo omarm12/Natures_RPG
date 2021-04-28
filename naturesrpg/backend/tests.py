@@ -1,9 +1,11 @@
 from django.test import TestCase
 from random import randrange
 
-from .TypeAssign import Type
-from .StatsAssign import FLOOR, CEILING, INCREASE_MOD, DECREASE_MOD, QUALITY_MOD, Stats
-from .Leveling import LEVEL_BREAKPOINTS, CalcLevel
+from .models import User, Observation
+
+from .Utils.TypeAssign import Type
+from .Utils.StatsAssign import FLOOR, CEILING, INCREASE_MOD, DECREASE_MOD, QUALITY_MOD, Stats
+from .Utils.Leveling import LEVEL_BREAKPOINTS, CONFIRM_EXP, CalcLevel, ConfirmExpGain
 
 class StatsGenTestCase(TestCase):
 
@@ -1168,8 +1170,65 @@ class LevelingTestCase(TestCase):
         self.assertTrue(Flag)
 
     # Tests that ConfirmExpGain correctly updates xp and confirmations when it should
+    def test_confirm_exp_gain(self):
+        # This observation has 2 confirmations when the test is written
+        o_id = 13713430
+        confirmations = 2
+
+        # Place the observation into the database
+        u = User(inat_user_id=1, username='test')
+        u.save()
+        o = Observation(username=u, obs_id=o_id)
+        o.save()
+
+        # Call the function and check that it gained the appropriate amount of xp
+        ConfirmExpGain(o_id)
+        o = Observation.objects.get(obs_id=o_id)
+        self.assertEqual(o.total_xp, CONFIRM_EXP*confirmations)
+
+        # Remove the observation from the database
+        Observation.objects.filter(obs_id=o_id).delete()
+        User.objects.filter(inat_user_id=1).delete()
 
     # Tests the ConfirmExpGain does not grant xp or change confirmations when it does not need to
+    def test_confirm_exp_none(self):
+        # This observation has 2 confirmations when the test is written
+        o_id = 13713430
+        confirmations = 2
+
+        # Place the observation into the database
+        u = User(inat_user_id=1, username='test')
+        u.save()
+        o = Observation(username=u, obs_id=o_id, num_of_confirmations=confirmations)
+        o.save()
+
+        # Call the function and check that it gained no xp
+        ConfirmExpGain(o_id)
+        o = Observation.objects.get(obs_id=o_id)
+        self.assertEqual(o.total_xp, 0)
+
+        # Remove the observation from the database
+        Observation.objects.filter(obs_id=o_id).delete()
+        User.objects.filter(inat_user_id=1).delete()
 
     # Tests that ConfirmExpGain does not remove xp or confirmations if an error occurs
     # (i.e. if an observation has more confirmations in the database than on iNaturalist)
+    def test_confirm_exp_error(self):
+        # This observation has 2 confirmations when the test is written
+        o_id = 13713430
+        confirmations = 2
+
+        # Place the observation into the database
+        u = User(inat_user_id=1, username='test')
+        u.save()
+        o = Observation(username=u, obs_id=o_id, num_of_confirmations=confirmations+1)
+        o.save()
+
+        # Call the function and check that it gained and lost no xp
+        ConfirmExpGain(o_id)
+        o = Observation.objects.get(obs_id=o_id)
+        self.assertEqual(o.total_xp, 0)
+
+        # Remove the observation from the database
+        Observation.objects.filter(obs_id=o_id).delete()
+        User.objects.filter(inat_user_id=1).delete()
