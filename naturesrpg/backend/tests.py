@@ -1166,3 +1166,10 @@ class LevelingTestCase(TestCase):
                 Flag = False
 
         self.assertTrue(Flag)
+
+    # Tests that ConfirmExpGain correctly updates xp and confirmations when it should
+
+    # Tests the ConfirmExpGain does not grant xp or change confirmations when it does not need to
+
+    # Tests that ConfirmExpGain does not remove xp or confirmations if an error occurs
+    # (i.e. if an observation has more confirmations in the database than on iNaturalist)
