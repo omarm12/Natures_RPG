@@ -6,7 +6,7 @@ const app = express()
 const client_id = process.env.INAT_CLIENT_ID
 const client_secret = process.env.INAT_CLIENT_SECRET
 
-console.log({client_id, client_secret})
+//console.log({client_id, client_secret})
 
 app.get('/', (req, res) => {
     res.send('Test')
@@ -54,9 +54,12 @@ app.get('/login/iNat/callback', async (req, res) => {
     const iNatData = await getiNatUser(token);
     
     const params = new URLSearchParams(iNatData)
-    const id = params.get('login')
+    const uname = params.get('login')
+    const id = params.get('id')
+    const obsCount = params.get('observations_count')
+    console.log(iNatData)
 
-    res.redirect(`http://localhost:3000/home?username=${id}`)
+    res.redirect(`http://localhost:3000/home?username=${uname}&id=${id}&count=${obsCount}`)
 } );
 
 const PORT = process.env.PORT || 9000;
