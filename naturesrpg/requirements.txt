@@ -4,9 +4,9 @@ chardet==4.0.0
 Django==3.2
 djangorestframework==3.12.4
 idna==2.10
-keyring==21.4.0
+keyring>=22.3
 psycopg2-binary==2.8.6
-pyinaturalist==0.12.1
+pyinaturalist>=0.13.0.dev245
 python-dateutil==2.8.1
 python-dotenv==0.17.0
 python-forge==18.6.0

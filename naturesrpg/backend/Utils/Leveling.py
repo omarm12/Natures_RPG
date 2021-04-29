@@ -36,7 +36,7 @@ def CalcLevel(exp):
     # is less than the passed number
     o_level = 0
     for level in LEVEL_BREAKPOINTS:
-        if ((level > o_level) and (exp > LEVEL_BREAKPOINTS.get(level))):
+        if ((level > o_level) and (exp >= LEVEL_BREAKPOINTS.get(level))):
             o_level = level
 
     return o_level
@@ -71,3 +71,7 @@ def ConfirmExpGain(o_id):
     else:
         # If/when we implement logging, output an error message here
         xp = xp
+
+    # Update the observation's level
+    o_level = CalcLevel(xp)
+    Observation.objects.filter(obs_id=o_id).update(level=o_level)

@@ -1,3 +1,8 @@
+# File: tests.py (for backend)
+# Author: Danielle Dishop, Colin Seifer
+# Description: This file contains the test suite for multiple files and functionalities
+#     managed by the backend of Nature's RPG
+
 from django.test import TestCase
 from random import randrange
 
@@ -1242,10 +1247,11 @@ class LevelingTestCase(TestCase):
         o = Observation(username=u, obs_id=o_id)
         o.save()
 
-        # Call the function and check that it gained the appropriate amount of xp
+        # Call the function and check that it gained the appropriate amount of xp and levels
         ConfirmExpGain(o_id)
         o = Observation.objects.get(obs_id=o_id)
         self.assertEqual(o.total_xp, CONFIRM_EXP*confirmations)
+        self.assertEqual(o.level, 3)  # 1000 EXP is level 3
 
         # Remove the observation from the database
         Observation.objects.filter(obs_id=o_id).delete()
@@ -1267,6 +1273,7 @@ class LevelingTestCase(TestCase):
         ConfirmExpGain(o_id)
         o = Observation.objects.get(obs_id=o_id)
         self.assertEqual(o.total_xp, 0)
+        self.assertEqual(o.level, 1)
 
         # Remove the observation from the database
         Observation.objects.filter(obs_id=o_id).delete()
@@ -1289,6 +1296,7 @@ class LevelingTestCase(TestCase):
         ConfirmExpGain(o_id)
         o = Observation.objects.get(obs_id=o_id)
         self.assertEqual(o.total_xp, 0)
+        self.assertEqual(o.level, 1)
 
         # Remove the observation from the database
         Observation.objects.filter(obs_id=o_id).delete()
