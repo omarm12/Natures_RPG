@@ -1,6 +1,5 @@
 import {
     Card,
-    CardTitle,
     CardImg,
     CardBody
   } from "shards-react";
@@ -8,7 +7,7 @@ import React from 'react'
 import './Observations.css'
 import closeBtn from './img/close.png'
 import { Container, Row, Col} from "shards-react";
-import EduInfo from './getObsdata'
+import EduInfo from './getObsdatas'
 
 function Observations(props) {
 
@@ -45,6 +44,7 @@ function Observations(props) {
                                         <h5>Defense: 80</h5>
                                         <h5>Speed: 100</h5>
                                         <p>Observed on: {props.time}</p>
+                                        <p>Quality: {props.quality}</p>
                                         <EduInfo wiki={props.wiki}/>
                                     </div>
                                 </CardBody>

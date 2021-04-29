@@ -6,10 +6,11 @@ import {
 } from "shards-react";
 import { Container, Row, Col} from "shards-react";
 import React, { useEffect, useState } from "react";
+import axios from 'axios'
 import './App.css';
 import Observations from './components/Observations'
-
-import Popup from 'reactjs-popup'
+import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import Sort from './components/SortObs'
 
 // Sample observations for testing
 const sampleObservationList = [
@@ -25,10 +26,11 @@ const sampleObservationList = [
   {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=10", description:"Description", key:10}
 ];
 
+const sortOptions = ["Order Observed", "Taxa", "Stats", "Quality", "A-Z", "Reverse"];
+
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-//const username = urlParams.get('username');
-const username = 'kai_vilbig'
+const username = urlParams.get('username');
 
 // Observation component
 // This is a basic component that gets populated with data
@@ -61,7 +63,6 @@ function Observation(props) {
         quality={props.quality}
         comment={props.comment}
         time={props.time}
-        update={props.update}
         wiki={props.wiki}
         >
       </Observations>
@@ -71,7 +72,7 @@ function Observation(props) {
 
 function convertToLarge(url){
   var position = url.search("square");
-  if(position != -1){
+  if(position !== -1){
     return url.substring(0, position) + "large" + url.substring(position + 6);
   } else {
     return url;
@@ -84,27 +85,43 @@ function App() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
+  const [dropdownOpen, setOpen] = useState(false);
+  const [sortOption, setSort] = useState(sortOptions[0]);
 
+  const toggle = () => setOpen(!dropdownOpen)
   
   useEffect(() => {
+    //Order Observed
+    if (sortOption === sortOptions[0]) {
+      items.sort((a, b) => (a.created_at > b.created_at) ? -1 : 1)
+    }
+    //Taxa alphabetical
+    else if (sortOption === sortOptions[1]) {
+      items.sort((a, b) => (a.taxon.name > b.taxon.name) ? 1 : -1)
+    }
+    else if (sortOption === sortOptions[3]) {
+      items.sort((a, b) => (a.quality_grade > b.quality_grade) ? -1 : 1)
+    }
+    else if (sortOption === sortOptions[4]) {
+      items.sort((a, b) => (a.species_guess > b.species_guess) ? 1 : -1)
+    }
+    //reverse
+    else {
+      items.reverse()
+    }
+  }, [sortOption])
 
-    // Fetches data from url + username
-    fetch("https://api.inaturalist.org/v1/observations/?page=1&per_page=100&user_id=" + username)
-      .then(res => res.json())
-      .then(
+  useEffect(() => {
 
-        // We got our data
-        (result) => {
-          setIsLoaded(true);
-          setItems(result);
-        },
+    async function fetchData() {
 
-        // Error handling
-        (error) => {
-          setIsLoaded(true);
-          setError(error);
-        }
-      )
+      const request = await axios.get("https://api.inaturalist.org/v1/observations/?page=1&per_page=100&user_id=" + username);
+      console.log(request.data.results)
+      setItems(request.data.results)
+      setIsLoaded(true)
+    }
+    fetchData()
+
   }, [])
 
   // Error State
@@ -121,7 +138,7 @@ function App() {
     var displayName = "Username";
 
     // Loads sample data into the observations variable if no username is provided
-    if(username == null || items == 0){
+    if(username === null || items === 0){
       observations = sampleObservationList.map((observation) =>
         <Observation
           key={observation.key}
@@ -134,8 +151,7 @@ function App() {
       
     // Loads user observation data into the observations variable
     } else {
-      console.log(items.results);
-      observations = items.results.map(observation =>
+      observations = items.map(observation =>
         <Observation
           key={observation.key}
           name={observation.species_guess}
@@ -144,14 +160,13 @@ function App() {
           body={observation.place_guess}
           quality={observation.quality_grade}
           comment={observation.description}
-          time={observation.time_observad_at}
-          update={observation.updated_at}
+          time={observation.observed_on_string}
           wiki={observation.taxon.wikipedia_url}
         />
       ); 
       displayName = username;
     }  
-
+    
     return (
       <div className="App">
         <Container className="dr-example-container"  style={{ paddingBottom: "20px"}}>
@@ -178,6 +193,25 @@ function App() {
           <Row>
             <h1 style={{ paddingBottom: "20px", paddingTop: "60px", paddingLeft: "10px"}}>Observations</h1>
           </Row>
+
+          <ButtonDropdown isOpen={dropdownOpen} toggle={toggle} className="dropDown">
+            <DropdownToggle caret className="dropDown-button">
+              {sortOption}
+            </DropdownToggle>
+            <DropdownMenu>
+              <DropdownItem onClick={() => setSort(sortOptions[0])}>{sortOptions[0]}</DropdownItem>
+              <DropdownItem onClick={() => setSort(sortOptions[1])}>{sortOptions[1]}</DropdownItem>
+              <DropdownItem onClick={() => setSort(sortOptions[2])}>{sortOptions[2]}</DropdownItem>
+              <DropdownItem onClick={() => setSort(sortOptions[3])}>{sortOptions[3]}</DropdownItem>
+              <DropdownItem onClick={() => setSort(sortOptions[4])}>{sortOptions[4]}</DropdownItem>
+              <DropdownItem onClick={() => setSort(sortOptions[5])}>{sortOptions[5]}</DropdownItem>
+            </DropdownMenu>
+          </ButtonDropdown>
+          <br /><br />
+          {/* <Sort 
+            sort={sortOption}
+            data={observations}
+            items={setItems}/> */}
 
           {/* Observation Cards */}
           <Row>{observations}</Row>

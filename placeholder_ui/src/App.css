@@ -26,3 +26,8 @@
     border-color: transparent;
     background-color: transparent;
 }
+
+.dropDown-button {
+    background-color: white!important;
+    color: black!important;
+}
