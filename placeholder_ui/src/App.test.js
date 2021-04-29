@@ -9,6 +9,7 @@ it("Renders without crashing", () => {
   shallow(<App />);
 });
 
+
 it("Renders Observations header", () => {
   const wrapper = shallow(<App />);
   const app = <h1 style={{ paddingBottom: "20px", paddingTop: "60px", paddingLeft: "10px"}}>Observations</h1>;
@@ -26,7 +27,7 @@ it("Renders loading state", () => {
 </div>;
   expect(wrapper.contains(loading)).toEqual(true);
 });
-
+  
 it("Renders eduLink button", () => {
   const wrapper = shallow(<GetObsdata />);
   const eduLink = <button className="eduLink">Click to learn more information</button>

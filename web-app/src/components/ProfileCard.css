@@ -1,0 +1,31 @@
+#profile-card{
+    box-shadow: 0 0 13px 1px rgba(0, 0, 0, 0.12);
+    margin: 20px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+}
+
+#profile-card .profile-image{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 15px;
+    margin-bottom: 10px;
+}
+
+#profile-card .profile-username{
+    width: 100%;
+    text-align: center;
+    color: rgb(36, 36, 36);
+    font-weight: 900;
+}
+
+#profile-card .profile-level{
+    width: 100%;
+    text-align: center;
+    color: rgb(141, 141, 141);
+    font-weight: 200;
+    padding-bottom: 15px;
+}
+    
