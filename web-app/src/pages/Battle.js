@@ -30,6 +30,9 @@ class Battle extends React.Component {
   }
 
   toggleBattle() {
+
+    
+
     this.setState(state => {
       return {inBattle: !this.state.inBattle}
     })
@@ -58,8 +61,8 @@ class Battle extends React.Component {
     if(!this.state.inBattle){
       return (
         <div className="startBattleBox">
-          <Button className="startBattleButton" block theme="primary" size="lg" onClick={() => this.toggleBattle()}>Enter Battle vs AI</Button>
-          <Button block disabled theme="secondary" size="lg" onClick={() => this.toggleBattle()}>Enter Battle vs Player</Button>
+          <Button className="startBattleButton" block theme="primary" size="lg" onClick={() => this.toggleBattle()}>Battle vs AI</Button>
+          <Button block disabled theme="secondary" size="lg" onClick={() => this.toggleBattle()}>Battle vs Player</Button>
         </div>
       );
     }
@@ -70,7 +73,7 @@ class Battle extends React.Component {
             <Row>
               <Col sm="12" md="6">
                 <div className="observation-card">
-                  <ObservationBattleCard health="120" level="12" name="Jules the cat" image="https://loremflickr.com/300/200/wildlife?random=1"/>
+                  <ObservationBattleCard startHealth="150" health="110" level="12" name="Jules the cat" image="https://loremflickr.com/300/200/wildlife?random=1"/>
                 </div>
               </Col>
               <Col sm="12" md="6">
