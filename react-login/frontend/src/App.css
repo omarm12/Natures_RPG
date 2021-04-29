@@ -1,0 +1,30 @@
+.App {
+  text-align: center;
+}
+
+.btn {
+  text-align: center;
+  display: inline-block;
+  padding: 15px 32px;
+  font-size: medium;
+  background-color: green;
+  border-style: none;
+  transition-duration: 0.4s;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+.btn:hover {
+  background-color: transparent;
+  color: black;
+}
+
+.login-btn {
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -ms-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}

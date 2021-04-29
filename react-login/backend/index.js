@@ -1,11 +1,12 @@
-import express from 'express'
-import fetch from 'node-fetch'
+const express = require("express")
+const fetch = require("node-fetch")
+require('dotenv').config();
 const app = express()
 
 const client_id = process.env.INAT_CLIENT_ID
 const client_secret = process.env.INAT_CLIENT_SECRET
 
-console.log({client_id, client_secret})
+//console.log({client_id, client_secret})
 
 app.get('/', (req, res) => {
     res.send('Test')
@@ -47,37 +48,19 @@ async function getiNatUser (access_token) {
     return data
 }
 
-async function pullObs (username) {
-
-    const res = await fetch(`https://api.inaturalist.org/v1/observations/?page=1&per_page=100&user_id=${username}`, {
-        headers: {
-            'Accept': 'application/json',
-            "Content-Type": "application/json"
-        }
-    })
-    const data = res.json()
-    return data
-}
-
 app.get('/login/iNat/callback', async (req, res) => {
     const code = req.query.code;
     const token = await getAccessToken(code);
     const iNatData = await getiNatUser(token);
     
     const params = new URLSearchParams(iNatData)
-    const id = params.get('login')
+    const uname = params.get('login')
+    const id = params.get('id')
+    const obsCount = params.get('observations_count')
+    console.log(iNatData)
 
-    res.redirect(`http://localhost:9000/home?username=${id}`)
+    res.redirect(`http://localhost:3000/home?username=${uname}&id=${id}&count=${obsCount}`)
 } );
-
-app.get('/home', async (req, res) => {
-    res.send("HOME")
-
-    //later this will pull username from url parameter
-    const username = "kai_vilbig"
-    const obs = await pullObs(username)
-    console.log(obs)
-})
 
 const PORT = process.env.PORT || 9000;
 app.listen(PORT, () => console.log('Listening http://localhost:' + PORT))

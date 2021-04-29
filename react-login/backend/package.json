@@ -1,5 +1,5 @@
 {
-  "name": "testLogin",
+  "name": "login",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,6 +8,7 @@
     "env": "^0.0.2",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "fetch": "^1.1.0",
     "node-fetch": "^2.6.1",
     "xml": "^1.0.1",
     "xmlhttprequest": "^1.8.0"
