@@ -1308,6 +1308,8 @@ class LevelingTestCase(TestCase):
 
 class TestStats(TestCase):
 
+    class TestStats(unittest.TestCase):
+
     # test that moves are imported correctly
     def test_moves(self):
         test_move = Moves.Moves()
@@ -1323,7 +1325,7 @@ class TestStats(TestCase):
         stats = [100, 100, 100, 100, 100, 100]
         moves = ["Nature's Wrath", "Autotomy", "Spine Shield", "Mimesis"]
         obs_type = "Insecta"
-        test_obs = LoadObservation.LoadObservation(obs_type, moves, stats)
+        test_obs = Observation.Observation(obs_type, moves, stats)
         # test that values are non-empty
         self.assertEqual(test_obs.stats[0], 100)
         self.assertEqual(test_obs.moves[0].get("name"), "Nature's Wrath")
@@ -1352,18 +1354,47 @@ class TestStats(TestCase):
     # test that battle system works properly
     def test_battle_sys(self):
         stats = [100, 100, 100, 100, 100, 100]
-        moves = ["Nature's Wrath", "Autotomy", "Spine Shield", "Mimesis"]
+        moves = ["Nature's Wrath", "Autotomy", "Sacrificial Tail", "Mimesis"]
         obs_type = "Insecta"
         observations = []
         # create list of 6 observations
         for i in range(6):
-            observations.append(LoadObservation.LoadObservation(obs_type, moves, stats))
+            observations.append(Observation.Observation(obs_type, moves, stats))
         # create battle object
         test_battle = BattleSys.Battle(observations)
         # test battle object observations size
         self.assertEqual(len(test_battle.observations), 6)
         # test that observations were imported correctly
         self.assertEqual(test_battle.observations[0].stats[0], 100)
+
+        # test get methods in range
+        self.assertEqual(test_battle.GetFlavorText(1), "The observation invokes nature’s wrath. Raises all stats by 20%.")
+        self.assertEqual(test_battle.GetBP(4), 60)
+        self.assertEqual(test_battle.GetACC(4), 100)
+
+        # test get methods out of range
+        self.assertIsNone(test_battle.GetFlavorText(5))
+        self.assertIsNone(test_battle.GetBP(1))
+        self.assertIsNone(test_battle.GetACC(1))
+        self.assertIsNone(test_battle.GetBP(5))
+        self.assertIsNone(test_battle.GetACC(5))
+
+        # test set methods
+        # valid input
+        test_battle.SetSwitch(1)
+        self.assertEqual(test_battle.switch, 1)
+        # test invalid input
+        test_battle.SetSwitch(6)
+        self.assertEqual(test_battle.switch, 1)
+        # valid input
+        test_battle.SetMoveChoice(4)
+        self.assertEqual(test_battle.move_choice, 4)
+        # test invalid input
+        test_battle.SetMoveChoice(0)
+        self.assertEqual(test_battle.move_choice, 4)
+        test_battle.SetSwitch(0)
+        # reset values
+        test_battle.PlayerTurn()
 
         # test player turn switch
         test_battle.switch = 1
@@ -1421,29 +1452,59 @@ class TestStats(TestCase):
         self.assertEqual(test_battle.switch, -1)
 
         # test attack not ai
-        self.assertEqual(test_battle.observations[test_battle.p2_active_obs].stats[4], 100)
+        test_battle.p1_move = test_battle.observations[test_battle.p1_active_obs].moves[3]
+        test_battle.p2_move = test_battle.observations[test_battle.p2_active_obs].moves[0]
         test_battle.Attack(False)
         # test that p1 attack reduces HP of p2 observation by 60
         self.assertEqual(test_battle.observations[5].stats[0], 40)
         # knock out p2 observation
         test_battle.switch = 4
+        test_battle.p1_move = test_battle.observations[test_battle.p1_active_obs].moves[3]
+        test_battle.p2_move = test_battle.observations[test_battle.p2_active_obs].moves[0]
         test_battle.Attack(False)
         self.assertTrue(test_battle.observations[5].stats[0] <= 0)
         # test that p2 observation was switched to 4
         self.assertEqual(test_battle.p2_active_obs, 4)
         # knock out p2 observation 4
+        test_battle.p1_move = test_battle.observations[test_battle.p1_active_obs].moves[3]
+        test_battle.p2_move = test_battle.observations[test_battle.p2_active_obs].moves[0]
         test_battle.Attack(False)
         test_battle.switch = 3
+        test_battle.p1_move = test_battle.observations[test_battle.p1_active_obs].moves[3]
+        test_battle.p2_move = test_battle.observations[test_battle.p2_active_obs].moves[0]
         test_battle.Attack(False)
         self.assertTrue(test_battle.observations[4].stats[0] <= 0)
         self.assertEqual(test_battle.p2_active_obs, 3)
         # attack one more time to get p2 final observation to 40hp
+        test_battle.p1_move = test_battle.observations[test_battle.p1_active_obs].moves[3]
+        test_battle.p2_move = test_battle.observations[test_battle.p2_active_obs].moves[0]
         test_battle.Attack(False)
 
         # test final turn in BattleLoop with ai
         test_battle.move_choice = 4
         # player 1 should win which is returned as a 0
         self.assertEqual(test_battle.BattleLoop(True), 0)
+
+    # test that battle effects work properly
+    def test_battle_effects(self):
+        stats = [100, 100, 100, 100, 100, 100]
+        moves = ["Night Vision", "Avoid Detection", "Play Dead", "Develop Tools"]
+        obs_type = "Insecta"
+        observations = []
+        # create new list of observations
+        for i in range(6):
+            observations.append(Observation.Observation(obs_type, moves, stats))
+        # create battle object
+        test_battle = BattleSys.Battle(observations)
+
+        # test next sure hit
+        test_battle.p1_active_obs = 0
+        test_battle.p2_active_obs = 3
+        test_battle.p1_move = test_battle.observations[3].moves[0]
+        test_battle.p1_move_prev = test_battle.observations[0].moves[0]
+        test_battle.p1_move = test_battle.observations[0].moves[3]
+        # placeholder until I get opp_dmg set up
+        self.assertTrue(True)
 
 class LoadDatabaseTestCase(TestCase):
     # Test loading a user and their observations

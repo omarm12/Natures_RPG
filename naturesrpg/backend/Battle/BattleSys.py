@@ -17,60 +17,7 @@ DEF_STAT = 2
 ACC_STAT = 3
 EVA_STAT = 4
 SPD_STAT = 5
-
-# possible move effects
-effect_dict = {
-    "flavor_text",
-    "priority",
-    "bp",
-    "acc",
-    "hp_mod",
-    "atk_mod",
-    "def_mod",
-    "acc_mod",
-    "eva_mod",
-    "spd_mod",
-    "team_hp_mod",
-    "team_atk_mod",
-    "team_def_mod",
-    "team_acc_mod",
-    "team_eva_mod",
-    "team_spd_mod",
-    "opp_hp_mod",
-    "opp_atk_mod",
-    "opp_def_mod",
-    "opp_acc_mod",
-    "opp_eva_mod",
-    "opp_spd_mod",
-    "miss_rate",
-    "user_dmg",
-	"opp_dmg",
-    "reduce_dmg",
-    "opp_dot",
-    "free_switch",
-    "next_sure_hit",
-    "force_switch",
-    "heal_ot",
-    "next_atk_lock",
-    "ignore_def",
-    "sure_hit",
-    "rand_move",
-    "next_reduce_dmg",
-    "no_retreat",
-    "team_heal",
-    "require_opp_contact",
-    "opp_move_lock",
-    "ko_type",
-    "use_opp_atk",
-    "revive_with_hp",
-    "reduce_dmg_type",
-    "single_move",
-    "opp_single_move",
-    "learn_opp_move",
-	"require_move",
-    "require_priority",
-	"require_first_turn"
-}
+PERCENT = 100 # multiply by 100 to get percent
 
 class Battle:
     def __init__(self, obs = []):
@@ -85,6 +32,31 @@ class Battle:
         self.p2_move_prev = None
         self.move_choice = 0
         self.switch = -1
+
+    # move index should be in range 1-4
+    def GetFlavorText(self, move_index):
+        if(move_index >= 1 and move_index <= 4):
+            return self.observations[self.p1_active_obs].moves[move_index - 1].get("flavor_text")
+
+    # move index should be in range 1-4
+    def GetBP(self, move_index):
+        if(move_index >= 1 and move_index <= 4):
+            return self.observations[self.p1_active_obs].moves[move_index - 1].get("bp")
+
+    # move index should be in range 1-4
+    def GetACC(self, move_index):
+        if(move_index >= 1 and move_index <= 4):
+            return self.observations[self.p1_active_obs].moves[move_index - 1].get("acc")
+
+    # switch should be in range 0-5
+    def SetSwitch(self, switch):
+        if(switch >= 0 and switch <= 5):
+            self.switch = switch
+    
+    # move index should be in range 1-4
+    def SetMoveChoice(self, move_index):
+        if(move_index >= 1 and move_index <= 4):
+            self.move_choice = move_index
 
     # handles first player's turn
     # assumes move choice and switch are valid values
@@ -137,7 +109,7 @@ class Battle:
 
     # get player priority
     def Priority(self):
-        if(self.p1_move.get("priority") == self.p2_move.get("priority")):
+        if(self.p1_move != None and self.p2_move != None and self.p1_move.get("priority") == self.p2_move.get("priority")):
             # choose by speed
             if(BattleCalc.Speed(self.observations[self.p1_active_obs].stats[SPD_STAT]\
                 , self.observations[self.p1_active_obs].stat_mod[SPD_STAT]\
@@ -154,7 +126,7 @@ class Battle:
             else:
                 # choose randomly
                 return random.randrange(2)
-        elif(self.p1_move.get("priority") > self.p2_move.get("priority")):
+        elif(self.p1_move != None and self.p2_move != None and self.p1_move.get("priority") > self.p2_move.get("priority")):
             # player1 has priority
             return 0
         else:
@@ -217,43 +189,61 @@ class Battle:
         if(self.Priority() == 0):
             # player1 moves first
             # TODO handle battle effects
-            if(self.p1_move.get("sure_hit") != None):
+            reduce_dmg_p1 = 0
+            reduce_dmg_p2 = 0
+            if(self.p1_move_prev != None and self.p1_move_prev.get("next_reduce_dmg") != None):
+                reduce_dmg_p1 = self.p1_move.get("next_reduce_dmg")
+            if(self.p2_move_prev != None and self.p2_move_prev.get("next_reduce_dmg") != None):
+                reduce_dmg_p2 = self.p2_move.get("next_reduce_dmg")
+            if((self.p1_move != None and self.p1_move.get("sure_hit") != None) or (self.p1_move_prev != None \
+                and self.p1_move_prev.get("next_sure_hit") != None)):
                 # if move is damaging
-                if(self.p1_move.get("bp") != None):
+                if(self.p1_move != None and self.p1_move.get("bp") != None):
                     # calculate damage
                     self.observations[self.p2_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
                         self.observations[self.p1_active_obs].stats[ATK_STAT]\
                         , self.observations[self.p2_active_obs].stats[DEF_STAT]\
-                        , self.p1_move.get("bp"))
+                        , self.p1_move.get("bp")) * (1 - reduce_dmg_p2)
             # if not a sure hit, get whether move hits
-            elif(self.p1_move.get("acc") != None and BattleCalc.Hit(self.p1_move.get("acc")\
+            elif(self.p1_move != None and self.p1_move.get("acc") != None and BattleCalc.Hit(self.p1_move.get("acc")\
                 , self.observations[self.p1_active_obs].stats[ACC_STAT]\
                 , self.observations[self.p2_active_obs].stats[EVA_STAT])):
                 # if move hits, calculate damage
                 self.observations[self.p2_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
                     self.observations[self.p1_active_obs].stats[ATK_STAT]\
                     , self.observations[self.p2_active_obs].stats[DEF_STAT]\
-                    , self.p1_move.get("bp"))
+                    , self.p1_move.get("bp")) * (1 - reduce_dmg_p2)
+            if(self.p1_move != None and self.p1_move.get("reduce_dmg") != None):
+                reduce_dmg_p1 = self.p1_move.get("reduce_dmg")
 
             # check to see if opponent was knocked out
             if(self.observations[self.p2_active_obs].stats[HP_STAT] > 0):
-                if(self.p2_move.get("sure_hit") != None):
+                if((self.p2_move != None and self.p2_move.get("sure_hit") != None) or (self.p2_move_prev != None \
+                    and self.p2_move_prev.get("next_sure_hit") != None)):
                     # if move is damaging
-                    if(self.p2_move.get("bp") != None):
+                    if(self.p2_move != None and self.p2_move.get("bp") != None):
                         # calculate damage
                         self.observations[self.p1_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
                             self.observations[self.p2_active_obs].stats[ATK_STAT]\
                             , self.observations[self.p1_active_obs].stats[DEF_STAT]\
-                            , self.p2_move.get("bp"))
+                            , self.p2_move.get("bp")) * (1 - reduce_dmg_p1)
                 # if not a sure hit, get whether move hits
-                elif(self.p2_move.get("acc") != None and BattleCalc.Hit(self.p2_move.get("acc")\
+                elif(self.p2_move != None and self.p2_move.get("acc") != None and BattleCalc.Hit(self.p2_move.get("acc")\
                     , self.observations[self.p2_active_obs].stats[ACC_STAT]\
                     , self.observations[self.p1_active_obs].stats[EVA_STAT])):
-                    # if move hits, calculate damage
-                    self.observations[self.p1_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
-                        self.observations[self.p2_active_obs].stats[ATK_STAT]\
-                        , self.observations[self.p1_active_obs].stats[DEF_STAT]\
-                        , self.p2_move.get("bp"))
+                    # check for additional hit modifiers
+                    if(self.p1_move != None and self.p1_move.get("miss_rate") != None \
+                        and random.randrange(PERCENT) < self.p1_move.get("miss_rate")):
+                        # if move hits, calculate damage
+                        self.observations[self.p1_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
+                            self.observations[self.p2_active_obs].stats[ATK_STAT]\
+                            , self.observations[self.p1_active_obs].stats[DEF_STAT]\
+                            , self.p2_move.get("bp")) * (1 - reduce_dmg_p1)
+                    else:
+                        self.observations[self.p1_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
+                            self.observations[self.p2_active_obs].stats[ATK_STAT]\
+                            , self.observations[self.p1_active_obs].stats[DEF_STAT]\
+                            , self.p2_move.get("bp")) * (1 - reduce_dmg_p1)
                 
                 # check to see if player was knocked out
                 if(self.observations[self.p2_active_obs].stats[HP_STAT] <= 0):
@@ -263,43 +253,61 @@ class Battle:
         else:
             # player2 moves first
             # TODO handle battle effects
-            if(self.p2_move.get("sure_hit") != None):
+            reduce_dmg_p1 = 0
+            reduce_dmg_p2 = 0
+            if(self.p2_move_prev != None and self.p2_move_prev.get("next_reduce_dmg") != None):
+                reduce_dmg_p2 = self.p2_move.get("next_reduce_dmg")
+            if(self.p1_move_prev != None and self.p1_move_prev.get("next_reduce_dmg") != None):
+                reduce_dmg_p1 = self.p1_move.get("next_reduce_dmg")
+            if((self.p2_move != None and self.p2_move.get("sure_hit") != None) or (self.p2_move_prev != None \
+                and self.p2_move_prev.get("next_sure_hit") != None)):
                 # if move is damaging
-                if(self.p2_move.get("bp") != None):
+                if(self.p2_move != None and self.p2_move.get("bp") != None):
                     # calculate damage
                     self.observations[self.p1_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
                         self.observations[self.p2_active_obs].stats[ATK_STAT]\
                         , self.observations[self.p1_active_obs].stats[DEF_STAT]\
-                        , self.p2_move.get("bp"))
+                        , self.p2_move.get("bp")) * (1 - reduce_dmg_p1)
             # if not sure hit, get whether move hits
-            elif(self.p2_move.get("acc") != None and BattleCalc.Hit(self.p2_move.get("acc")\
+            elif(self.p2_move != None and self.p2_move.get("acc") != None and BattleCalc.Hit(self.p2_move.get("acc")\
                 , self.observations[self.p2_active_obs].stats[ACC_STAT]\
                 , self.observations[self.p1_active_obs].stats[EVA_STAT])):
                 # if move hits, calculate damage
                 self.observations[self.p1_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
                     self.observations[self.p2_active_obs].stats[ATK_STAT]\
                     , self.observations[self.p1_active_obs].stats[DEF_STAT]\
-                    , self.p2_move.get("bp"))
+                    , self.p2_move.get("bp")) * (1 - reduce_dmg_p1)
+            if(self.p2_move != None and self.p2_move.get("reduce_dmg") != None):
+                reduce_dmg_p2 = self.p2_move.get("reduce_dmg")
 
             # check to see if player was knocked out
             if(self.observations[self.p1_active_obs].stats[HP_STAT] > 0):
-                if(self.p1_move.get("sure_hit") != None):
+                if((self.p1_move != None and self.p1_move.get("sure_hit") != None) or (self.p1_move_prev != None \
+                    and self.p1_move_prev.get("next_sure_hit") != None)):
                     # if move is damaging
-                    if(self.p1_move.get("bp") != None):
+                    if(self.p1_move != None and self.p1_move.get("bp") != None):
                         # calculate damage
                         self.observations[self.p2_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
                             self.observations[self.p1_active_obs].stats[ATK_STAT]\
                             , self.observations[self.p2_active_obs].stats[DEF_STAT]\
-                            , self.p1_move.get("bp"))
+                            , self.p1_move.get("bp")) * (1 - reduce_dmg_p2)
                 # if not sure hit, get whether move hits
-                elif(self.p1_move.get("acc") != None and BattleCalc.Hit(self.p1_move.get("acc")\
+                elif(self.p1_move != None and self.p1_move.get("acc") != None and BattleCalc.Hit(self.p1_move.get("acc")\
                     , self.observations[self.p1_active_obs].stats[ACC_STAT]\
                     , self.observations[self.p2_active_obs].stats[EVA_STAT])):
-                    # if move hits, calculate damage
-                    self.observations[self.p2_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
-                        self.observations[self.p1_active_obs].stats[ATK_STAT]\
-                        , self.observations[self.p2_active_obs].stats[DEF_STAT]\
-                        , self.p1_move.get("bp"))
+                    # check for additional hit modifiers
+                    if(self.p2_move != None and self.p2_move.get("miss_rate") != None \
+                        and random.randrange(PERCENT) < self.p2_move.get("miss_rate")):
+                        # if move hits, calculate damage
+                        self.observations[self.p2_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
+                            self.observations[self.p1_active_obs].stats[ATK_STAT]\
+                            , self.observations[self.p2_active_obs].stats[DEF_STAT]\
+                            , self.p1_move.get("bp")) * (1 - reduce_dmg_p2)
+                    else:
+                        self.observations[self.p2_active_obs].stats[HP_STAT] -= BattleCalc.Damage(\
+                            self.observations[self.p1_active_obs].stats[ATK_STAT]\
+                            , self.observations[self.p2_active_obs].stats[DEF_STAT]\
+                            , self.p1_move.get("bp")) * (1 - reduce_dmg_p2)
                 
                 # check to see if opponent was knocked out
                 if(self.observations[self.p2_active_obs].stats[HP_STAT] <= 0):
@@ -310,6 +318,10 @@ class Battle:
         # set current move as previous move
         self.p1_move_prev = self.p1_move
         self.p2_move_prev = self.p2_move
+
+        # reset moves to None
+        self.p1_move = None
+        self.p2_move = None
 
     # handles one observation attacking another
     def BattleLoop(self, ai = False):

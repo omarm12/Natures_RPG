@@ -29,6 +29,9 @@
 - *Danielle Dishop* Added Leveling.py, with an automatic calculation of level from exp
 - *Danielle Dishop* moved previous code into the Django backend, and integrated previous tests
 - *Danielle Dishop* added functionality for observations to gain experience base on confirmations from iNaturalist
+- *colin seifer* added some battle effects
+- *colin seifer* added methods to BattleSys.py to call from frontend
+- *colin seifer* added test cases for battle effects
 
 ###### TODO:
 - *colin seifer* implement battle effects
