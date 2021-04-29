@@ -1,0 +1,19 @@
+#observations{
+    padding: 50px;
+    overflow-y: hidden;
+}
+
+#observations .observation-card{
+    margin-left: 10px;
+    margin-right: 10px;
+    margin-bottom: 40px;
+}
+
+#observations .observations-header{
+    padding-bottom: 5px;
+    color: rgb(58, 134, 255, 1);
+    color: rgb(36, 36, 36);
+    margin-top: 20px;
+    margin-left: 15px;
+    margin-bottom: 70px;
+}

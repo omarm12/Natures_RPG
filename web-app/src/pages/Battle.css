@@ -1,0 +1,30 @@
+#battle{
+    padding: 50px;
+}
+
+.battle-button{
+    margin-top: 30px;
+}
+
+.battle-textbox{
+    margin-left: 15px;
+    margin-right: 15px;
+    margin-top: 50px;
+    margin-bottom: 20px;
+    width: 100%;
+}
+
+.observation-battle-image{
+    margin-bottom: 15px;
+}
+
+.startBattleBox{
+    position: relative;
+    margin-left: calc(50% - 140px);
+    top: calc(50% - 74px);
+    width: 280px;
+}
+
+.startBattleButton{
+    margin-bottom: 40px;
+}
