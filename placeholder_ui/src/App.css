@@ -1,0 +1,28 @@
+.Observation {
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+
+}
+
+.Observation:hover {
+    transform: scale(1.05);
+}
+
+.btn {
+    border-style: none;
+    background-color: transparent;
+}
+
+.btn-primary {
+    color: transparent!important;
+    background-color: transparent!important;
+    border-color: transparent!important;
+    background-image: none;
+    box-shadow: inset 0 3px 5px rgba(0,0,0,0)!important;
+}
+
+.card {
+    border: none;
+    border-color: transparent;
+    background-color: transparent;
+}
