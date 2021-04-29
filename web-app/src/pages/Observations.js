@@ -48,7 +48,7 @@ function Observation(props) {
 
 function convertToLarge(url){
   var position = url.search("square");
-  if(position != -1){
+  if(position !== -1){
     return url.substring(0, position) + "large" + url.substring(position + 6);
   } else {
     return url;
@@ -96,10 +96,9 @@ function Observations() {
   // Loaded State
   else {
     var observations = <div></div>;
-    var displayName = "Username";
 
     // Loads sample data into the observations variable if no username is provided
-    if(username == null || items == 0){
+    if(username === null || items === 0){
       observations = sampleObservationList.map((observation) =>
         <Observation
           key={observation.key}
@@ -119,8 +118,7 @@ function Observations() {
           image={convertToLarge(observation.photos[0].url)}
           body={observation.place_guess}
         />
-      ); 
-      displayName = username;
+      );
     }  
 
     return (

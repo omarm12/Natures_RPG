@@ -17,3 +17,14 @@
 .observation-battle-image{
     margin-bottom: 15px;
 }
+
+.startBattleBox{
+    position: relative;
+    margin-left: calc(50% - 140px);
+    top: calc(50% - 74px);
+    width: 280px;
+}
+
+.startBattleButton{
+    margin-bottom: 40px;
+}

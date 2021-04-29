@@ -4,7 +4,7 @@ import ProfileCard from './ProfileCard';
 import { Link } from 'react-router-dom';
 
 //import react pro sidebar components
-import {ProSidebar, Menu, MenuItem, SidebarHeader, SidebarFooter, SidebarContent} from "react-pro-sidebar";
+import {ProSidebar, Menu, MenuItem, SidebarFooter, SidebarContent} from "react-pro-sidebar";
 
 //import icons from react icons
 import { RiSwordLine } from "react-icons/ri";
@@ -41,19 +41,19 @@ const Navbar = () => {
                 <SidebarContent>
                     <Menu iconShape="square">
                         <div className="home-menuItem">
-                        <MenuItem className="home-menuItem" active={window.location.pathname == "/"} onClick={menuItemSelect} icon={<FiHome className="home-menuText"/>}>
+                        <MenuItem className="home-menuItem" active={window.location.pathname === "/"} onClick={menuItemSelect} icon={<FiHome className="home-menuText"/>}>
                             <div className="menu-text">Home</div>
                             <Link to="/" />
                         </MenuItem>
                         </div>
                         <div className="observation-menuItem">
-                        <MenuItem className="observation-menuItem" active={window.location.pathname == "/observations"} onClick={menuItemSelect} icon={<FiCamera className="observation-menuText"/>}>
+                        <MenuItem className="observation-menuItem" active={window.location.pathname === "/observations"} onClick={menuItemSelect} icon={<FiCamera className="observation-menuText"/>}>
                             <div className="menu-text">Observations</div>
                             <Link to="/observations" />
                         </MenuItem>
                         </div>
                         <div className="battle-menuItem">
-                        <MenuItem className="battle-menuItem" active={window.location.pathname == "/battle"} onClick={menuItemSelect} icon={<RiSwordLine className="battle-menuText"/>}>
+                        <MenuItem className="battle-menuItem" active={window.location.pathname === "/battle"} onClick={menuItemSelect} icon={<RiSwordLine className="battle-menuText"/>}>
                             <div className="menu-text">Battle</div>
                             <Link to="/battle" />
                         </MenuItem>
