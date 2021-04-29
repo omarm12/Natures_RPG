@@ -1308,8 +1308,6 @@ class LevelingTestCase(TestCase):
 
 class TestStats(TestCase):
 
-    class TestStats(unittest.TestCase):
-
     # test that moves are imported correctly
     def test_moves(self):
         test_move = Moves.Moves()
@@ -1325,7 +1323,7 @@ class TestStats(TestCase):
         stats = [100, 100, 100, 100, 100, 100]
         moves = ["Nature's Wrath", "Autotomy", "Spine Shield", "Mimesis"]
         obs_type = "Insecta"
-        test_obs = Observation.Observation(obs_type, moves, stats)
+        test_obs = LoadObservation.Observation(obs_type, moves, stats)
         # test that values are non-empty
         self.assertEqual(test_obs.stats[0], 100)
         self.assertEqual(test_obs.moves[0].get("name"), "Nature's Wrath")
@@ -1359,7 +1357,7 @@ class TestStats(TestCase):
         observations = []
         # create list of 6 observations
         for i in range(6):
-            observations.append(Observation.Observation(obs_type, moves, stats))
+            observations.append(LoadObservation.Observation(obs_type, moves, stats))
         # create battle object
         test_battle = BattleSys.Battle(observations)
         # test battle object observations size
@@ -1493,7 +1491,7 @@ class TestStats(TestCase):
         observations = []
         # create new list of observations
         for i in range(6):
-            observations.append(Observation.Observation(obs_type, moves, stats))
+            observations.append(LoadObservation.Observation(obs_type, moves, stats))
         # create battle object
         test_battle = BattleSys.Battle(observations)
 
