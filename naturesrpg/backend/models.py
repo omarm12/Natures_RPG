@@ -7,6 +7,9 @@ class Player(models.Model):
     num_of_obs = models.IntegerField(default=0)
     team = models.JSONField(default=list, null=True)
 
+    def __str__(self):
+        return self.username
+
 class Observation(models.Model):
     owner = models.ForeignKey(Player, on_delete=models.CASCADE)
     obs_id = models.IntegerField(default=0)
@@ -28,3 +31,6 @@ class Observation(models.Model):
     image_link = models.CharField(max_length=100, blank=True)
     quality = models.CharField(max_length=20, default="casual")
     wiki_link = models.CharField(max_length=100, default="https://en.wikipedia.org/wiki/Main_Page")
+
+    def __str__(self):
+        return self.obs_id

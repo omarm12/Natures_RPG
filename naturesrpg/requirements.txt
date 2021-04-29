@@ -11,12 +11,12 @@ djangorestframework==3.12.4
 httplib2==0.19.1
 idna==2.10
 jwcrypto==0.8
-keyring==21.4.0
+keyring>=22.3
 oauth2==1.9.0.post1
 oauthlib==3.1.0
 psycopg2-binary==2.8.6
 pycparser==2.20
-pyinaturalist==0.12.1
+pyinaturalist>=0.13.0.dev245
 pyparsing==2.4.7
 python-dateutil==2.8.1
 python-dotenv==0.17.0
