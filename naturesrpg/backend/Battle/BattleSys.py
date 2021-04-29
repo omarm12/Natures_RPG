@@ -2,7 +2,7 @@
 # author: colin seifer
 # description: handles battles on the backend.
 
-from ..src import Observation
+from . import LoadObservation
 from . import BattleCalc
 import time
 import random
