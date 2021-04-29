@@ -23,7 +23,10 @@ class Battle extends React.Component {
 
   constructor(props){
     super(props);
-    this.state = {action: -2}
+    this.state = {
+      action: -2,
+      inBattle: false
+    }
   }
 
   handleClick(value) {
