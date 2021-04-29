@@ -57,21 +57,22 @@ def ConfirmExpGain(o_id):
         totalConf = obs.get('num_identification_agreements')
 
     # Get the experience and number of previous confirmations from the database
-    observation = Observation.objects.get(obs_id=o_id)
-    xp = observation.total_xp
-    prevConf = observation.num_of_confirmations
+    if Observation.objects.filter(obs_id=o_id).count() == 1:
+        observation = Observation.objects.get(obs_id=o_id)
+        xp = observation.total_xp
+        prevConf = observation.num_of_confirmations
 
-    # Calculate the difference in confirmations and update xp accordingly, then send both numbers to
-    # the database
-    newConf = totalConf - prevConf
-    if (newConf >= 0):
-        xp = xp + (newConf * CONFIRM_EXP)
+        # Calculate the difference in confirmations and update xp accordingly, then send both numbers to
+        # the database
+        newConf = totalConf - prevConf
+        if (newConf >= 0):
+            xp = xp + (newConf * CONFIRM_EXP)
 
-        Observation.objects.filter(obs_id=o_id).update(total_xp=xp, num_of_confirmations=totalConf)
-    else:
-        # If/when we implement logging, output an error message here
-        xp = xp
+            Observation.objects.filter(obs_id=o_id).update(total_xp=xp, num_of_confirmations=totalConf)
+        else:
+            # If/when we implement logging, output an error message here
+            xp = xp
 
-    # Update the observation's level
-    o_level = CalcLevel(xp)
-    Observation.objects.filter(obs_id=o_id).update(level=o_level)
+        # Update the observation's level
+        o_level = CalcLevel(xp)
+        Observation.objects.filter(obs_id=o_id).update(level=o_level)
