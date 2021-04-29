@@ -1253,6 +1253,7 @@ class LevelingTestCase(TestCase):
         o = Observation.objects.get(obs_id=o_id)
         self.assertEqual(o.total_xp, CONFIRM_EXP*confirmations)
         self.assertEqual(o.level, 3)  # 1000 EXP is level 3
+        self.assertEqual(o.num_of_confirmations, 2)
 
         # Remove the observation from the database
         Observation.objects.filter(obs_id=o_id).delete()
@@ -1275,6 +1276,7 @@ class LevelingTestCase(TestCase):
         o = Observation.objects.get(obs_id=o_id)
         self.assertEqual(o.total_xp, 0)
         self.assertEqual(o.level, 1)
+        self.assertEqual(o.num_of_confirmations, 2)
 
         # Remove the observation from the database
         Observation.objects.filter(obs_id=o_id).delete()
@@ -1298,6 +1300,7 @@ class LevelingTestCase(TestCase):
         o = Observation.objects.get(obs_id=o_id)
         self.assertEqual(o.total_xp, 0)
         self.assertEqual(o.level, 1)
+        self.assertEqual(o.num_of_confirmations, 3)
 
         # Remove the observation from the database
         Observation.objects.filter(obs_id=o_id).delete()
@@ -1455,6 +1458,80 @@ class LoadDatabaseTestCase(TestCase):
         u_count = u_results.count()
         self.assertEqual(u_count, 1)
         if u_count == 1:
+            # Test that database loaded correctly
+            user = User.objects.get(inat_user_id=u_id)
+            self.assertEqual(user.username, "neurodoc")
+
+            # Test that the correct number of observations were loaded
+            o_count = Observation.objects.filter(username=user).count()
+            self.assertEqual(o_count, 2)
+
+            # Check that the first observation loaded correctly
+            obs_1 = Observation.objects.filter(obs_id=13713430).count()
+            self.assertEqual(obs_1, 1)
+            if obs_1 == 1:
+                obs_1 = Observation.objects.get(obs_id=13713430)
+                self.assertEqual(obs_1.total_xp, CONFIRM_EXP*2)
+                self.assertEqual(obs_1.level, 3)
+                self.assertEqual(obs_1.num_of_confirmations, 2)
+                # Observation is research grade insect, check attributes
+                self.assertGreaterEqual(obs_1.hp, FLOOR + (QUALITY_MOD*2))
+                self.assertLess(obs_1.hp, CEILING)
+                self.assertGreaterEqual(obs_1.strength, FLOOR + (QUALITY_MOD*2))
+                self.assertLess(obs_1.strength, CEILING)
+                self.assertGreaterEqual(obs_1.evasion, FLOOR + (QUALITY_MOD * 2))
+                self.assertLess(obs_1.evasion, CEILING)
+                self.assertGreaterEqual(obs_1.accuracy, FLOOR + (QUALITY_MOD * 2))
+                self.assertLess(obs_1.accuracy, CEILING)
+                self.assertGreaterEqual(obs_1.speed, round((FLOOR + (QUALITY_MOD * 2)) * INCREASE_MOD))
+                self.assertLess(obs_1.speed, round(CEILING * INCREASE_MOD))
+                self.assertGreaterEqual(obs_1.defense, round((FLOOR + (QUALITY_MOD * 2)) * DECREASE_MOD))
+                self.assertLess(obs_1.defense, round(CEILING * DECREASE_MOD))
+
+            # Check that the second observation loaded correctly
+            obs_1 = Observation.objects.filter(obs_id=13713355).count()
+            self.assertEqual(obs_1, 1)
+            if obs_1 == 1:
+                obs_1 = Observation.objects.get(obs_id=13713355)
+                self.assertEqual(obs_1.total_xp, CONFIRM_EXP * 1)
+                self.assertEqual(obs_1.level, 2)
+                self.assertEqual(obs_1.num_of_confirmations, 1)
+                # Observation is needs_id insect, check attributes
+                self.assertGreaterEqual(obs_1.hp, FLOOR)
+                self.assertLess(obs_1.hp, CEILING)
+                self.assertGreaterEqual(obs_1.strength, FLOOR)
+                self.assertLess(obs_1.strength, CEILING)
+                self.assertGreaterEqual(obs_1.evasion, FLOOR)
+                self.assertLess(obs_1.evasion, CEILING)
+                self.assertGreaterEqual(obs_1.accuracy, FLOOR)
+                self.assertLess(obs_1.accuracy, CEILING)
+                self.assertGreaterEqual(obs_1.speed, round(FLOOR * INCREASE_MOD))
+                self.assertLess(obs_1.speed, round(CEILING * INCREASE_MOD))
+                self.assertGreaterEqual(obs_1.defense, round(FLOOR * DECREASE_MOD))
+                self.assertLess(obs_1.defense, round(CEILING * DECREASE_MOD))
+
+            # Clean up the database
+            Observation.objects.filter(username=user).delete()
+        else:
+            # This is an error of the user, don't need to/can't check observations
+            self.assertEqual(1,0)
+
+        # Clean up the database
+        User.objects.filter(inat_user_id=u_id).delete()
+
+    # Test that LoadDatabase does not load things twice
+    def test_load_database_twice(self):
+        # This user is named neurodoc, and has 2 insect observations at the writing of this test
+        u_id = 1042661
+
+        LoadDatabase(1042661)
+        LoadDatabase(1042661)
+
+        # Check that the user and their observations are in the database
+        u_results = User.objects.filter(inat_user_id=u_id)
+        u_count = u_results.count()
+        self.assertEqual(u_count, 1)
+        if u_count == 1:
             u_results = User.objects.get(inat_user_id=u_id)
             o_results = Observation.objects.filter(username=u_results)
             o_count = Observation.objects.filter(username=u_results).count()
@@ -1462,6 +1539,6 @@ class LoadDatabaseTestCase(TestCase):
             Observation.objects.filter(username=u_results).delete()
         else:
             # This is an error of the user, don't need to/can't check observations
-            self.assertEqual(1,0)
+            self.assertEqual(1, 0)
 
         User.objects.filter(inat_user_id=u_id).delete()
