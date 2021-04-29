@@ -3,6 +3,7 @@
 # description: stores and returns moves
 
 import json
+import os
 
 class Moves:
     def __init__(self):
@@ -11,7 +12,7 @@ class Moves:
     # gets data from moves json by relative path
     def ImportJson(self):
         # open file for reading
-        json_file = open("Natures_RPG/src/moves.json")
+        json_file = open("backend/Battle/moves.json")
         # parse into a dict called moves
         self.moves = json.load(json_file)
         # close file

@@ -2,11 +2,11 @@
 # author: colin seifer
 # description: holds observation data.
 
-from . import TypeAssign
-from . import StatsAssign
+from ..Utils import TypeAssign
+from ..Utils import StatsAssign
 from . import Moves
 
-class Observation:
+class LoadObservation:
     def __init__(self, observation_type, move_names = [], stats = []):
         self.observation_type = observation_type
         self.move_names = []
