@@ -5,9 +5,7 @@
 - node package manager
 
 ## Running Tests
-- *Danielle Dishop* From Linux/Unix terminal, navigate to parent directory of Natures_RPG and run <code>python -m unittest Natures_RPG/test/statTest.py</code>
-- *Colin Seifer* from Linux/Unix terminal, navigate to parent directory of Natures_RPG and run <code>python3 -m Natures_RPG.test.cstest</code>
-- *Colin Seifer* to test battle system, from Linux/Unix terminal, navigate to parent directory of Natures_RPG and run <code>python3 -m Natures_RPG.test.battleTest</code>
+- From the naturesrpg directory, run the command 'manage.py test'
 
 ###### Changelog:
 - *Danielle Dishop* added Stats class to TypeAssign
@@ -29,6 +27,8 @@
 - *Danielle Dishop* added Undefined type stat generation in testing block (Undefined typed objects were already generating stats correctly by default)
 - *Danielle Dishop* implemented better quality scores increasing the floor of the stat generation, including tests
 - *Danielle Dishop* Added Leveling.py, with an automatic calculation of level from exp
+- *Danielle Dishop* moved previous code into the Django backend, and integrated previous tests
+- *Danielle Dishop* added functionality for observations to gain experience base on confirmations from iNaturalist
 
 ###### TODO:
 - *colin seifer* implement battle effects
