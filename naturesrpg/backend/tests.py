@@ -11,6 +11,7 @@ from .models import User, Observation
 from .Utils.TypeAssign import Type
 from .Utils.StatsAssign import FLOOR, CEILING, INCREASE_MOD, DECREASE_MOD, QUALITY_MOD, Stats
 from .Utils.Leveling import LEVEL_BREAKPOINTS, CONFIRM_EXP, CalcLevel, ConfirmExpGain
+from .Utils.LoadDatabase import LoadDatabase
 from .Battle import Moves
 from .Battle import LoadObservation
 from .Battle import BattleCalc
@@ -1440,3 +1441,27 @@ class TestStats(TestCase):
         test_battle.move_choice = 4
         # player 1 should win which is returned as a 0
         self.assertEqual(test_battle.BattleLoop(True), 0)
+
+class LoadDatabaseTestCase(TestCase):
+    # Test loading a user and their observations
+    def test_load_database(self):
+        # This user is named neurodoc, and has 2 insect observations at the writing of this test
+        u_id = 1042661
+
+        LoadDatabase(1042661)
+
+        # Check that the user and their observations are in the database
+        u_results = User.objects.filter(inat_user_id=u_id)
+        u_count = u_results.count()
+        self.assertEqual(u_count, 1)
+        if u_count == 1:
+            u_results = User.objects.get(inat_user_id=u_id)
+            o_results = Observation.objects.filter(username=u_results)
+            o_count = Observation.objects.filter(username=u_results).count()
+            self.assertEqual(o_count, 2)
+            Observation.objects.filter(username=u_results).delete()
+        else:
+            # This is an error of the user, don't need to/can't check observations
+            self.assertEqual(1,0)
+
+        User.objects.filter(inat_user_id=u_id).delete()

@@ -14,7 +14,7 @@ from .Leveling import ConfirmExpGain
 def LoadDatabase(u_id):
     # Check if the user is already in the database
     results = User.objects.filter(inat_user_id=u_id)
-    name = ""
+    user = ""
     if len(results) == 0:
         # request user data from the iNat API and add the user to the database
         user = get_user_by_id(u_id)
@@ -28,7 +28,7 @@ def LoadDatabase(u_id):
         return
 
     else:
-        name = results.username
+        user = results
 
     # Request the user's observations
     observations = get_observations(user_id=u_id)
@@ -49,7 +49,7 @@ def LoadDatabase(u_id):
             stats = stats_obj.AssignStats()
 
             new_o = Observation(
-                username=name,
+                username=user,
                 obs_id=o_id,
                 hp=stats.get("Health"),
                 strength=stats.get("Attack"),
