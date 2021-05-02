@@ -8,9 +8,8 @@ import { Container, Row, Col} from "shards-react";
 import React, { useEffect, useState } from "react";
 import axios from 'axios'
 import './Observations.css';
-import Observations from './components/Observations'
+import Observations from '../components/ObsPopup'
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
-import Sort from './components/SortObs'
 
 // Sample observations for testing
 const sampleObservationList = [
