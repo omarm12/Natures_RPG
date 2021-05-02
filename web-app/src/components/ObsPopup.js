@@ -5,7 +5,7 @@ import {
   } from "shards-react";
 import React from 'react'
 import './ObsPopup.css'
-import closeBtn from './img/close.png'
+import closeBtn from '../image/close.png'
 import { Container, Row, Col} from "shards-react";
 import EduInfo from './eduInfo'
 
