@@ -7,7 +7,7 @@ import {
 import { Container, Row, Col} from "shards-react";
 import React, { useEffect, useState } from "react";
 import axios from 'axios'
-import './App.css';
+import './Observations.css';
 import Observations from './components/Observations'
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import Sort from './components/SortObs'
