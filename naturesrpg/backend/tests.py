@@ -21,6 +21,7 @@ from .Battle import Moves
 from .Battle import LoadObservation
 from .Battle import BattleCalc
 from .Battle import BattleSys
+from .Battle import BattleEffects
 
 client = Client()
 
@@ -1603,23 +1604,84 @@ class TestStats(TestCase):
     # test that battle effects work properly
     def test_battle_effects(self):
         stats = [100, 100, 100, 100, 100, 100]
-        moves = ["Night Vision", "Avoid Detection", "Play Dead", "Develop Tools"]
+        moves = ["Nature's Wrath", "Nature's Beauty", "Hiss", "Develop Tools"]
         obs_type = "Insecta"
         observations = []
+        p1_obs = 0
+        p2_obs = 3
         # create new list of observations
         for i in range(6):
             observations.append(LoadObservation.Observation(obs_type, moves, stats))
-        # create battle object
-        test_battle = BattleSys.Battle(observations)
 
-        # test next sure hit
-        test_battle.p1_active_obs = 0
-        test_battle.p2_active_obs = 3
-        test_battle.p1_move = test_battle.observations[3].moves[0]
-        test_battle.p1_move_prev = test_battle.observations[0].moves[0]
-        test_battle.p1_move = test_battle.observations[0].moves[3]
-        # placeholder until I get opp_dmg set up
-        self.assertTrue(True)
+        # test that additional_effects modifies user stats
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[0], 0)
+        # make sure all stat modifiers were set to 0.2
+        for stat in observations[p1_obs].stat_mod:
+            self.assertAlmostEqual(stat, 0.2, 2)
+        # try to get stats above 1 (not allowed) and test again
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[0], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[0], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[0], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[0], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[0], 0)
+        for stat in observations[p1_obs].stat_mod:
+            self.assertAlmostEqual(stat, 1.0, 2)
+
+        # test opponent stat modifiers
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[0], 1)
+        # make sure all stat modifiers were set to 0.2
+        for stat in observations[p2_obs].stat_mod:
+            self.assertAlmostEqual(stat, 0.2, 2)
+
+        # reset observations
+        for i in range(6):
+            observations[i] = LoadObservation.Observation(obs_type, moves, stats)
+        
+        # test that team stat mods and user_dmg work correctly
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[1], 0)
+        self.assertAlmostEqual(observations[0].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[1].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[2].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[0].stat_mod[2], 0.2, 2)
+        self.assertAlmostEqual(observations[1].stat_mod[2], 0.2, 2)
+        self.assertAlmostEqual(observations[2].stat_mod[2], 0.2, 2)
+        self.assertTrue(observations[0].stats[0] <= 0)
+
+        # test that team stat mods and user_dmg work correctly for opponent
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[1], 1)
+        self.assertAlmostEqual(observations[3].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[4].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[5].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[3].stat_mod[2], 0.2, 2)
+        self.assertAlmostEqual(observations[4].stat_mod[2], 0.2, 2)
+        self.assertAlmostEqual(observations[5].stat_mod[2], 0.2, 2)
+        self.assertTrue(observations[3].stats[0] <= 0)
+
+        # test that lowering opponent's stats works correctly
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 0)
+        for stat in observations[p2_obs].stat_mod:
+            self.assertAlmostEqual(stat, -0.1, 2)
+        # test that stats cannot go below -0.5 * base stat
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 0)
+        for stat in observations[p2_obs].stat_mod:
+            self.assertAlmostEqual(stat, -0.5, 2)
+
+        # test that lowering user's stats works correctly
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 1)
+        for stat in observations[p1_obs].stat_mod:
+            self.assertAlmostEqual(stat, -0.1, 2)
+        # test that stats cannot go below -0.5 * base stat
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 1)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 1)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 1)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 1)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 1)
+        for stat in observations[p1_obs].stat_mod:
+            self.assertAlmostEqual(stat, -0.5, 2)
 
 class LoadDatabaseTestCase(TestCase):
     # Test loading a user and their observations
