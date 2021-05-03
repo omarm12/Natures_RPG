@@ -13,6 +13,10 @@ EVA_STAT = 4
 SPD_STAT = 5
 NUM_OBS = 6
 
+# player is 0 for user or 1 for opponent
+# move is a move object, not a string
+# active obs is an int
+# observations is a list of observation objects
 def additional_effects(observations[], p1_active_obs, p2_active_obs, move, player):
     if(len(observations) != NUM_OBS):
         return
@@ -114,6 +118,12 @@ def additional_effects(observations[], p1_active_obs, p2_active_obs, move, playe
             if(stat < 0.5):
                 stat = 0.5
 
+    # set retreat and revive
+    if(move != None and move.get("no_retreat") != None):
+        observations[active_obs].retreat = 0
+    if(move != None and move.get("revive_with_hp") != None and observations[active_obs].revive != -1):
+        observations[active_obs].revive = move.get("revive_with_hp")
+
     # additional damage and healing effects
     # damage takes effect before healing
     if(move != None and move.get("user_dmg") != None):
@@ -138,29 +148,13 @@ def additional_effects(observations[], p1_active_obs, p2_active_obs, move, playe
     if(move != None and move.get("ko_type") != None):
         if(observations[opp_active_obs].observation_type == move.get("ko_type")):
             observations[opp_active_obs].stats[HP_STAT] = 0
-
-# More battle effects that need to be handled in BattleSys.py
-# not yet implemented
-
-# take effect after move
-#"free_switch":0, - user switches with party member without using a turn – 0 or 1
-#"force_switch":0, - forces opponent to switch with party member 0 or 1
-#"revive_with_hp":0, - user revives after KO with specified health – 0 to 1
-#"learn_opp_move":0 – learn an opponent’s move at random – 0 or 1
-
-# take effect before move
-#"rand_move":0, - uses a move at random – 0 or 1
-#"no_retreat":0, - user cannot retreat – 0 or 1
-#"use_opp_atk":0, - user uses opponent’s attack – 0 or 1
-#"opp_move_lock":0, - locks opponent’s specified move – 0 to 4 (int)
-#"single_move":0, - user can only use a single chosen move – 0 or 1
-#"opp_single_move":0, - opponent can only use a single chosen move – 0 or 1
-
-# take effect during move
-#"next_atk_lock":0, - opponent can’t attack next turn – 0 or 1
-#"ignore_def":0, - user ignores defense modifications on the opponent – 0 or 1
-#"require_opp_contact":0, - opponent must make contact for move to work – 0 or 1
-#"reduce_dmg_type":"", - reduce incoming damage from a specific type - string
-#"require_move":”” – can only use after specified move – string
-#"require_priority":0 – requires user to move first – 0 or 1
-#"require_first_turn":0 – can only use on first turn – 0 or 1
+    
+    # update stats
+    for obs in observations:
+        obs.stats[HP_STAT] = int((1. + obs.stat_mod[HP_STAT]) * obs.base_stats[HP_STAT]) - \
+            (obs.base_stats[HP_STAT] - obs.stats[HP_STAT])
+        obs.stats[ATK_STAT] = int((1. + obs.stat_mod[ATK_STAT]) * obs.base_stats[ATK_STAT])
+        obs.stats[DEF_STAT] = int((1. + obs.stat_mod[DEF_STAT]) * obs.base_stats[DEF_STAT])
+        obs.stats[ACC_STAT] = int((1. + obs.stat_mod[ACC_STAT]) * obs.base_stats[ACC_STAT])
+        obs.stats[EVA_STAT] = int((1. + obs.stat_mod[EVA_STAT]) * obs.base_stats[EVA_STAT])
+        obs.stats[SPD_STAT] = int((1. + obs.stat_mod[SPD_STAT]) * obs.base_stats[SPD_STAT])

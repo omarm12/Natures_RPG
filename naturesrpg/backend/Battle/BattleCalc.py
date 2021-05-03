@@ -31,16 +31,6 @@ def Damage(atk, defense, bp):
     return int((atk / defense) * bp)
 
 # returns difference between modified speed stats
-def Speed(bspeed, mod_speed, bspeed2, mod_speed2):
-    # set stat mod limits
-    if(mod_speed > 1):
-        mod_speed = 1
-    if(mod_speed2 > 1):
-        mod_speed2 = 1
-
-    # modify base speed
-    bspeed += bspeed * mod_speed
-    bspeed2 += bspeed2 * mod_speed2
-
+def Speed(speed, speed2):
     # return diff between bspeed and bspeed2
     return bspeed - bspeed2

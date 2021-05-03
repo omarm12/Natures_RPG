@@ -1470,7 +1470,7 @@ class TestStats(TestCase):
     # test that battle system works properly
     def test_battle_sys(self):
         stats = [100, 100, 100, 100, 100, 100]
-        moves = ["Nature's Wrath", "Autotomy", "Sacrificial Tail", "Mimesis"]
+        moves = ["Flight Feathers", "Autotomy", "Sacrificial Tail", "Mimesis"]
         obs_type = "Insecta"
         observations = []
         # create list of 6 observations
@@ -1484,7 +1484,7 @@ class TestStats(TestCase):
         self.assertEqual(test_battle.observations[0].stats[0], 100)
 
         # test get methods in range
-        self.assertEqual(test_battle.GetFlavorText(1), "The observation invokes nature’s wrath. Raises all stats by 20%.")
+        self.assertEqual(test_battle.GetFlavorText(1), "The observation uses its fight feathers to increase its speed by 60%.")
         self.assertEqual(test_battle.GetBP(4), 60)
         self.assertEqual(test_battle.GetACC(4), 100)
 
@@ -1601,10 +1601,156 @@ class TestStats(TestCase):
         # player 1 should win which is returned as a 0
         self.assertEqual(test_battle.BattleLoop(True), 0)
 
+    # test battle effects handled before attack
+    def test_pre_attack(self):
+        # HP_STAT = 10000 not a mistake. We don't want any KOs in this test.
+        stats = [10000, 100, 100, 100, 100, 100]
+        moves = ["Talon Grab", "Thorns", "Drop", "Extra Membrane"]
+        obs_type = "Insecta"
+        observations = []
+        # create new list of observations
+        for i in range(6):
+            observations.append(LoadObservation.Observation(obs_type, moves, stats))
+        # create battle object
+        test_atk = BattleSys.Battle(observations)
+
+        # test that require contact works
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[1]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[0]
+        test_atk.Attack(False)
+        self.assertTrue(test_atk.observations[test_atk.p2_active_obs].stats[0] == 10000)
+        test_atk.p1_move_prev = None
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[1]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[1]
+        test_atk.Attack(False)
+        self.assertTrue(test_atk.observations[test_atk.p1_active_obs].stats[0] == 9900)
+        self.assertTrue(test_atk.observations[test_atk.p2_active_obs].stats[0] == 9900)
+
+        # test next attack lock
+        test_atk.p1_move_prev = test_atk.observations[test_atk.p1_active_obs].moves[0]
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[1]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[1]
+        test_atk.Attack(False)
+        self.assertTrue(test_atk.observations[test_atk.p1_active_obs].stats[0] == 9900)
+        self.assertTrue(test_atk.observations[test_atk.p2_active_obs].stats[0] == 9800)
+
+        # test previous move requirement
+        test_atk.p1_move_prev = test_atk.observations[test_atk.p1_active_obs].moves[0]
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[2]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[2]
+        test_atk.Attack(False)
+        self.assertTrue(test_atk.observations[test_atk.p1_active_obs].stats[0] == 9900)
+        self.assertTrue(test_atk.observations[test_atk.p2_active_obs].stats[0] == 9700)
+
+        # test first turn requirement
+        test_atk.turn = 1
+        test_atk.p1_move_prev = None
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[3]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertTrue(test_atk.p1_move_prev == test_atk.observations[test_atk.p1_active_obs].moves[3])
+        self.assertTrue(test_atk.p2_move_prev == test_atk.observations[test_atk.p2_active_obs].moves[3])
+        test_atk.turn = 2
+        test_atk.p1_move_prev = None
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[3]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertIsNone(test_atk.p1_move_prev)
+        self.assertIsNone(test_atk.p2_move_prev)
+
+    # test battle effects handled in attack
+    def test_attack(self):
+        # HP_STAT = 10000 not a mistake. We don't want any KOs in this test.
+        stats = [10000, 100, 100, 100, 100, 100]
+        moves = ["Seafood Surprise", "Host Control", "Den Trap", "Extra Membrane"]
+        obs_type = "Insecta"
+        observations = []
+        # create new list of observations
+        for i in range(6):
+            observations.append(LoadObservation.Observation(obs_type, moves, stats))
+        # create battle object
+        test_atk = BattleSys.Battle(observations)
+
+        # test use opponent attack
+        test_atk.p1_move_prev = None
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[1]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertEqual(test_atk.p1_move_prev, test_atk.observations[test_atk.p2_active_obs].moves[3])
+
+        # test require priority
+        test_atk.p1_move_prev = None
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[2]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertIsNone(test_atk.p1_move_prev)
+
+        # test reduce damage
+        test_atk.p1_move_prev = test_atk.observations[test_atk.p1_active_obs].moves[3]
+        test_atk.p2_move_prev = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.p1_move = None
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[2]
+        test_atk.Attack(False)
+        self.assertTrue(test_atk.observations[test_atk.p1_active_obs].stats[0] == 10000)
+
+        # test random move (not guaranteed to pass, but statistically unlikely it will fail)
+        passed = False
+        for i in range(1000):
+            test_atk.p1_move_prev = None
+            test_atk.p2_move_prev = None
+            test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[0]
+            test_atk.p2_move = None
+            test_atk.Attack(True)
+            # in case an observation was knocked out, revive it.
+            for obs in test_atk.observations:
+                if(obs.stats[0] <= 0):
+                    obs.stats[0] = 10000
+            # if p1 used a move, test passed.
+            if(test_atk.p1_move_prev != None):
+                passed = True
+        self.assertTrue(passed)
+            
+
+    # test switch effects handled in attack
+    def test_switch(self):
+        # HP_STAT = 10000 not a mistake. We don't want any KOs in this test.
+        stats = [10000, 100, 100, 100, 100, 100]
+        moves = ["Sacrificial Tail", "Passive Aggression", "Flight Feathers", "Flight Feathers"]
+        obs_type = "Insecta"
+        observations = []
+        # create new list of observations
+        for i in range(6):
+            observations.append(LoadObservation.Observation(obs_type, moves, stats))
+        # create battle object
+        test_atk = BattleSys.Battle(observations)
+
+        # test free switch
+        test_atk.p1_active_obs = 0
+        test_atk.switch = 1
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[0]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertEqual(test_atk.p1_active_obs, 1)
+
+        # test force switch
+        test_atk.p2_active_obs = 3
+        test_atk.switch = 4
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[1]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertEqual(test_atk.p2_active_obs, 4)
+
     # test that battle effects work properly
     def test_battle_effects(self):
         stats = [100, 100, 100, 100, 100, 100]
-        moves = ["Nature's Wrath", "Nature's Beauty", "Hiss", "Develop Tools"]
+        moves = ["Nature's Wrath", "Nature's Beauty", "Hiss", "Deep Roots"]
         obs_type = "Insecta"
         observations = []
         p1_obs = 0
@@ -1618,6 +1764,9 @@ class TestStats(TestCase):
         # make sure all stat modifiers were set to 0.2
         for stat in observations[p1_obs].stat_mod:
             self.assertAlmostEqual(stat, 0.2, 2)
+        # make sure stat modifications occurred properly
+        for stat in observations[p1_obs].stat_mod:
+            self.assertEqual(stat, 120)
         # try to get stats above 1 (not allowed) and test again
         BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[0], 0)
         BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[0], 0)
@@ -1682,6 +1831,14 @@ class TestStats(TestCase):
         BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[2], 1)
         for stat in observations[p1_obs].stat_mod:
             self.assertAlmostEqual(stat, -0.5, 2)
+
+        # test no retreat
+        self.assertEqual(observations[p1_obs].retreat, 1)
+        self.assertEqual(observations[p2_obs].retreat, 1)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[3], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations.moves[3], 1)
+        self.assertEqual(observations[p1_obs].retreat, 0)
+        self.assertEqual(observations[p2_obs].retreat, 0)
 
 class LoadDatabaseTestCase(TestCase):
     # Test loading a user and their observations

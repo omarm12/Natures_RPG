@@ -21,6 +21,7 @@ class LoadObservation:
         self.dot = 0
         self.heal_ot = 0
         self.revive = 0
+        self.retreat = 1
 
     # populate list of moves
     def PopulateMoves(self):
