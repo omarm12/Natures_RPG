@@ -1640,6 +1640,7 @@ class LoadDatabaseTestCase(TestCase):
 
             # Test that the correct number of observations were loaded
             o_count = Observation.objects.filter(owner=user).count()
+            self.assertEqual(user.num_of_obs, 2)
             self.assertEqual(o_count, 2)
 
             # Check that the first observation loaded correctly
@@ -1647,9 +1648,12 @@ class LoadDatabaseTestCase(TestCase):
             self.assertEqual(obs_1, 1)
             if obs_1 == 1:
                 obs_1 = Observation.objects.get(obs_id=13713430)
+                self.assertEqual(obs_1.owner, user)
+                self.assertEqual(obs_1.taxa, "Insecta")
                 self.assertEqual(obs_1.total_xp, CONFIRM_EXP*2)
                 self.assertEqual(obs_1.level, 3)
                 self.assertEqual(obs_1.num_of_confirmations, 2)
+                self.assertEqual(obs_1.quality, "research")
                 # Observation is research grade insect, check attributes
                 self.assertGreaterEqual(obs_1.hp, FLOOR + (QUALITY_MOD*2))
                 self.assertLess(obs_1.hp, CEILING)
@@ -1665,26 +1669,29 @@ class LoadDatabaseTestCase(TestCase):
                 self.assertLess(obs_1.defense, round(CEILING * DECREASE_MOD))
 
             # Check that the second observation loaded correctly
-            obs_1 = Observation.objects.filter(obs_id=13713355).count()
-            self.assertEqual(obs_1, 1)
-            if obs_1 == 1:
-                obs_1 = Observation.objects.get(obs_id=13713355)
-                self.assertEqual(obs_1.total_xp, CONFIRM_EXP * 1)
-                self.assertEqual(obs_1.level, 2)
-                self.assertEqual(obs_1.num_of_confirmations, 1)
+            obs_2 = Observation.objects.filter(obs_id=13713355).count()
+            self.assertEqual(obs_2, 1)
+            if obs_2 == 1:
+                obs_2 = Observation.objects.get(obs_id=13713355)
+                self.assertEqual(obs_2.owner, user)
+                self.assertEqual(obs_2.taxa, "Insecta")
+                self.assertEqual(obs_2.total_xp, CONFIRM_EXP * 1)
+                self.assertEqual(obs_2.level, 2)
+                self.assertEqual(obs_2.num_of_confirmations, 1)
+                self.assertEqual(obs_2.quality, "needs_id")
                 # Observation is needs_id insect, check attributes
-                self.assertGreaterEqual(obs_1.hp, FLOOR)
-                self.assertLess(obs_1.hp, CEILING)
-                self.assertGreaterEqual(obs_1.strength, FLOOR)
-                self.assertLess(obs_1.strength, CEILING)
-                self.assertGreaterEqual(obs_1.evasion, FLOOR)
-                self.assertLess(obs_1.evasion, CEILING)
-                self.assertGreaterEqual(obs_1.accuracy, FLOOR)
-                self.assertLess(obs_1.accuracy, CEILING)
-                self.assertGreaterEqual(obs_1.speed, round(FLOOR * INCREASE_MOD))
-                self.assertLess(obs_1.speed, round(CEILING * INCREASE_MOD))
-                self.assertGreaterEqual(obs_1.defense, round(FLOOR * DECREASE_MOD))
-                self.assertLess(obs_1.defense, round(CEILING * DECREASE_MOD))
+                self.assertGreaterEqual(obs_2.hp, FLOOR)
+                self.assertLess(obs_2.hp, CEILING)
+                self.assertGreaterEqual(obs_2.strength, FLOOR)
+                self.assertLess(obs_2.strength, CEILING)
+                self.assertGreaterEqual(obs_2.evasion, FLOOR)
+                self.assertLess(obs_2.evasion, CEILING)
+                self.assertGreaterEqual(obs_2.accuracy, FLOOR)
+                self.assertLess(obs_2.accuracy, CEILING)
+                self.assertGreaterEqual(obs_2.speed, round(FLOOR * INCREASE_MOD))
+                self.assertLess(obs_2.speed, round(CEILING * INCREASE_MOD))
+                self.assertGreaterEqual(obs_2.defense, round(FLOOR * DECREASE_MOD))
+                self.assertLess(obs_2.defense, round(CEILING * DECREASE_MOD))
 
             # Clean up the database
             Observation.objects.filter(owner=user).delete()

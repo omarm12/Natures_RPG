@@ -19,6 +19,7 @@ def LoadDatabase(u_id):
         # request user data from the iNat API and add the user to the database
         user = get_user_by_id(u_id)
         name = user.get('login')
+        o_count = user.get('observations_count')
         user = Player(iNat_user_id=u_id, username=name)
         user.save()
 
@@ -41,6 +42,11 @@ def LoadDatabase(u_id):
 
         # If an observation isn't in the database, assign it a type and stats, and add it
         if len(results) == 0:
+            # Update the user's number of observations
+            user = Player.objects.get(iNat_user_id=u_id)
+            o_num = user.num_of_obs
+            Player.objects.filter(iNat_user_id=u_id).update(num_of_obs=o_num+1)
+
             taxon = obs.get('taxon')
             o_type_obj = Type(taxon.get('id'), taxon.get('ancestor_ids'))
             o_type = o_type_obj.AssignType()
@@ -51,12 +57,14 @@ def LoadDatabase(u_id):
             new_o = Observation(
                 owner=user,
                 obs_id=o_id,
+                taxa=o_type,
                 hp=stats.get("Health"),
                 strength=stats.get("Attack"),
                 defense=stats.get("Defense"),
                 evasion=stats.get("Evasion"),
                 accuracy=stats.get("Accuracy"),
-                speed=stats.get("Speed")
+                speed=stats.get("Speed"),
+                quality=obs.get('quality_grade')
             )
             new_o.save()
 
