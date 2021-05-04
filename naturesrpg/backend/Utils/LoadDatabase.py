@@ -5,7 +5,7 @@
 
 from pyinaturalist.node_api import get_user_by_id, get_observations
 
-from ..models import User, Observation
+from ..models import Player, Observation
 
 from .TypeAssign import Type
 from .StatsAssign import Stats
@@ -13,13 +13,13 @@ from .Leveling import ConfirmExpGain
 
 def LoadDatabase(u_id):
     # Check if the user is already in the database
-    results = User.objects.filter(inat_user_id=u_id)
+    results = Player.objects.filter(iNat_user_id=u_id)
     user = ""
     if len(results) == 0:
         # request user data from the iNat API and add the user to the database
         user = get_user_by_id(u_id)
         name = user.get('login')
-        user = User(inat_user_id=u_id, username=name)
+        user = Player(iNat_user_id=u_id, username=name)
         user.save()
 
     # If/when logging is implemented, output an error because more than one user in the database
@@ -49,7 +49,7 @@ def LoadDatabase(u_id):
             stats = stats_obj.AssignStats()
 
             new_o = Observation(
-                username=user,
+                owner=user,
                 obs_id=o_id,
                 hp=stats.get("Health"),
                 strength=stats.get("Attack"),
