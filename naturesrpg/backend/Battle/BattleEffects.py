@@ -17,9 +17,10 @@ NUM_OBS = 6
 # move is a move object, not a string
 # active obs is an int
 # observations is a list of observation objects
-def additional_effects(observations[], p1_active_obs, p2_active_obs, move, player):
+def additional_effects(observations, p1_active_obs, p2_active_obs, move, player):
     if(len(observations) != NUM_OBS):
         return
+
     active_obs = p1_active_obs
     opp_active_obs = p2_active_obs
     if(player == 1):
@@ -42,56 +43,56 @@ def additional_effects(observations[], p1_active_obs, p2_active_obs, move, playe
 
     # team stat modifications
     if(move != None and move.get("team_hp_mod") != None):
-        if(player = 0):
+        if(player == 0):
             observations[0].stat_mod[HP_STAT] += move.get("team_hp_mod")
             observations[1].stat_mod[HP_STAT] += move.get("team_hp_mod")
             observations[2].stat_mod[HP_STAT] += move.get("team_hp_mod")
-        elif(player = 1):
+        elif(player == 1):
             observations[3].stat_mod[HP_STAT] += move.get("team_hp_mod")
             observations[4].stat_mod[HP_STAT] += move.get("team_hp_mod")
             observations[5].stat_mod[HP_STAT] += move.get("team_hp_mod")
     if(move != None and move.get("team_atk_mod") != None):
-        if(player = 0):
+        if(player == 0):
             observations[0].stat_mod[ATK_STAT] += move.get("team_atk_mod")
             observations[1].stat_mod[ATK_STAT] += move.get("team_atk_mod")
             observations[2].stat_mod[ATK_STAT] += move.get("team_atk_mod")
-        elif(player = 1):
+        elif(player == 1):
             observations[3].stat_mod[ATK_STAT] += move.get("team_atk_mod")
             observations[4].stat_mod[ATK_STAT] += move.get("team_atk_mod")
             observations[5].stat_mod[ATK_STAT] += move.get("team_atk_mod")
     if(move != None and move.get("team_def_mod") != None):
-        if(player = 0):
+        if(player == 0):
             observations[0].stat_mod[DEF_STAT] += move.get("team_def_mod")
             observations[1].stat_mod[DEF_STAT] += move.get("team_def_mod")
             observations[2].stat_mod[DEF_STAT] += move.get("team_def_mod")
-        elif(player = 1):
+        elif(player == 1):
             observations[3].stat_mod[DEF_STAT] += move.get("team_def_mod")
             observations[4].stat_mod[DEF_STAT] += move.get("team_def_mod")
             observations[5].stat_mod[DEF_STAT] += move.get("team_def_mod")
     if(move != None and move.get("team_acc_mod") != None):
-        if(player = 0):
+        if(player == 0):
             observations[0].stat_mod[ACC_STAT] += move.get("team_acc_mod")
             observations[1].stat_mod[ACC_STAT] += move.get("team_acc_mod")
             observations[2].stat_mod[ACC_STAT] += move.get("team_acc_mod")
-        elif(player = 1):
+        elif(player == 1):
             observations[3].stat_mod[ACC_STAT] += move.get("team_acc_mod")
             observations[4].stat_mod[ACC_STAT] += move.get("team_acc_mod")
             observations[5].stat_mod[ACC_STAT] += move.get("team_acc_mod")
     if(move != None and move.get("team_eva_mod") != None):
-        if(player = 0):
+        if(player == 0):
             observations[0].stat_mod[EVA_STAT] += move.get("team_eva_mod")
             observations[1].stat_mod[EVA_STAT] += move.get("team_eva_mod")
             observations[2].stat_mod[EVA_STAT] += move.get("team_eva_mod")
-        elif(player = 1):
+        elif(player == 1):
             observations[3].stat_mod[EVA_STAT] += move.get("team_eva_mod")
             observations[4].stat_mod[EVA_STAT] += move.get("team_eva_mod")
             observations[5].stat_mod[EVA_STAT] += move.get("team_eva_mod")
     if(move != None and move.get("team_spd_mod") != None):
-        if(player = 0):
+        if(player == 0):
             observations[0].stat_mod[SPD_STAT] += move.get("team_spd_mod")
             observations[1].stat_mod[SPD_STAT] += move.get("team_spd_mod")
             observations[2].stat_mod[SPD_STAT] += move.get("team_spd_mod")
-        elif(player = 1):
+        elif(player == 1):
             observations[3].stat_mod[SPD_STAT] += move.get("team_spd_mod")
             observations[4].stat_mod[SPD_STAT] += move.get("team_spd_mod")
             observations[5].stat_mod[SPD_STAT] += move.get("team_spd_mod")
@@ -112,11 +113,30 @@ def additional_effects(observations[], p1_active_obs, p2_active_obs, move, playe
     
     # set stat mods within acceptible range
     for obs in observations:
-        for stat in obs.stat_mod:
-            if(stat > 1.0):
-                stat = 1.0
-            if(stat < 0.5):
-                stat = 0.5
+        if(obs.stat_mod[HP_STAT] > 1.0):
+            obs.stat_mod[HP_STAT] = 1.0
+        elif(obs.stat_mod[HP_STAT] < -0.5):
+            obs.stat_mod[HP_STAT] = -0.5
+        if(obs.stat_mod[ATK_STAT] > 1.0):
+            obs.stat_mod[ATK_STAT] = 1.0
+        elif(obs.stat_mod[ATK_STAT] < -0.5):
+            obs.stat_mod[ATK_STAT] = -0.5
+        if(obs.stat_mod[DEF_STAT] > 1.0):
+            obs.stat_mod[DEF_STAT] = 1.0
+        elif(obs.stat_mod[DEF_STAT] < -0.5):
+            obs.stat_mod[DEF_STAT] = -0.5
+        if(obs.stat_mod[ACC_STAT] > 1.0):
+            obs.stat_mod[ACC_STAT] = 1.0
+        elif(obs.stat_mod[ACC_STAT] < -0.5):
+            obs.stat_mod[ACC_STAT] = -0.5
+        if(obs.stat_mod[EVA_STAT] > 1.0):
+            obs.stat_mod[EVA_STAT] = 1.0
+        elif(obs.stat_mod[EVA_STAT] < -0.5):
+            obs.stat_mod[EVA_STAT] = -0.5
+        if(obs.stat_mod[SPD_STAT] > 1.0):
+            obs.stat_mod[SPD_STAT] = 1.0
+        elif(obs.stat_mod[SPD_STAT] < -0.5):
+            obs.stat_mod[SPD_STAT] = -0.5
 
     # set retreat and revive
     if(move != None and move.get("no_retreat") != None):
@@ -135,16 +155,14 @@ def additional_effects(observations[], p1_active_obs, p2_active_obs, move, playe
     if(move != None and move.get("heal_ot") != None):
         observations[active_obs].stats[HP_STAT] += move.get("heal_ot") * observations[active_obs].base_stats[HP_STAT]
     if(move != None and move.get("team_heal") != None):
-        if(player = 0):
-            observations[p1_active_obs].stat_mod[HP_STAT] -= move.get("team_heal") * observations[p1_active_obs].base_stats[HP_STAT]
-            observations[0].stat_mod[HP_STAT] += move.get("team_heal") * observations[0].base_stats[HP_STAT]
-            observations[1].stat_mod[HP_STAT] += move.get("team_heal") * observations[1].base_stats[HP_STAT]
-            observations[2].stat_mod[HP_STAT] += move.get("team_heal") * observations[2].base_stats[HP_STAT]
-        elif(player = 1):
-            observations[p2_active_obs].stat_mod[HP_STAT] -= move.get("team_heal") * observations[p2_active_obs].base_stats[HP_STAT]
-            observations[3].stat_mod[HP_STAT] += move.get("team_heal") * observations[3].base_stats[HP_STAT]
-            observations[4].stat_mod[HP_STAT] += move.get("team_heal") * observations[4].base_stats[HP_STAT]
-            observations[5].stat_mod[HP_STAT] += move.get("team_heal") * observations[5].base_stats[HP_STAT]
+        if(player == 0):
+            observations[0].stats[HP_STAT] = int((1. + observations[0].stat_mod[HP_STAT]) * observations[0].base_stats[HP_STAT])
+            observations[1].stats[HP_STAT] = int((1. + observations[1].stat_mod[HP_STAT]) * observations[1].base_stats[HP_STAT])
+            observations[2].stats[HP_STAT] = int((1. + observations[2].stat_mod[HP_STAT]) * observations[2].base_stats[HP_STAT])
+        elif(player == 1):
+            observations[3].stats[HP_STAT] = int((1. + observations[3].stat_mod[HP_STAT]) * observations[3].base_stats[HP_STAT])
+            observations[4].stats[HP_STAT] = int((1. + observations[4].stat_mod[HP_STAT]) * observations[4].base_stats[HP_STAT])
+            observations[5].stats[HP_STAT] = int((1. + observations[5].stat_mod[HP_STAT]) * observations[5].base_stats[HP_STAT])
     if(move != None and move.get("ko_type") != None):
         if(observations[opp_active_obs].observation_type == move.get("ko_type")):
             observations[opp_active_obs].stats[HP_STAT] = 0

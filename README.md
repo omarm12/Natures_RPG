@@ -34,6 +34,7 @@
 - *colin seifer* added test cases for battle effects
 - *colin seifer* finished adding battle effects
 - *colin seifer* finished adding tests for battle effects
+- *colin seifer* finished debugging battle effects
 
 ###### TODO:
 - *colin seifer* work with *Cameron Miller* to implement front end for battle system

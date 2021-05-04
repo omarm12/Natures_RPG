@@ -33,4 +33,4 @@ def Damage(atk, defense, bp):
 # returns difference between modified speed stats
 def Speed(speed, speed2):
     # return diff between bspeed and bspeed2
-    return bspeed - bspeed2
+    return speed - speed2

@@ -221,14 +221,14 @@ class Battle:
             # option to choose random move
             if(self.p1_move != None and self.p1_move.get("rand_move") != None):
                 move_list = Moves.Moves()
-                self.p1_move = move_list.moves[random.randrange(len(move_list.moves))]
+                self.p1_move = move_list.moves["moves"][random.randrange(len(move_list.moves))]
             # option to choose opponent move
             if(self.p1_move != None and self.p1_move.get("use_opp_atk") != None):
                 self.p1_move = self.p2_move
             if(self.p1_move_prev != None and self.p1_move_prev.get("next_reduce_dmg") != None):
-                reduce_dmg_p1 = self.p1_move.get("next_reduce_dmg")
+                reduce_dmg_p1 = self.p1_move_prev.get("next_reduce_dmg")
             if(self.p2_move_prev != None and self.p2_move_prev.get("next_reduce_dmg") != None):
-                reduce_dmg_p2 = self.p2_move.get("next_reduce_dmg")
+                reduce_dmg_p2 = self.p2_move_prev.get("next_reduce_dmg")
             if((self.p1_move != None and self.p1_move.get("sure_hit") != None) or (self.p1_move_prev != None \
                 and self.p1_move_prev.get("next_sure_hit") != None)):
                 # if move is damaging
@@ -272,7 +272,7 @@ class Battle:
                 # option to choose random move
                 if(self.p2_move != None and self.p2_move.get("rand_move") != None):
                     move_list = Moves.Moves()
-                    self.p2_move = move_list.moves[random.randrange(len(move_list.moves))]
+                    self.p2_move = move_list.moves["moves"][random.randrange(len(move_list.moves))]
                 # option to choose opponent move
                 if(self.p2_move != None and self.p2_move.get("use_opp_atk") != None):
                     self.p2_move = self.p1_move
@@ -335,14 +335,14 @@ class Battle:
             # option to choose random move
             if(self.p2_move != None and self.p2_move.get("rand_move") != None):
                 move_list = Moves.Moves()
-                self.p2_move = move_list.moves[random.randrange(len(move_list.moves))]
+                self.p2_move = move_list.moves["moves"][random.randrange(len(move_list.moves))]
             # option to choose opponent move
             if(self.p2_move != None and self.p2_move.get("use_opp_atk") != None):
                 self.p2_move = self.p1_move
             if(self.p2_move_prev != None and self.p2_move_prev.get("next_reduce_dmg") != None):
-                reduce_dmg_p2 = self.p2_move.get("next_reduce_dmg")
+                reduce_dmg_p2 = self.p2_move_prev.get("next_reduce_dmg")
             if(self.p1_move_prev != None and self.p1_move_prev.get("next_reduce_dmg") != None):
-                reduce_dmg_p1 = self.p1_move.get("next_reduce_dmg")
+                reduce_dmg_p1 = self.p1_move_prev.get("next_reduce_dmg")
             if((self.p2_move != None and self.p2_move.get("sure_hit") != None) or (self.p2_move_prev != None \
                 and self.p2_move_prev.get("next_sure_hit") != None)):
                 # if move is damaging
@@ -387,7 +387,7 @@ class Battle:
                 # option to choose random move
                 if(self.p1_move != None and self.p1_move.get("rand_move") != None):
                     move_list = Moves.Moves()
-                    self.p1_move = move_list.moves[random.randrange(len(move_list.moves))]
+                    self.p1_move = move_list.moves["moves"][random.randrange(len(move_list.moves))]
                 # option to choose opponent move
                 if(self.p1_move != None and self.p1_move.get("use_opp_atk") != None):
                     self.p1_move = self.p2_move
