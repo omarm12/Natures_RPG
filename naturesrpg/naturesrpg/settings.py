@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'backend.apps.BackendConfig',
+    'frontend.apps.FrontendConfig',
     'rest_framework',
     'corsheaders',
 ]
@@ -142,7 +143,7 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / 'static/',
     '/frontend/static/',
-    '/backend/static/',
+    '/backend/static/'
 ]
 
 if 'test' in sys.argv:
