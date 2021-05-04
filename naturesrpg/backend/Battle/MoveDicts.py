@@ -151,7 +151,6 @@ fungi_dict = {
     "Polyketides",
     "Host Control",
     "Rapid Spread",
-    "Odd Mutation",
     "Yeast"
 }
 

@@ -34,6 +34,12 @@
 - *colin seifer* added methods to BattleSys.py to call from frontend
 - *colin seifer* added test cases for battle effects
 - *Danielle Dishop* fixed bugs related to database model changes
+- *colin seifer* finished adding battle effects
+- *colin seifer* finished adding tests for battle effects
+- *colin seifer* finished debugging battle effects
+
+###### TODO:
+- *colin seifer* work with *Cameron Miller* to implement front end for battle system
 
 
 ## Django

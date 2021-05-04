@@ -437,11 +437,11 @@
         },
         {
             "name":"Puncture",
-            "flavor_text":"The observation breaks through the opponents defenses with its strong beak. Ignores defense modifications.",
+            "flavor_text":"The observation breaks through the opponents defenses with its strong beak. Reduces opponent's defense by 50%.",
             "priority":0,
-            "bp":60,
+            "bp":40,
             "acc":100,
-            "ignore_def":1
+            "opp_def_mod":-0.5
         },
         {
             "name":"Swoop In",
@@ -459,9 +459,8 @@
         },
         {
             "name":"Seafood Surprise",
-            "flavor_text":"The observation surprises the opponent by using a random move and raising its accuracy by 20%.",
+            "flavor_text":"The observation surprises the opponent by using a random move.",
             "priority":0,
-            "acc_mod":0.2,
             "rand_move":1
         },
         {
@@ -566,10 +565,10 @@
         },
         {
             "name":"Toxic Spores",
-            "flavor_text":"The observation releases spores that prevent the use of the opponent’s first move.",
+            "flavor_text":"The observation releases spores that prevent the use of the opponent’s next move.",
             "priority":0,
             "sure_hit":1,
-            "opp_move1_lock":1
+            "next_atk_lock":1
         },
         {
             "name":"Pathogenic Fungus",
@@ -599,26 +598,20 @@
             "revive_with_hp":0.5
         },
         {
-            "name":"Odd Mutation",
-            "flavor_text":"The observation develops immunity to the opponent’s type. Usable only once.",
-            "priority":0,
-            "sure_hit":1,
-            "reduce_dmg_type":"Opponent"
-        },
-        {
             "name":"Yeast",
-            "flavor_text":"The observation and the opponent each give up all but one move to use until they are knocked out or switch with a party member in waiting.",
+            "flavor_text":"The observation switches with a party member in waiting and prevents the opponent from attacking next turn.",
             "priority":0,
             "sure_hit":1,
-            "single_move":1,
-            "opp_single_move":1
+            "next_atk_lock":1,
+            "free_switch":1
         },
         {
             "name":"Adaptation",
-            "flavor_text":"The observation permanently learns a random move from the opponent.",
+            "flavor_text":"The observation uses a strong attack that will always hit when used consecutively.",
             "priority":0,
-            "sure_hit":1,
-            "learn_opp_move":1
+            "bp":120,
+            "acc":50,
+            "next_sure_hit":1
         }
     ]
 }
