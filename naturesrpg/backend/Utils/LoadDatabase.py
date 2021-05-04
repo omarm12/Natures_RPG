@@ -5,7 +5,7 @@
 
 from pyinaturalist.node_api import get_user_by_id, get_observations
 
-from ..models import User, Observation
+from ..models import Player, Observation
 
 from .TypeAssign import Type
 from .StatsAssign import Stats
@@ -13,13 +13,14 @@ from .Leveling import ConfirmExpGain
 
 def LoadDatabase(u_id):
     # Check if the user is already in the database
-    results = User.objects.filter(inat_user_id=u_id)
+    results = Player.objects.filter(iNat_user_id=u_id)
     user = ""
     if len(results) == 0:
         # request user data from the iNat API and add the user to the database
         user = get_user_by_id(u_id)
         name = user.get('login')
-        user = User(inat_user_id=u_id, username=name)
+        o_count = user.get('observations_count')
+        user = Player(iNat_user_id=u_id, username=name)
         user.save()
 
     # If/when logging is implemented, output an error because more than one user in the database
@@ -41,6 +42,11 @@ def LoadDatabase(u_id):
 
         # If an observation isn't in the database, assign it a type and stats, and add it
         if len(results) == 0:
+            # Update the user's number of observations
+            user = Player.objects.get(iNat_user_id=u_id)
+            o_num = user.num_of_obs
+            Player.objects.filter(iNat_user_id=u_id).update(num_of_obs=o_num+1)
+
             taxon = obs.get('taxon')
             o_type_obj = Type(taxon.get('id'), taxon.get('ancestor_ids'))
             o_type = o_type_obj.AssignType()
@@ -49,14 +55,16 @@ def LoadDatabase(u_id):
             stats = stats_obj.AssignStats()
 
             new_o = Observation(
-                username=user,
+                owner=user,
                 obs_id=o_id,
+                taxa=o_type,
                 hp=stats.get("Health"),
                 strength=stats.get("Attack"),
                 defense=stats.get("Defense"),
                 evasion=stats.get("Evasion"),
                 accuracy=stats.get("Accuracy"),
-                speed=stats.get("Speed")
+                speed=stats.get("Speed"),
+                quality=obs.get('quality_grade')
             )
             new_o.save()
 
