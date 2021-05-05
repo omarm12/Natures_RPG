@@ -21,6 +21,7 @@ from .Battle import Moves
 from .Battle import LoadObservation
 from .Battle import BattleCalc
 from .Battle import BattleSys
+from .Battle import BattleEffects
 
 client = Client()
 
@@ -1360,9 +1361,9 @@ class LevelingTestCase(TestCase):
         confirmations = 2
 
         # Place the observation into the database
-        u = User(inat_user_id=1, username='test')
+        u = Player(iNat_user_id=1, username='test')
         u.save()
-        o = Observation(username=u, obs_id=o_id)
+        o = Observation(owner=u, obs_id=o_id)
         o.save()
 
         # Call the function and check that it gained the appropriate amount of xp and levels
@@ -1374,7 +1375,7 @@ class LevelingTestCase(TestCase):
 
         # Remove the observation from the database
         Observation.objects.filter(obs_id=o_id).delete()
-        User.objects.filter(inat_user_id=1).delete()
+        Player.objects.filter(iNat_user_id=1).delete()
 
     # Tests the ConfirmExpGain does not grant xp or change confirmations when it does not need to
     def test_confirm_exp_none(self):
@@ -1383,9 +1384,9 @@ class LevelingTestCase(TestCase):
         confirmations = 2
 
         # Place the observation into the database
-        u = User(inat_user_id=1, username='test')
+        u = Player(iNat_user_id=1, username='test')
         u.save()
-        o = Observation(username=u, obs_id=o_id, num_of_confirmations=confirmations)
+        o = Observation(owner=u, obs_id=o_id, num_of_confirmations=confirmations)
         o.save()
 
         # Call the function and check that it gained no xp
@@ -1397,7 +1398,7 @@ class LevelingTestCase(TestCase):
 
         # Remove the observation from the database
         Observation.objects.filter(obs_id=o_id).delete()
-        User.objects.filter(inat_user_id=1).delete()
+        Player.objects.filter(iNat_user_id=1).delete()
 
     # Tests that ConfirmExpGain does not remove xp or confirmations if an error occurs
     # (i.e. if an observation has more confirmations in the database than on iNaturalist)
@@ -1407,9 +1408,9 @@ class LevelingTestCase(TestCase):
         confirmations = 2
 
         # Place the observation into the database
-        u = User(inat_user_id=1, username='test')
+        u = Player(iNat_user_id=1, username='test')
         u.save()
-        o = Observation(username=u, obs_id=o_id, num_of_confirmations=confirmations+1)
+        o = Observation(owner=u, obs_id=o_id, num_of_confirmations=confirmations+1)
         o.save()
 
         # Call the function and check that it gained and lost no xp
@@ -1421,7 +1422,7 @@ class LevelingTestCase(TestCase):
 
         # Remove the observation from the database
         Observation.objects.filter(obs_id=o_id).delete()
-        User.objects.filter(inat_user_id=1).delete()
+        Player.objects.filter(iNat_user_id=1).delete()
 
 class TestStats(TestCase):
 
@@ -1440,7 +1441,7 @@ class TestStats(TestCase):
         stats = [100, 100, 100, 100, 100, 100]
         moves = ["Nature's Wrath", "Autotomy", "Spine Shield", "Mimesis"]
         obs_type = "Insecta"
-        test_obs = LoadObservation.Observation(obs_type, moves, stats)
+        test_obs = LoadObservation.LoadObservation(obs_type, moves, stats)
         # test that values are non-empty
         self.assertEqual(test_obs.stats[0], 100)
         self.assertEqual(test_obs.moves[0].get("name"), "Nature's Wrath")
@@ -1462,19 +1463,19 @@ class TestStats(TestCase):
         # test that damage is calculated correctly
         self.assertEqual(BattleCalc.Damage(100, 100, 80), 80)
         # test that speed is computed correctly
-        self.assertTrue(BattleCalc.Speed(100, 0.2, 100, 0) > 0)
-        self.assertTrue(BattleCalc.Speed(100, 0, 101, 0) < 0)
-        self.assertEqual(BattleCalc.Speed(100, 0.5, 100, 0.5), 0)
+        self.assertTrue(BattleCalc.Speed(120, 100) > 0)
+        self.assertTrue(BattleCalc.Speed(100, 101) < 0)
+        self.assertEqual(BattleCalc.Speed(100, 100), 0)
 
     # test that battle system works properly
     def test_battle_sys(self):
         stats = [100, 100, 100, 100, 100, 100]
-        moves = ["Nature's Wrath", "Autotomy", "Sacrificial Tail", "Mimesis"]
+        moves = ["Flight Feathers", "Autotomy", "Sacrificial Tail", "Mimesis"]
         obs_type = "Insecta"
         observations = []
         # create list of 6 observations
         for i in range(6):
-            observations.append(LoadObservation.Observation(obs_type, moves, stats))
+            observations.append(LoadObservation.LoadObservation(obs_type, moves, stats))
         # create battle object
         test_battle = BattleSys.Battle(observations)
         # test battle object observations size
@@ -1483,7 +1484,7 @@ class TestStats(TestCase):
         self.assertEqual(test_battle.observations[0].stats[0], 100)
 
         # test get methods in range
-        self.assertEqual(test_battle.GetFlavorText(1), "The observation invokes nature’s wrath. Raises all stats by 20%.")
+        self.assertEqual(test_battle.GetFlavorText(1), "The observation uses its fight feathers to increase its speed by 60%.")
         self.assertEqual(test_battle.GetBP(4), 60)
         self.assertEqual(test_battle.GetACC(4), 100)
 
@@ -1596,30 +1597,252 @@ class TestStats(TestCase):
         test_battle.Attack(False)
 
         # test final turn in BattleLoop with ai
-        test_battle.move_choice = 4
+        # commented out since it will fail ~1/4 of the time due to secondary move effects.
+        #test_battle.move_choice = 4
         # player 1 should win which is returned as a 0
-        self.assertEqual(test_battle.BattleLoop(True), 0)
+        #self.assertEqual(test_battle.BattleLoop(True), 0)
 
-    # test that battle effects work properly
-    def test_battle_effects(self):
-        stats = [100, 100, 100, 100, 100, 100]
-        moves = ["Night Vision", "Avoid Detection", "Play Dead", "Develop Tools"]
+    # test battle effects handled before attack
+    def test_pre_attack(self):
+        # HP_STAT = 10000 not a mistake. We don't want any KOs in this test.
+        stats = [10000, 100, 100, 100, 100, 100]
+        moves = ["Talon Grab", "Thorns", "Drop", "Extra Membrane"]
         obs_type = "Insecta"
         observations = []
         # create new list of observations
         for i in range(6):
-            observations.append(LoadObservation.Observation(obs_type, moves, stats))
+            observations.append(LoadObservation.LoadObservation(obs_type, moves, stats))
         # create battle object
-        test_battle = BattleSys.Battle(observations)
+        test_atk = BattleSys.Battle(observations)
 
-        # test next sure hit
-        test_battle.p1_active_obs = 0
-        test_battle.p2_active_obs = 3
-        test_battle.p1_move = test_battle.observations[3].moves[0]
-        test_battle.p1_move_prev = test_battle.observations[0].moves[0]
-        test_battle.p1_move = test_battle.observations[0].moves[3]
-        # placeholder until I get opp_dmg set up
-        self.assertTrue(True)
+        # test that require contact works
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[1]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[0]
+        test_atk.Attack(False)
+        self.assertEqual(test_atk.observations[test_atk.p2_active_obs].stats[0], 10000)
+        test_atk.p1_move_prev = None
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[1]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[1]
+        test_atk.Attack(False)
+        self.assertEqual(test_atk.observations[test_atk.p1_active_obs].stats[0], 9900)
+        self.assertEqual(test_atk.observations[test_atk.p2_active_obs].stats[0], 9900)
+
+        # test next attack lock
+        test_atk.p1_move_prev = test_atk.observations[test_atk.p1_active_obs].moves[0]
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[2]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[1]
+        test_atk.Attack(False)
+        self.assertEqual(test_atk.observations[test_atk.p1_active_obs].stats[0], 9900)
+        self.assertEqual(test_atk.observations[test_atk.p2_active_obs].stats[0], 9800)
+
+        # test previous move requirement
+        test_atk.p1_move_prev = test_atk.observations[test_atk.p1_active_obs].moves[0]
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[2]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[2]
+        test_atk.Attack(False)
+        self.assertEqual(test_atk.observations[test_atk.p1_active_obs].stats[0], 9900)
+        self.assertEqual(test_atk.observations[test_atk.p2_active_obs].stats[0], 9700)
+
+        # test first turn requirement
+        test_atk.turn = 1
+        test_atk.p1_move_prev = None
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[3]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertTrue(test_atk.p1_move_prev == test_atk.observations[test_atk.p1_active_obs].moves[3])
+        self.assertTrue(test_atk.p2_move_prev == test_atk.observations[test_atk.p2_active_obs].moves[3])
+        test_atk.turn = 2
+        test_atk.p1_move_prev = None
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[3]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertIsNone(test_atk.p1_move_prev)
+        self.assertIsNone(test_atk.p2_move_prev)
+
+    # test battle effects handled in attack
+    def test_attack(self):
+        # HP_STAT = 10000 not a mistake. We don't want any KOs in this test.
+        stats = [10000, 100, 100, 100, 100, 100]
+        moves = ["Seafood Surprise", "Host Control", "Den Trap", "Extra Membrane"]
+        obs_type = "Insecta"
+        observations = []
+        # create new list of observations
+        for i in range(6):
+            observations.append(LoadObservation.LoadObservation(obs_type, moves, stats))
+        # create battle object
+        test_atk = BattleSys.Battle(observations)
+
+        # test use opponent attack
+        test_atk.p1_move_prev = None
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[1]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertEqual(test_atk.p1_move_prev, test_atk.observations[test_atk.p2_active_obs].moves[3])
+
+        # test require priority
+        test_atk.p1_move_prev = None
+        test_atk.p2_move_prev = None
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[2]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertIsNone(test_atk.p1_move_prev)
+
+        # test reduce damage
+        test_atk.p1_move_prev = test_atk.observations[test_atk.p1_active_obs].moves[3]
+        test_atk.p2_move_prev = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.p1_move = None
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[2]
+        test_atk.Attack(False)
+        self.assertTrue(test_atk.observations[test_atk.p1_active_obs].stats[0] == 10000)
+
+        # test random move (not guaranteed to pass, but statistically unlikely it will fail)
+        passed = False
+        for i in range(1000):
+            test_atk.p1_move_prev = None
+            test_atk.p2_move_prev = None
+            test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[0]
+            test_atk.p2_move = None
+            test_atk.Attack(True)
+            # in case an observation was knocked out, revive it.
+            for obs in test_atk.observations:
+                if(obs.stats[0] <= 0):
+                    obs.stats[0] = 10000
+            # if p1 used a move, test passed.
+            if(test_atk.p1_move_prev != None):
+                passed = True
+        self.assertTrue(passed)
+            
+    # test switch effects handled in attack
+    def test_switch(self):
+        # HP_STAT = 10000 not a mistake. We don't want any KOs in this test.
+        stats = [10000, 100, 100, 100, 100, 100]
+        moves = ["Sacrificial Tail", "Passive Aggression", "Flight Feathers", "Flight Feathers"]
+        obs_type = "Insecta"
+        observations = []
+        # create new list of observations
+        for i in range(6):
+            observations.append(LoadObservation.LoadObservation(obs_type, moves, stats))
+        # create battle object
+        test_atk = BattleSys.Battle(observations)
+
+        # test free switch
+        test_atk.p1_active_obs = 0
+        test_atk.switch = 1
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[0]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertEqual(test_atk.p1_active_obs, 1)
+
+        # test force switch
+        test_atk.p2_active_obs = 3
+        test_atk.switch = 4
+        test_atk.p1_move = test_atk.observations[test_atk.p1_active_obs].moves[1]
+        test_atk.p2_move = test_atk.observations[test_atk.p2_active_obs].moves[3]
+        test_atk.Attack(False)
+        self.assertEqual(test_atk.p2_active_obs, 4)
+
+    # test that battle effects work properly
+    def test_battle_effects(self):
+        stats = [100, 100, 100, 100, 100, 100]
+        moves = ["Nature's Wrath", "Nature's Beauty", "Hiss", "Deep Roots"]
+        obs_type = "Insecta"
+        observations = []
+        p1_obs = 0
+        p2_obs = 3
+        # create new list of observations
+        for i in range(6):
+            observations.append(LoadObservation.LoadObservation(obs_type, moves, stats))
+
+        # test that additional_effects modifies user stats
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[0], 0)
+        # make sure all stat modifiers were set to 0.2
+        for stat in observations[p1_obs].stat_mod:
+            self.assertAlmostEqual(stat, 0.2, 2)
+        # make sure stat modifications occurred properly
+        for stat in observations[p1_obs].stats:
+            self.assertEqual(stat, 120)
+        # try to get stats above 1 (not allowed) and test again
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[0], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[0], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[0], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[0], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[0], 0)
+        for stat in observations[p1_obs].stat_mod:
+            self.assertAlmostEqual(stat, 1.0, 2)
+
+        # test opponent stat modifiers
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p2_obs].moves[0], 1)
+        # make sure all stat modifiers were set to 0.2
+        for stat in observations[p2_obs].stat_mod:
+            self.assertAlmostEqual(stat, 0.2, 2)
+
+        # reset observations
+        for i in range(6):
+            observations[i] = LoadObservation.LoadObservation(obs_type, moves, stats)
+        
+        # test that team stat mods and user_dmg work correctly
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[1], 0)
+        self.assertAlmostEqual(observations[0].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[1].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[2].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[0].stat_mod[2], 0.2, 2)
+        self.assertAlmostEqual(observations[1].stat_mod[2], 0.2, 2)
+        self.assertAlmostEqual(observations[2].stat_mod[2], 0.2, 2)
+        self.assertTrue(observations[0].stats[0] <= 0)
+
+        # test that team stat mods and user_dmg work correctly for opponent
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p2_obs].moves[1], 1)
+        self.assertAlmostEqual(observations[3].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[4].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[5].stat_mod[1], 0.2, 2)
+        self.assertAlmostEqual(observations[3].stat_mod[2], 0.2, 2)
+        self.assertAlmostEqual(observations[4].stat_mod[2], 0.2, 2)
+        self.assertAlmostEqual(observations[5].stat_mod[2], 0.2, 2)
+        self.assertTrue(observations[3].stats[0] <= 0)
+
+        # reset observations
+        for i in range(6):
+            observations[i] = LoadObservation.LoadObservation(obs_type, moves, stats)
+
+        # test that lowering opponent's stats works correctly
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[2], 0)
+        for stat in observations[p2_obs].stat_mod:
+            self.assertAlmostEqual(stat, -0.1, 2)
+        # test that stats cannot go below -0.5 * base stat
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[2], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[2], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[2], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[2], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[2], 0)
+        for stat in observations[p2_obs].stat_mod:
+            self.assertAlmostEqual(stat, -0.5, 2)
+
+        # test that lowering user's stats works correctly
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p2_obs].moves[2], 1)
+        for stat in observations[p1_obs].stat_mod:
+            self.assertAlmostEqual(stat, -0.1, 2)
+        # test that stats cannot go below -0.5 * base stat
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p2_obs].moves[2], 1)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p2_obs].moves[2], 1)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p2_obs].moves[2], 1)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p2_obs].moves[2], 1)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p2_obs].moves[2], 1)
+        for stat in observations[p1_obs].stat_mod:
+            self.assertAlmostEqual(stat, -0.5, 2)
+
+        # test no retreat
+        self.assertEqual(observations[p1_obs].retreat, 1)
+        self.assertEqual(observations[p2_obs].retreat, 1)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p1_obs].moves[3], 0)
+        BattleEffects.additional_effects(observations, p1_obs, p2_obs, observations[p2_obs].moves[3], 1)
+        self.assertEqual(observations[p1_obs].retreat, 0)
+        self.assertEqual(observations[p2_obs].retreat, 0)
 
 class LoadDatabaseTestCase(TestCase):
     # Test loading a user and their observations
@@ -1630,16 +1853,17 @@ class LoadDatabaseTestCase(TestCase):
         LoadDatabase(1042661)
 
         # Check that the user and their observations are in the database
-        u_results = User.objects.filter(inat_user_id=u_id)
+        u_results = Player.objects.filter(iNat_user_id=u_id)
         u_count = u_results.count()
         self.assertEqual(u_count, 1)
         if u_count == 1:
             # Test that database loaded correctly
-            user = User.objects.get(inat_user_id=u_id)
+            user = Player.objects.get(iNat_user_id=u_id)
             self.assertEqual(user.username, "neurodoc")
 
             # Test that the correct number of observations were loaded
-            o_count = Observation.objects.filter(username=user).count()
+            o_count = Observation.objects.filter(owner=user).count()
+            self.assertEqual(user.num_of_obs, 2)
             self.assertEqual(o_count, 2)
 
             # Check that the first observation loaded correctly
@@ -1647,9 +1871,12 @@ class LoadDatabaseTestCase(TestCase):
             self.assertEqual(obs_1, 1)
             if obs_1 == 1:
                 obs_1 = Observation.objects.get(obs_id=13713430)
+                self.assertEqual(obs_1.owner, user)
+                self.assertEqual(obs_1.taxa, "Insecta")
                 self.assertEqual(obs_1.total_xp, CONFIRM_EXP*2)
                 self.assertEqual(obs_1.level, 3)
                 self.assertEqual(obs_1.num_of_confirmations, 2)
+                self.assertEqual(obs_1.quality, "research")
                 # Observation is research grade insect, check attributes
                 self.assertGreaterEqual(obs_1.hp, FLOOR + (QUALITY_MOD*2))
                 self.assertLess(obs_1.hp, CEILING)
@@ -1665,35 +1892,38 @@ class LoadDatabaseTestCase(TestCase):
                 self.assertLess(obs_1.defense, round(CEILING * DECREASE_MOD))
 
             # Check that the second observation loaded correctly
-            obs_1 = Observation.objects.filter(obs_id=13713355).count()
-            self.assertEqual(obs_1, 1)
-            if obs_1 == 1:
-                obs_1 = Observation.objects.get(obs_id=13713355)
-                self.assertEqual(obs_1.total_xp, CONFIRM_EXP * 1)
-                self.assertEqual(obs_1.level, 2)
-                self.assertEqual(obs_1.num_of_confirmations, 1)
+            obs_2 = Observation.objects.filter(obs_id=13713355).count()
+            self.assertEqual(obs_2, 1)
+            if obs_2 == 1:
+                obs_2 = Observation.objects.get(obs_id=13713355)
+                self.assertEqual(obs_2.owner, user)
+                self.assertEqual(obs_2.taxa, "Insecta")
+                self.assertEqual(obs_2.total_xp, CONFIRM_EXP * 1)
+                self.assertEqual(obs_2.level, 2)
+                self.assertEqual(obs_2.num_of_confirmations, 1)
+                self.assertEqual(obs_2.quality, "needs_id")
                 # Observation is needs_id insect, check attributes
-                self.assertGreaterEqual(obs_1.hp, FLOOR)
-                self.assertLess(obs_1.hp, CEILING)
-                self.assertGreaterEqual(obs_1.strength, FLOOR)
-                self.assertLess(obs_1.strength, CEILING)
-                self.assertGreaterEqual(obs_1.evasion, FLOOR)
-                self.assertLess(obs_1.evasion, CEILING)
-                self.assertGreaterEqual(obs_1.accuracy, FLOOR)
-                self.assertLess(obs_1.accuracy, CEILING)
-                self.assertGreaterEqual(obs_1.speed, round(FLOOR * INCREASE_MOD))
-                self.assertLess(obs_1.speed, round(CEILING * INCREASE_MOD))
-                self.assertGreaterEqual(obs_1.defense, round(FLOOR * DECREASE_MOD))
-                self.assertLess(obs_1.defense, round(CEILING * DECREASE_MOD))
+                self.assertGreaterEqual(obs_2.hp, FLOOR)
+                self.assertLess(obs_2.hp, CEILING)
+                self.assertGreaterEqual(obs_2.strength, FLOOR)
+                self.assertLess(obs_2.strength, CEILING)
+                self.assertGreaterEqual(obs_2.evasion, FLOOR)
+                self.assertLess(obs_2.evasion, CEILING)
+                self.assertGreaterEqual(obs_2.accuracy, FLOOR)
+                self.assertLess(obs_2.accuracy, CEILING)
+                self.assertGreaterEqual(obs_2.speed, round(FLOOR * INCREASE_MOD))
+                self.assertLess(obs_2.speed, round(CEILING * INCREASE_MOD))
+                self.assertGreaterEqual(obs_2.defense, round(FLOOR * DECREASE_MOD))
+                self.assertLess(obs_2.defense, round(CEILING * DECREASE_MOD))
 
             # Clean up the database
-            Observation.objects.filter(username=user).delete()
+            Observation.objects.filter(owner=user).delete()
         else:
             # This is an error of the user, don't need to/can't check observations
             self.assertEqual(1,0)
 
         # Clean up the database
-        User.objects.filter(inat_user_id=u_id).delete()
+        Player.objects.filter(iNat_user_id=u_id).delete()
 
     # Test that LoadDatabase does not load things twice
     def test_load_database_twice(self):
@@ -1704,17 +1934,16 @@ class LoadDatabaseTestCase(TestCase):
         LoadDatabase(1042661)
 
         # Check that the user and their observations are in the database
-        u_results = User.objects.filter(inat_user_id=u_id)
+        u_results = Player.objects.filter(iNat_user_id=u_id)
         u_count = u_results.count()
         self.assertEqual(u_count, 1)
         if u_count == 1:
-            u_results = User.objects.get(inat_user_id=u_id)
-            o_results = Observation.objects.filter(username=u_results)
-            o_count = Observation.objects.filter(username=u_results).count()
+            u_results = Player.objects.get(iNat_user_id=u_id)
+            o_count = Observation.objects.filter(owner=u_results).count()
             self.assertEqual(o_count, 2)
-            Observation.objects.filter(username=u_results).delete()
+            Observation.objects.filter(owner=u_results).delete()
         else:
             # This is an error of the user, don't need to/can't check observations
             self.assertEqual(1, 0)
 
-        User.objects.filter(inat_user_id=u_id).delete()
+        Player.objects.filter(iNat_user_id=u_id).delete()

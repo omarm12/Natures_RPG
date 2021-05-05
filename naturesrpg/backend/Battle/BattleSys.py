@@ -4,6 +4,8 @@
 
 from . import LoadObservation
 from . import BattleCalc
+from . import Moves
+from . import BattleEffects
 import time
 import random
 
@@ -112,15 +114,11 @@ class Battle:
         if(self.p1_move != None and self.p2_move != None and self.p1_move.get("priority") == self.p2_move.get("priority")):
             # choose by speed
             if(BattleCalc.Speed(self.observations[self.p1_active_obs].stats[SPD_STAT]\
-                , self.observations[self.p1_active_obs].stat_mod[SPD_STAT]\
-                , self.observations[self.p2_active_obs].stats[SPD_STAT]\
-                , self.observations[self.p2_active_obs].stat_mod[SPD_STAT] > 0)):
+                , self.observations[self.p2_active_obs].stats[SPD_STAT]) > 0):
                 # player1 has priority
                 return 0
             elif(BattleCalc.Speed(self.observations[self.p1_active_obs].stats[SPD_STAT]\
-                , self.observations[self.p1_active_obs].stat_mod[SPD_STAT]\
-                , self.observations[self.p2_active_obs].stats[SPD_STAT]\
-                , self.observations[self.p2_active_obs].stat_mod[SPD_STAT] < 0)):
+                , self.observations[self.p2_active_obs].stats[SPD_STAT]) < 0):
                 # player2 has priority
                 return 1
             else:
@@ -185,16 +183,52 @@ class Battle:
 
     # performs attacks
     def Attack(self, ai):
+        # resolve move lock from prev turn
+        if(self.p1_move_prev != None and self.p1_move_prev.get("next_atk_lock") != None):
+            self.p2_move = None
+        if(self.p2_move_prev != None and self.p2_move_prev.get("next_atk_lock") != None):
+            self.p1_move = None
+        # resolve contact requirement
+        if(self.p1_move != None and self.p1_move.get("require_opp_contact") != None):
+            if((self.p2_move != None and self.p2_move.get("bp") == None) or self.p2_move == None):
+                self.p1_move = None
+        if(self.p2_move != None and self.p2_move.get("require_opp_contact") != None):
+            if((self.p1_move != None and self.p1_move.get("bp") == None) or self.p1_move == None):
+                self.p2_move = None
+        # resolve previous move requirement
+        if(self.p1_move != None and self.p1_move.get("require_move") != None):
+            if((self.p1_move_prev != None and self.p1_move.get("require_move") != self.p1_move_prev.get("name")) \
+                or self.p1_move_prev == None):
+                self.p1_move = None
+        if(self.p2_move != None and self.p2_move.get("require_move") != None):
+            if((self.p2_move_prev != None and self.p2_move.get("require_move") != self.p2_move_prev.get("name")) \
+                or self.p2_move_prev == None):
+                self.p2_move = None
+        # resolve first turn requirement
+        if(self.p1_move != None and self.p1_move.get("require_first_turn") != None and self.turn > 1):
+            self.p1_move = None
+        if(self.p2_move != None and self.p2_move.get("require_first_turn") != None and self.turn > 1):
+            self.p2_move = None
+
         # check priority
         if(self.Priority() == 0):
             # player1 moves first
-            # TODO handle battle effects
             reduce_dmg_p1 = 0
             reduce_dmg_p2 = 0
+            # resolve priority requirement
+            if(self.p2_move != None and self.p2_move.get("require_priority") != None):
+                self.p2_move = None
+            # option to choose random move
+            if(self.p1_move != None and self.p1_move.get("rand_move") != None):
+                move_list = Moves.Moves()
+                self.p1_move = move_list.moves["moves"][random.randrange(len(move_list.moves))]
+            # option to choose opponent move
+            if(self.p1_move != None and self.p1_move.get("use_opp_atk") != None):
+                self.p1_move = self.p2_move
             if(self.p1_move_prev != None and self.p1_move_prev.get("next_reduce_dmg") != None):
-                reduce_dmg_p1 = self.p1_move.get("next_reduce_dmg")
+                reduce_dmg_p1 = self.p1_move_prev.get("next_reduce_dmg")
             if(self.p2_move_prev != None and self.p2_move_prev.get("next_reduce_dmg") != None):
-                reduce_dmg_p2 = self.p2_move.get("next_reduce_dmg")
+                reduce_dmg_p2 = self.p2_move_prev.get("next_reduce_dmg")
             if((self.p1_move != None and self.p1_move.get("sure_hit") != None) or (self.p1_move_prev != None \
                 and self.p1_move_prev.get("next_sure_hit") != None)):
                 # if move is damaging
@@ -213,11 +247,35 @@ class Battle:
                     self.observations[self.p1_active_obs].stats[ATK_STAT]\
                     , self.observations[self.p2_active_obs].stats[DEF_STAT]\
                     , self.p1_move.get("bp")) * (1 - reduce_dmg_p2)
+
+            # apply additional battle effects
+            BattleEffects.additional_effects(self.observations, self.p1_active_obs, self.p2_active_obs, self.p1_move, 0)
+            
+            # check for free switch
+            if(self.p1_move != None and self.p1_move.get("free_switch") != None):
+                self.PlayerSwitch()
+            # check for force switch
+            if(self.p1_move != None and self.p1_move.get("force_switch") != None):
+                self.OpponentSwitch(ai)
+                self.p2_move = None
             if(self.p1_move != None and self.p1_move.get("reduce_dmg") != None):
                 reduce_dmg_p1 = self.p1_move.get("reduce_dmg")
 
+            # revive opponent if they have a revive value
+            if(self.observations[self.p2_active_obs].stats[HP_STAT] <= 0):
+                self.observations[self.p2_active_obs].stats[HP_STAT] = self.observations[self.p2_active_obs].revive * \
+                    self.observations[self.p2_active_obs].base_stats[HP_STAT]
+                self.observations[self.p2_active_obs].revive = -1
+
             # check to see if opponent was knocked out
             if(self.observations[self.p2_active_obs].stats[HP_STAT] > 0):
+                # option to choose random move
+                if(self.p2_move != None and self.p2_move.get("rand_move") != None):
+                    move_list = Moves.Moves()
+                    self.p2_move = move_list.moves["moves"][random.randrange(len(move_list.moves))]
+                # option to choose opponent move
+                if(self.p2_move != None and self.p2_move.get("use_opp_atk") != None):
+                    self.p2_move = self.p1_move
                 if((self.p2_move != None and self.p2_move.get("sure_hit") != None) or (self.p2_move_prev != None \
                     and self.p2_move_prev.get("next_sure_hit") != None)):
                     # if move is damaging
@@ -244,6 +302,23 @@ class Battle:
                             self.observations[self.p2_active_obs].stats[ATK_STAT]\
                             , self.observations[self.p1_active_obs].stats[DEF_STAT]\
                             , self.p2_move.get("bp")) * (1 - reduce_dmg_p1)
+
+                # apply additional battle effects
+                BattleEffects.additional_effects(self.observations, self.p1_active_obs, self.p2_active_obs, self.p2_move, 1)
+
+                # check for free switch
+                if(self.p2_move != None and self.p2_move.get("free_switch") != None):
+                    self.OpponentSwitch(ai)
+                # check for force switch
+                if(self.p2_move != None and self.p2_move.get("force_switch") != None):
+                    self.PlayerSwitch()
+                    self.p1_move = None
+
+                # revive user if they have a revive value
+                if(self.observations[self.p1_active_obs].stats[HP_STAT] <= 0):
+                    self.observations[self.p1_active_obs].stats[HP_STAT] = self.observations[self.p1_active_obs].revive * \
+                        self.observations[self.p1_active_obs].base_stats[HP_STAT]
+                    self.observations[self.p1_active_obs].revive = -1
                 
                 # check to see if player was knocked out
                 if(self.observations[self.p2_active_obs].stats[HP_STAT] <= 0):
@@ -252,13 +327,22 @@ class Battle:
                 self.OpponentSwitch(ai)
         else:
             # player2 moves first
-            # TODO handle battle effects
             reduce_dmg_p1 = 0
             reduce_dmg_p2 = 0
+            # resolve priority requirement
+            if(self.p1_move != None and self.p1_move.get("require_priority") != None):
+                self.p1_move = None
+            # option to choose random move
+            if(self.p2_move != None and self.p2_move.get("rand_move") != None):
+                move_list = Moves.Moves()
+                self.p2_move = move_list.moves["moves"][random.randrange(len(move_list.moves))]
+            # option to choose opponent move
+            if(self.p2_move != None and self.p2_move.get("use_opp_atk") != None):
+                self.p2_move = self.p1_move
             if(self.p2_move_prev != None and self.p2_move_prev.get("next_reduce_dmg") != None):
-                reduce_dmg_p2 = self.p2_move.get("next_reduce_dmg")
+                reduce_dmg_p2 = self.p2_move_prev.get("next_reduce_dmg")
             if(self.p1_move_prev != None and self.p1_move_prev.get("next_reduce_dmg") != None):
-                reduce_dmg_p1 = self.p1_move.get("next_reduce_dmg")
+                reduce_dmg_p1 = self.p1_move_prev.get("next_reduce_dmg")
             if((self.p2_move != None and self.p2_move.get("sure_hit") != None) or (self.p2_move_prev != None \
                 and self.p2_move_prev.get("next_sure_hit") != None)):
                 # if move is damaging
@@ -277,11 +361,36 @@ class Battle:
                     self.observations[self.p2_active_obs].stats[ATK_STAT]\
                     , self.observations[self.p1_active_obs].stats[DEF_STAT]\
                     , self.p2_move.get("bp")) * (1 - reduce_dmg_p1)
+
+            # apply additional battle effects
+            BattleEffects.additional_effects(self.observations, self.p1_active_obs, self.p2_active_obs, self.p2_move, 1)
+
+            # check for free switch
+            if(self.p2_move != None and self.p2_move.get("free_switch") != None):
+                self.OpponentSwitch(ai)
             if(self.p2_move != None and self.p2_move.get("reduce_dmg") != None):
                 reduce_dmg_p2 = self.p2_move.get("reduce_dmg")
+            # check for force switch
+            if(self.p2_move != None and self.p2_move.get("force_switch") != None):
+                self.PlayerSwitch()
+                self.p1_move = None
+
+            # revive user if they have a revive value
+            if(self.observations[self.p1_active_obs].stats[HP_STAT] <= 0):
+                self.observations[self.p1_active_obs].stats[HP_STAT] = self.observations[self.p1_active_obs].revive * \
+                    self.observations[self.p1_active_obs].base_stats[HP_STAT]
+                self.observations[self.p1_active_obs].revive = -1
+                
 
             # check to see if player was knocked out
             if(self.observations[self.p1_active_obs].stats[HP_STAT] > 0):
+                # option to choose random move
+                if(self.p1_move != None and self.p1_move.get("rand_move") != None):
+                    move_list = Moves.Moves()
+                    self.p1_move = move_list.moves["moves"][random.randrange(len(move_list.moves))]
+                # option to choose opponent move
+                if(self.p1_move != None and self.p1_move.get("use_opp_atk") != None):
+                    self.p1_move = self.p2_move
                 if((self.p1_move != None and self.p1_move.get("sure_hit") != None) or (self.p1_move_prev != None \
                     and self.p1_move_prev.get("next_sure_hit") != None)):
                     # if move is damaging
@@ -308,6 +417,23 @@ class Battle:
                             self.observations[self.p1_active_obs].stats[ATK_STAT]\
                             , self.observations[self.p2_active_obs].stats[DEF_STAT]\
                             , self.p1_move.get("bp")) * (1 - reduce_dmg_p2)
+
+                # apply additional battle effects
+                BattleEffects.additional_effects(self.observations, self.p1_active_obs, self.p2_active_obs, self.p1_move, 0)
+
+                # check for free switch
+                if(self.p1_move != None and self.p1_move.get("free_switch") != None):
+                    self.PlayerSwitch()
+                # check for force switch
+                if(self.p1_move != None and self.p1_move.get("force_switch") != None):
+                    self.OpponentSwitch(ai)
+                    self.p2_move = None
+
+                # revive opponent if they have a revive value
+                if(self.observations[self.p2_active_obs].stats[HP_STAT] <= 0):
+                    self.observations[self.p2_active_obs].stats[HP_STAT] = self.observations[self.p2_active_obs].revive * \
+                        self.observations[self.p2_active_obs].base_stats[HP_STAT]
+                    self.observations[self.p2_active_obs].revive = -1
                 
                 # check to see if opponent was knocked out
                 if(self.observations[self.p2_active_obs].stats[HP_STAT] <= 0):
@@ -324,6 +450,7 @@ class Battle:
         self.p2_move = None
 
     # handles one observation attacking another
+    # should probably be called from its own thread
     def BattleLoop(self, ai = False):
         # continue until max turns
         while(self.turn <= MAX_TURN):

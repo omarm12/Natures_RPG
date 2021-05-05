@@ -45,7 +45,12 @@ def LoadDatabase(u_id):
 
         # If an observation isn't in the database, assign it a type and stats, and add it
         if len(results) == 0:
-            quality = obs.get('quality_grade')
+
+            # Update the user's number of observations
+            user = Player.objects.get(iNat_user_id=u_id)
+            o_num = user.num_of_obs
+            Player.objects.filter(iNat_user_id=u_id).update(num_of_obs=o_num+1)
+
             taxon = obs.get('taxon')
             o_type_obj = Type(taxon.get('id'), taxon.get('ancestor_ids'))
             o_type = o_type_obj.AssignType()
@@ -64,16 +69,16 @@ def LoadDatabase(u_id):
                 owner=user,
                 obs_id=o_id,
                 name=obs_name,
+                taxa=o_type,
                 hp=stats.get("Health"),
                 attack=stats.get("Attack"),
                 defense=stats.get("Defense"),
                 evasion=stats.get("Evasion"),
                 accuracy=stats.get("Accuracy"),
                 speed=stats.get("Speed"),
-                num_of_confirmations=num_of_confirms,
                 image_link=obs_img,
-                quality=quality,
-                wiki_link=wiki
+                wiki_link=wiki,
+                quality=obs.get('quality_grade')
             )
             new_o.save()
 

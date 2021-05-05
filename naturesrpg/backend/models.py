@@ -32,7 +32,7 @@ class Observation(models.Model):
     move_3 = models.CharField(max_length=50, blank=True)
     move_4 = models.CharField(max_length=50, blank=True)
     image_link = models.CharField(max_length=150, default="https://www.pngitem.com/pimgs/m/30-307416_profile-icon-png-image-free-download-searchpng-employee.png")
-    quality = models.CharField(max_length=20, default="casual")
+    quality = models.CharField(max_length=20, default="needs_id")
     wiki_link = models.CharField(max_length=100, default="https://en.wikipedia.org/wiki/Main_Page")
 
     def __str__(self):

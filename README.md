@@ -1,10 +1,11 @@
 # Natures_RPG
 
 ## Dependencies
-- python3
+- python3.9 or later
 - node package manager
 
 ## Running Tests
+- .env file must be imported into the project, placed in the Nature's_RPG/naturesrpg folder. The .env file is pinned in #text for our group in discord
 - From the naturesrpg directory, run the command 'manage.py test'
 
 ###### Changelog:
@@ -32,9 +33,12 @@
 - *colin seifer* added some battle effects
 - *colin seifer* added methods to BattleSys.py to call from frontend
 - *colin seifer* added test cases for battle effects
+- *Danielle Dishop* fixed bugs related to database model changes
+- *colin seifer* finished adding battle effects
+- *colin seifer* finished adding tests for battle effects
+- *colin seifer* finished debugging battle effects
 
 ###### TODO:
-- *colin seifer* implement battle effects
 - *colin seifer* work with *Cameron Miller* to implement front end for battle system
 
 
