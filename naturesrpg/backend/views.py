@@ -1,6 +1,6 @@
-import os, requests
+import os, requests, json
 
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from django.urls import reverse
 from django.shortcuts import render, redirect
 
@@ -14,6 +14,7 @@ from .forms import LoginForm
 from dotenv import load_dotenv
 
 from pyinaturalist.auth import get_access_token
+from .Utils.LoadDatabase import LoadDatabase
 
 def login(request):
     if request.method == 'POST':
@@ -29,8 +30,10 @@ def login(request):
             except requests.HTTPError:
                 return render(request, 'backend/no_inat_acc.html')
 
-            request.session["username"] = form.cleaned_data['username']
-            return redirect('/?username=' + form.cleaned_data['username'])
+            test = requests.get("https://api.inaturalist.org/v1/users/autocomplete?q=" + form.cleaned_data['username'])
+            request.session['u'] = test.json()['results'][0]['id']
+            LoadDatabase(test.json()['results'][0]['id'])
+            return redirect('/?u=' + str(test.json()['results'][0]['id']))
     else:
         form = LoginForm()
 

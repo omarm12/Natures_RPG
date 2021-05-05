@@ -2,12 +2,9 @@ from django.shortcuts import render
 
 # Create your views here.
 def home(request):
-    return render(request, 'frontend/index.html')
-
-def logged_in(request):
-    if request.session["username"] is None:
-        return render(request, 'frontend/index.html')
-
+    if 'u' in request.GET:
+        print("")
+        
     return render(request, 'frontend/index.html')
 
 def handler404(request):

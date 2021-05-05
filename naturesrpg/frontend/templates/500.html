@@ -1,27 +1,37 @@
-{% load static %}
-    <link rel="stylesheet" href="{% static "css/404.css" %}">
+<!DOCTYPE html>
+<html>
+<head>
+    {% load static %}
+    <meta charset="utf-8" />
+    <title>Unexpected Error</title>
+    <link href="https://fonts.googleapis.com/css?family=Encode+Sans+Semi+Condensed:100,200,300,400" rel="stylesheet">
+    <link href="{% static "css/500.css" %}" rel="stylesheet" type="text/css" />
 
-<figure>
-	<div class="sad-mac"></div>
-	<figcaption>
-		<span class="sr-text">Error 404: Not Found</span>
-		<span class="e"></span>
-		<span class="r"></span>
-		<span class="r"></span>
-		<span class="o"></span>
-		<span class="r"></span>
-		<span class="_5"></span>
-		<span class="_0"></span>
-		<span class="_0"></span>
-		<span class="i"></span>
-		<span class="n"></span>
-		<span class="t"></span>
-		<span class="e"></span>
-		<span class="r"></span>
-		<span class="n"></span>
-		<span class="a"></span>
-		<span class="l"></span>
-	</figcaption>
-</figure>
+</head>
 
-<p style="color:white">Please click <a href="http://127.0.0.1:8000/home">here</a> to be redirected to the homepage.</p>
+<div class="error-502__container">
+	<div class="error-502">
+		<div class="error-502__text">
+			<h1>Unexpected Error <b>:(</b></h1>
+			<h2><p>You can go back to our <a href="http://127.0.0.1:8000/">Homepage</a>.</p></h2>
+		</div>
+	</div>
+</div>
+<div class="gears">
+    <div class="gear one">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+    <div class="gear two">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+    <div class="gear three">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+    </div>
+</div>
+</html>
