@@ -32,11 +32,6 @@ def LoadDatabase(u_id):
     # Request the user's observations
     observations = get_observations(user_id=u_id)
     observations = observations.get('results')
-    obs_num = len(observations)
-    
-    if obs_num > user.num_of_obs:
-        user.num_of_obs = obs_num
-        user.save()
 
     for obs in observations:
         # For each observation, check if it is already added to the database
