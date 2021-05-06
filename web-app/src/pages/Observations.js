@@ -9,6 +9,9 @@ import React, { useEffect, useState } from "react";
 
 import './Observations.css';
 
+const player_url = "http://127.0.0.1:8000/players/"
+const observations_url = "http://127.0.0.1:8000/obs/"
+
 // Sample observations for testing
 const sampleObservationList = [
   {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=1", description:"Description", key:1},
@@ -26,6 +29,7 @@ const sampleObservationList = [
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 const username = urlParams.get('username');
+const userId = urlParams.get('id');
 
 // Observation component
 // This is a basic component that gets populated with data
@@ -67,7 +71,7 @@ function Observations() {
   useEffect(() => {
 
     // Fetches data from url + username
-    fetch("https://api.inaturalist.org/v1/observations/?page=1&per_page=100&user_id=" + username)
+    fetch(observations_url + userId + '/')
       .then(res => res.json())
       .then(
 
