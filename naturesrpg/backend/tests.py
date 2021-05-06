@@ -15,7 +15,8 @@ from .serializers import PlayerSerializer
 
 from .Utils.TypeAssign import Type
 from .Utils.StatsAssign import FLOOR, CEILING, INCREASE_MOD, DECREASE_MOD, QUALITY_MOD, Stats
-from .Utils.Leveling import LEVEL_BREAKPOINTS, CONFIRM_EXP, CalcLevel, ConfirmExpGain
+from .Utils.Leveling import LEVEL_BREAKPOINTS, CONFIRM_EXP, BATTLE_EXP_WIN, BATTLE_EXP_SHARED_WIN,\
+    BATTLE_EXP_LOSE, CalcLevel, ConfirmExpGain, BattleExpGain
 from .Utils.LoadDatabase import LoadDatabase
 from .Battle import Moves
 from .Battle import LoadObservation
@@ -1424,6 +1425,117 @@ class LevelingTestCase(TestCase):
         Observation.objects.filter(obs_id=o_id).delete()
         Player.objects.filter(iNat_user_id=1).delete()
 
+    # Tests that xp is correctly granted for winning observations
+    def test_battle_exp_win_0(self):
+        stats = [100, 100, 100, 100, 100, 100]
+        moves = ["Flight Feathers", "Autotomy", "Sacrificial Tail", "Mimesis"]
+        obs_type = "Insecta"
+        observations = []
+        # create list of 6 observations
+        u = Player(iNat_user_id=1, username='test')
+        u.save()
+        for i in range(6):
+            o = Observation(owner=u, obs_id=i)
+            o.save()
+            observations.append(LoadObservation.LoadObservation(i, obs_type, moves, stats))
+
+        BattleExpGain(True, observations[0], observations)
+
+        # Check that the xp was updated correctly
+        self.assertEqual(Observation.objects.get(obs_id=0).total_xp, BATTLE_EXP_WIN)
+        self.assertEqual(Observation.objects.get(obs_id=1).total_xp, BATTLE_EXP_SHARED_WIN)
+        self.assertEqual(Observation.objects.get(obs_id=2).total_xp, BATTLE_EXP_SHARED_WIN)
+        for i in range(3,6):
+            self.assertEqual(Observation.objects.get(obs_id=i).total_xp, 0)
+
+    # Checks that it doesn't matter which observation is active
+    def test_battle_exp_win_1(self):
+        stats = [100, 100, 100, 100, 100, 100]
+        moves = ["Flight Feathers", "Autotomy", "Sacrificial Tail", "Mimesis"]
+        obs_type = "Insecta"
+        observations = []
+        # create list of 6 observations
+        u = Player(iNat_user_id=1, username='test')
+        u.save()
+        for i in range(6):
+            o = Observation(owner=u, obs_id=i)
+            o.save()
+            observations.append(LoadObservation.LoadObservation(i, obs_type, moves, stats))
+
+        BattleExpGain(True, observations[1], observations)
+
+        # Check that the xp was updated correctly
+        self.assertEqual(Observation.objects.get(obs_id=1).total_xp, BATTLE_EXP_WIN)
+        self.assertEqual(Observation.objects.get(obs_id=0).total_xp, BATTLE_EXP_SHARED_WIN)
+        self.assertEqual(Observation.objects.get(obs_id=2).total_xp, BATTLE_EXP_SHARED_WIN)
+        for i in range(3, 6):
+            self.assertEqual(Observation.objects.get(obs_id=i).total_xp, 0)
+
+    # Checks that the index of the active observation doesn't matter
+    def test_battle_exp_win_2(self):
+        stats = [100, 100, 100, 100, 100, 100]
+        moves = ["Flight Feathers", "Autotomy", "Sacrificial Tail", "Mimesis"]
+        obs_type = "Insecta"
+        observations = []
+        # create list of 6 observations
+        u = Player(iNat_user_id=1, username='test')
+        u.save()
+        for i in range(6):
+            o = Observation(owner=u, obs_id=i)
+            o.save()
+            observations.append(LoadObservation.LoadObservation(i, obs_type, moves, stats))
+
+        BattleExpGain(True, observations[2], observations)
+
+        # Check that the xp was updated correctly
+        self.assertEqual(Observation.objects.get(obs_id=2).total_xp, BATTLE_EXP_WIN)
+        self.assertEqual(Observation.objects.get(obs_id=0).total_xp, BATTLE_EXP_SHARED_WIN)
+        self.assertEqual(Observation.objects.get(obs_id=1).total_xp, BATTLE_EXP_SHARED_WIN)
+        for i in range(3, 6):
+            self.assertEqual(Observation.objects.get(obs_id=i).total_xp, 0)
+
+    # Checks that if the player losts, xp is calculated correctly
+    def test_battle_exp_lose(self):
+        stats = [100, 100, 100, 100, 100, 100]
+        moves = ["Flight Feathers", "Autotomy", "Sacrificial Tail", "Mimesis"]
+        obs_type = "Insecta"
+        observations = []
+        # create list of 6 observations
+        u = Player(iNat_user_id=1, username='test')
+        u.save()
+        for i in range(6):
+            o = Observation(owner=u, obs_id=i)
+            o.save()
+            observations.append(LoadObservation.LoadObservation(i, obs_type, moves, stats))
+
+        BattleExpGain(False, observations[0], observations)
+
+        # Check that the xp was updated correctly
+        self.assertEqual(Observation.objects.get(obs_id=0).total_xp, BATTLE_EXP_LOSE)
+        for i in range(1, 6):
+            self.assertEqual(Observation.objects.get(obs_id=i).total_xp, 0)
+
+    # Tests error segment that no observations receive xp
+    def test_battle_exp_error(self):
+        stats = [100, 100, 100, 100, 100, 100]
+        moves = ["Flight Feathers", "Autotomy", "Sacrificial Tail", "Mimesis"]
+        obs_type = "Insecta"
+        observations = []
+        # create list of 5 observations
+        u = Player(iNat_user_id=1, username='test')
+        u.save()
+        for i in range(5):
+            o = Observation(owner=u, obs_id=i)
+            o.save()
+            observations.append(LoadObservation.LoadObservation(i, obs_type, moves, stats))
+
+        BattleExpGain(True, observations[0], observations)
+
+        # Check that the xp was updated correctly
+        for i in range(0, 5):
+            self.assertEqual(Observation.objects.get(obs_id=i).total_xp, 0)
+
+
 class TestStats(TestCase):
 
     # test that moves are imported correctly
@@ -1441,12 +1553,14 @@ class TestStats(TestCase):
         stats = [100, 100, 100, 100, 100, 100]
         moves = ["Nature's Wrath", "Autotomy", "Spine Shield", "Mimesis"]
         obs_type = "Insecta"
-        test_obs = LoadObservation.LoadObservation(obs_type, moves, stats)
+        obs_id = 1
+        test_obs = LoadObservation.LoadObservation(obs_id, obs_type, moves, stats)
         # test that values are non-empty
         self.assertEqual(test_obs.stats[0], 100)
         self.assertEqual(test_obs.moves[0].get("name"), "Nature's Wrath")
         self.assertEqual(test_obs.stat_mod[0], 0)
         self.assertEqual(test_obs.observation_type, "Insecta")
+        self.assertEqual(test_obs.obs_id, 1)
 
     # test that battle calculations are correctly computed
     def test_battleCalc(self):
@@ -1474,8 +1588,12 @@ class TestStats(TestCase):
         obs_type = "Insecta"
         observations = []
         # create list of 6 observations
+        u = Player(iNat_user_id=1, username='test')
+        u.save()
         for i in range(6):
-            observations.append(LoadObservation.LoadObservation(obs_type, moves, stats))
+            o = Observation(owner=u, obs_id=i)
+            o.save()
+            observations.append(LoadObservation.LoadObservation(i, obs_type, moves, stats))
         # create battle object
         test_battle = BattleSys.Battle(observations)
         # test battle object observations size
