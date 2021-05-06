@@ -30,6 +30,8 @@ def additional_effects(observations, p1_active_obs, p2_active_obs, move, player)
     # individual stat modifications
     if(move != None and move.get("hp_mod") != None):
         observations[active_obs].stat_mod[HP_STAT] += move.get("hp_mod")
+        observations[active_obs].stats[HP_STAT] = \
+            int((1. + observations[active_obs].stat_mod[HP_STAT]) * observations[active_obs].stats[HP_STAT])
     if(move != None and move.get("atk_mod") != None):
         observations[active_obs].stat_mod[ATK_STAT] += move.get("atk_mod")
     if(move != None and move.get("def_mod") != None):
@@ -45,12 +47,24 @@ def additional_effects(observations, p1_active_obs, p2_active_obs, move, player)
     if(move != None and move.get("team_hp_mod") != None):
         if(player == 0):
             observations[0].stat_mod[HP_STAT] += move.get("team_hp_mod")
+            observations[0].stats[HP_STAT] = \
+                int((1. + observations[0].stat_mod[HP_STAT]) * observations[0].stats[HP_STAT])
             observations[1].stat_mod[HP_STAT] += move.get("team_hp_mod")
+            observations[1].stats[HP_STAT] = \
+                int((1. + observations[1].stat_mod[HP_STAT]) * observations[1].stats[HP_STAT])
             observations[2].stat_mod[HP_STAT] += move.get("team_hp_mod")
+            observations[2].stats[HP_STAT] = \
+                int((1. + observations[2].stat_mod[HP_STAT]) * observations[2].stats[HP_STAT])
         elif(player == 1):
             observations[3].stat_mod[HP_STAT] += move.get("team_hp_mod")
+            observations[3].stats[HP_STAT] = \
+                int((1. + observations[3].stat_mod[HP_STAT]) * observations[3].stats[HP_STAT])
             observations[4].stat_mod[HP_STAT] += move.get("team_hp_mod")
+            observations[4].stats[HP_STAT] = \
+                int((1. + observations[4].stat_mod[HP_STAT]) * observations[4].stats[HP_STAT])
             observations[5].stat_mod[HP_STAT] += move.get("team_hp_mod")
+            observations[5].stats[HP_STAT] = \
+                int((1. + observations[5].stat_mod[HP_STAT]) * observations[5].stats[HP_STAT])
     if(move != None and move.get("team_atk_mod") != None):
         if(player == 0):
             observations[0].stat_mod[ATK_STAT] += move.get("team_atk_mod")
@@ -100,6 +114,8 @@ def additional_effects(observations, p1_active_obs, p2_active_obs, move, player)
     # opponent stat modifications
     if(move != None and move.get("opp_hp_mod") != None):
         observations[opp_active_obs].stat_mod[HP_STAT] += move.get("opp_hp_mod")
+    observations[opp_active_obs].stats[HP_STAT] = \
+        int((1. + observations[opp_active_obs].stat_mod[HP_STAT]) * observations[opp_active_obs].stats[HP_STAT])
     if(move != None and move.get("opp_atk_mod") != None):
         observations[opp_active_obs].stat_mod[ATK_STAT] += move.get("opp_atk_mod")
     if(move != None and move.get("opp_def_mod") != None):
@@ -147,13 +163,17 @@ def additional_effects(observations, p1_active_obs, p2_active_obs, move, player)
     # additional damage and healing effects
     # damage takes effect before healing
     if(move != None and move.get("user_dmg") != None):
-        observations[active_obs].stats[HP_STAT] -= move.get("user_dmg") * observations[active_obs].base_stats[HP_STAT]
+        observations[active_obs].stats[HP_STAT] -= int(move.get("user_dmg") \
+            * (1. + observations[active_obs].stat_mod[HP_STAT]) * observations[active_obs].base_stats[HP_STAT])
     if(move != None and move.get("opp_dmg") != None):
-        observations[opp_active_obs].stats[HP_STAT] -= move.get("opp_dmg") * observations[opp_active_obs].base_stats[HP_STAT]
+        observations[opp_active_obs].stats[HP_STAT] -= int(move.get("opp_dmg") \
+            * (1. + observations[opp_active_obs].stat_mod[HP_STAT]) * observations[opp_active_obs].base_stats[HP_STAT])
     if(move != None and move.get("opp_dot") != None):
-        observations[opp_active_obs].stats[HP_STAT] -= move.get("opp_dot") * observations[opp_active_obs].base_stats[HP_STAT]
+        observations[opp_active_obs].stats[HP_STAT] -= int(move.get("opp_dot") \
+            * (1. + observations[opp_active_obs].stat_mod[HP_STAT]) * observations[opp_active_obs].base_stats[HP_STAT])
     if(move != None and move.get("heal_ot") != None):
-        observations[active_obs].stats[HP_STAT] += move.get("heal_ot") * observations[active_obs].base_stats[HP_STAT]
+        observations[active_obs].stats[HP_STAT] += int(move.get("heal_ot") \
+            * (1. + observations[active_obs].stat_mod[HP_STAT]) * observations[active_obs].base_stats[HP_STAT])
     if(move != None and move.get("team_heal") != None):
         if(player == 0):
             observations[0].stats[HP_STAT] = int((1. + observations[0].stat_mod[HP_STAT]) * observations[0].base_stats[HP_STAT])
@@ -169,8 +189,7 @@ def additional_effects(observations, p1_active_obs, p2_active_obs, move, player)
     
     # update stats
     for obs in observations:
-        obs.stats[HP_STAT] = int((1. + obs.stat_mod[HP_STAT]) * obs.base_stats[HP_STAT]) - \
-            (obs.base_stats[HP_STAT] - obs.stats[HP_STAT])
+        obs.stats[HP_STAT] = min(int((1. + obs.stat_mod[HP_STAT]) * obs.base_stats[HP_STAT]), int(obs.stats[HP_STAT]))
         obs.stats[ATK_STAT] = int((1. + obs.stat_mod[ATK_STAT]) * obs.base_stats[ATK_STAT])
         obs.stats[DEF_STAT] = int((1. + obs.stat_mod[DEF_STAT]) * obs.base_stats[DEF_STAT])
         obs.stats[ACC_STAT] = int((1. + obs.stat_mod[ACC_STAT]) * obs.base_stats[ACC_STAT])
