@@ -18,10 +18,12 @@ import prof_photo from "../images/prof.jpg";
 
 
 const Navbar = () => {
+
+    const queryString = window.location.search;
   
     // Function gets called when logout is clicked
     const logoutClicked = () => {
-        alert("\n You think you can leave... how cute"); 
+        window.location.reload();
     }
 
     // Create hook to update when new selection is made
@@ -43,26 +45,29 @@ const Navbar = () => {
                         <div className="home-menuItem">
                         <MenuItem className="home-menuItem" active={window.location.pathname === "/"} onClick={menuItemSelect} icon={<FiHome className="home-menuText"/>}>
                             <div className="menu-text">Home</div>
-                            <Link to="/" />
+                            <Link to={"/" + queryString} />
                         </MenuItem>
                         </div>
                         <div className="observation-menuItem">
                         <MenuItem className="observation-menuItem" active={window.location.pathname === "/observations"} onClick={menuItemSelect} icon={<FiCamera className="observation-menuText"/>}>
                             <div className="menu-text">Observations</div>
-                            <Link to="/observations" />
+                            <Link to={"/observations" + queryString} />
                         </MenuItem>
                         </div>
                         <div className="battle-menuItem">
                         <MenuItem className="battle-menuItem" active={window.location.pathname === "/battle"} onClick={menuItemSelect} icon={<RiSwordLine className="battle-menuText"/>}>
                             <div className="menu-text">Battle</div>
-                            <Link to="/battle" />
+                            <Link to={"/battle" + queryString} />
                         </MenuItem>
                         </div>
                     </Menu>
                 </SidebarContent>
                 <SidebarFooter>
                     <Menu iconShape="square">
-                    <MenuItem onClick={logoutClicked} icon={<FiLogOut />}> <div className="logout-text">Logout</div></MenuItem>
+                        <MenuItem onClick={logoutClicked} icon={<FiLogOut />}> 
+                            <div className="logout-text">Logout</div>
+                            <Link to="/" />
+                        </MenuItem>
                     </Menu>
                 </SidebarFooter>
                 </ProSidebar>

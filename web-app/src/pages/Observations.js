@@ -5,7 +5,7 @@ import {
   CardBody
 } from "shards-react";
 import { Container, Row, Col} from "shards-react";
-import React, { useEffect, useState } from "react";
+import React, {useState, useEffect} from "react";
 
 import './Observations.css';
 
@@ -63,7 +63,6 @@ function Observations() {
   const [isLoaded, setIsLoaded] = useState(false);
   const [items, setItems] = useState([]);
 
-  
   useEffect(() => {
 
     // Fetches data from url + username
@@ -98,7 +97,7 @@ function Observations() {
     var observations = <div></div>;
 
     // Loads sample data into the observations variable if no username is provided
-    if(username === null || items === 0){
+    if(username === null || items === 0 || items === undefined){
       observations = sampleObservationList.map((observation) =>
         <Observation
           key={observation.key}
