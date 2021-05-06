@@ -6,6 +6,7 @@ from . import LoadObservation
 from . import BattleCalc
 from . import Moves
 from . import BattleEffects
+from ..Utils.Leveling import BattleExpGain
 import time
 import random
 
@@ -468,15 +469,21 @@ class Battle:
             # check hp of each observation
             if(len(self.observations) == NUM_OBS and self.observations[0].stats[HP_STAT] <= 0\
                 and self.observations[1].stats[HP_STAT] <= 0 and self.observations[2].stats[HP_STAT] <= 0):
+                # grants xp
+                BattleExpGain(False, self.p1_active_obs, self.observations)
                 # returns 1 for player 2 win
                 return 1
 
             elif(len(self.observations) == NUM_OBS and self.observations[3].stats[HP_STAT] <= 0\
                 and self.observations[4].stats[HP_STAT] <= 0 and self.observations[5].stats[HP_STAT] <= 0):
+                # grants xp
+                BattleExpGain(True, self.p1_active_obs, self.observations)
                 # returns 0 for player 1 win
                 return 0
 
         # if max turns are reached, both players lose
+        # grants xp
+        BattleExpGain(False, self.p1_active_obs, self.observations)
         # return 1 for player 2 win
         # since both players are player 1 from their perspective, this is a loss for both
         return 1

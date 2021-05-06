@@ -7,7 +7,8 @@ from ..Utils import StatsAssign
 from . import Moves
 
 class LoadObservation:
-    def __init__(self, observation_type, move_names = [], stats = []):
+    def __init__(self, obs_id, observation_type, move_names = [], stats = []):
+        self.obs_id = obs_id
         self.observation_type = observation_type
         self.move_names = []
         self.move_names.extend(move_names)
