@@ -7,6 +7,9 @@
 ## Running Tests
 - From the naturesrpg directory, run the command 'manage.py test'
 
+## Running the battle simulator
+- From the naturesrpg directory, run the command 'python3 -m backend.Battle.BattleSim'
+
 ###### Changelog:
 - *Danielle Dishop* added Stats class to TypeAssign
 - *Danielle Dishop* fixed the mod stat dictionary to be the correct stats
