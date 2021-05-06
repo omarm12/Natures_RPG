@@ -1,8 +1,43 @@
+import os, requests, json
+
+from django.http import HttpResponseRedirect, HttpResponse
+from django.urls import reverse
+from django.shortcuts import render, redirect
+
 from rest_framework import generics, status
 from rest_framework.exceptions import NotFound
 
 from .serializers import PlayerSerializer, ObsSerializer
 from .models import Player, Observation
+
+from .forms import LoginForm
+from dotenv import load_dotenv
+
+from pyinaturalist.auth import get_access_token
+from .Utils.LoadDatabase import LoadDatabase
+
+def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request.POST)
+        if form.is_valid():
+            try:
+                get_access_token(
+                    username=form.cleaned_data['username'],
+                    password=form.cleaned_data['password'],
+                    app_id=os.environ.get("INAT_CLIENT_ID"),
+                    app_secret=os.environ.get("INAT_CLIENT_SECRET"),
+                )
+            except requests.HTTPError:
+                return render(request, 'backend/no_inat_acc.html')
+
+            test = requests.get("https://api.inaturalist.org/v1/users/autocomplete?q=" + form.cleaned_data['username'])
+            request.session['u'] = test.json()['results'][0]['id']
+            LoadDatabase(test.json()['results'][0]['id'])
+            return redirect('/?u=' + str(test.json()['results'][0]['id']))
+    else:
+        form = LoginForm()
+
+    return render(request, 'backend/login.html', {'form': form})
 
 
 class PlayerList(generics.ListCreateAPIView):

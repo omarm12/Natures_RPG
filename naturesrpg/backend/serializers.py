@@ -4,7 +4,7 @@ from .models import Player, Observation
 class PlayerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Player
-        fields = ['iNat_user_id', 'username', 'num_of_obs', 'team']
+        fields = ['iNat_user_id', 'username', 'num_of_obs', 'team_mems', 'profile_pic']
 
 class ObsSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,8 +14,9 @@ class ObsSerializer(serializers.ModelSerializer):
             'obs_id',
             'name',
             'taxa',
+            'is_on_team',
             'hp', 
-            'strength', 
+            'attack', 
             'defense', 
             'evasion', 
             'accuracy', 

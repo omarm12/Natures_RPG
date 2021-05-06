@@ -14,10 +14,11 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.urls import path, include, re_path
-from .views import ObsDetail, ObsList, PlayerDetail, PlayerList
+from .views import ObsDetail, ObsList, PlayerDetail, PlayerList, login
 from rest_framework.urlpatterns import format_suffix_patterns
 
 urlpatterns = [
+    path('login/', login, name='login'),
     path('players/', PlayerList.as_view(), name='players'),
     path('players/<int:pk>/', PlayerDetail.as_view(), name='player'),
     path('obs/<int:owner>/', ObsList.as_view(), name='observations'),
