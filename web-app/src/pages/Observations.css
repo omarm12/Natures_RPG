@@ -1,19 +1,33 @@
-#observations{
-    padding: 50px;
-    overflow-y: hidden;
+.Observation {
+    cursor: pointer;
+    transition: all 0.3s ease-out;
+
 }
 
-#observations .observation-card{
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 40px;
+.Observation:hover {
+    transform: scale(1.05);
 }
 
-#observations .observations-header{
-    padding-bottom: 5px;
-    color: rgb(58, 134, 255, 1);
-    color: rgb(36, 36, 36);
-    margin-top: 20px;
-    margin-left: 15px;
-    margin-bottom: 70px;
+.btn {
+    border-style: none;
+    background-color: transparent;
+}
+
+.btn-primary {
+    color: transparent!important;
+    background-color: transparent!important;
+    border-color: transparent!important;
+    background-image: none;
+    box-shadow: inset 0 3px 5px rgba(0,0,0,0)!important;
+}
+
+.card {
+    border: none;
+    border-color: transparent;
+    background-color: transparent;
+}
+
+.dropDown-button {
+    background-color: white!important;
+    color: black!important;
 }
