@@ -17,7 +17,7 @@ import prof_photo from "../images/prof.jpg";
 
 
 
-const Navbar = () => {
+const Navbar = (props) => {
 
     const queryString = window.location.search;
   
@@ -39,7 +39,7 @@ const Navbar = () => {
         <>
             <div id="navbar">
                 <ProSidebar collapsed={false}>
-                   <ProfileCard image={prof_photo} username="Ben_Johnson" level="12"/>
+                   <ProfileCard image={props.profile_pic || "https://via.placeholder.com/150"} username={props.username || "Username"} level="12"/>
                 <SidebarContent>
                     <Menu iconShape="square">
                         <div className="home-menuItem">
