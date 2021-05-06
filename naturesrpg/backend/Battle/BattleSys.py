@@ -325,6 +325,7 @@ class Battle:
                     self.PlayerSwitch()
             else:
                 self.OpponentSwitch(ai)
+                self.p2_move = None
         else:
             # player2 moves first
             reduce_dmg_p1 = 0
@@ -440,6 +441,7 @@ class Battle:
                     self.OpponentSwitch(ai)
             else:
                 self.PlayerSwitch()
+                self.p1_move = None
 
         # set current move as previous move
         self.p1_move_prev = self.p1_move
