@@ -42,6 +42,11 @@ class Battle:
             return self.observations[self.p1_active_obs].moves[move_index - 1].get("flavor_text")
 
     # move index should be in range 1-4
+    def GetMoveName(self, move_index):
+        if(move_index >= 1 and move_index <= 4):
+            return self.observations[self.p1_active_obs].moves[move_index - 1].get("name")
+
+    # move index should be in range 1-4
     def GetBP(self, move_index):
         if(move_index >= 1 and move_index <= 4):
             return self.observations[self.p1_active_obs].moves[move_index - 1].get("bp")
@@ -50,6 +55,10 @@ class Battle:
     def GetACC(self, move_index):
         if(move_index >= 1 and move_index <= 4):
             return self.observations[self.p1_active_obs].moves[move_index - 1].get("acc")
+
+    # get current state of battle
+    def GetSelf(self):
+        return self
 
     # switch should be in range 0-5
     def SetSwitch(self, switch):
