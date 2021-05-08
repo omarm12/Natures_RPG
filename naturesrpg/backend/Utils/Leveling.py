@@ -29,6 +29,9 @@ LEVEL_BREAKPOINTS = {
     20:355000
 }
 CONFIRM_EXP = 500
+BATTLE_EXP_WIN = 200
+BATTLE_EXP_SHARED_WIN = 50
+BATTLE_EXP_LOSE = 50
 
 # The function is passed an amount of experience, and returns the corresponding level of the observation
 def CalcLevel(exp):
@@ -76,3 +79,33 @@ def ConfirmExpGain(o_id):
         # Update the observation's level
         o_level = CalcLevel(xp)
         Observation.objects.filter(obs_id=o_id).update(level=o_level)
+
+# This function is passed a boolean for if the player won or not, and the list of observations from the battle
+# It updates the player's observations' xp in the database
+def BattleExpGain(winner, active, obs):
+    # If the player won, give the active observation 200 xp, and the inactive observations 50
+    if (winner == True and len(obs) == 6):
+        active_id = active.obs_id
+        o = Observation.objects.get(obs_id=active_id)
+        xp = o.total_xp
+        Observation.objects.filter(obs_id=active_id).update(total_xp=xp+BATTLE_EXP_WIN)
+
+        # The player's other observations are in the first three indices of obs.
+        # Check that the active obs isn't added twice
+        for i in range(3):
+            if obs[i].obs_id != active_id:
+                o = Observation.objects.get(obs_id=obs[i].obs_id)
+                xp = o.total_xp
+                Observation.objects.filter(obs_id=obs[i].obs_id).update(total_xp=xp+BATTLE_EXP_SHARED_WIN)
+
+    # If the player did not win, give the active observation 50 xp
+    elif (winner == False and len(obs) == 6):
+        active_id = active.obs_id
+        o = Observation.objects.get(obs_id=active_id)
+        xp = o.total_xp
+        Observation.objects.filter(obs_id=active_id).update(total_xp=xp+BATTLE_EXP_LOSE)
+
+    # If either statement didn't fire, there are likely not 6 observations loaded. just return
+    # If we had logging implemented, this is where we'd have an error statement
+    else:
+        return

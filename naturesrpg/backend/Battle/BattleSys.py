@@ -6,6 +6,7 @@ from . import LoadObservation
 from . import BattleCalc
 from . import Moves
 from . import BattleEffects
+from ..Utils.Leveling import BattleExpGain
 import time
 import random
 
@@ -22,18 +23,18 @@ SPD_STAT = 5
 PERCENT = 100 # multiply by 100 to get percent
 
 class Battle:
-    def __init__(self, obs = []):
+    def __init__(self, obs = [], turn = 0, p1_move = None, p2_move = None, p1_active_obs = 0, p2_active_obs = 3, p1_move_prev = None, p2_move_prev = None, move_choice = 0, switch = -1):
         self.observations = []
         self.observations.extend(obs)
-        self.turn = 0
-        self.p1_move = None
-        self.p2_move = None
-        self.p1_active_obs = 0
-        self.p2_active_obs = 3
-        self.p1_move_prev = None
-        self.p2_move_prev = None
-        self.move_choice = 0
-        self.switch = -1
+        self.turn = turn
+        self.p1_move = p1_move
+        self.p2_move = p2_move
+        self.p1_active_obs = p1_active_obs
+        self.p2_active_obs = p2_active_obs
+        self.p1_move_prev = p1_move_prev
+        self.p2_move_prev = p2_move_prev
+        self.move_choice = move_choice
+        self.switch = switch
 
     # move index should be in range 1-4
     def GetFlavorText(self, move_index):
@@ -325,6 +326,7 @@ class Battle:
                     self.PlayerSwitch()
             else:
                 self.OpponentSwitch(ai)
+                self.p2_move = None
         else:
             # player2 moves first
             reduce_dmg_p1 = 0
@@ -440,6 +442,7 @@ class Battle:
                     self.OpponentSwitch(ai)
             else:
                 self.PlayerSwitch()
+                self.p1_move = None
 
         # set current move as previous move
         self.p1_move_prev = self.p1_move
@@ -466,15 +469,21 @@ class Battle:
             # check hp of each observation
             if(len(self.observations) == NUM_OBS and self.observations[0].stats[HP_STAT] <= 0\
                 and self.observations[1].stats[HP_STAT] <= 0 and self.observations[2].stats[HP_STAT] <= 0):
+                # grants xp
+                BattleExpGain(False, self.p1_active_obs, self.observations)
                 # returns 1 for player 2 win
                 return 1
 
             elif(len(self.observations) == NUM_OBS and self.observations[3].stats[HP_STAT] <= 0\
                 and self.observations[4].stats[HP_STAT] <= 0 and self.observations[5].stats[HP_STAT] <= 0):
+                # grants xp
+                BattleExpGain(True, self.p1_active_obs, self.observations)
                 # returns 0 for player 1 win
                 return 0
 
         # if max turns are reached, both players lose
+        # grants xp
+        BattleExpGain(False, self.p1_active_obs, self.observations)
         # return 1 for player 2 win
         # since both players are player 1 from their perspective, this is a loss for both
         return 1
