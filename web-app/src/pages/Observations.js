@@ -10,6 +10,7 @@ import './Observations.css';
 import ObservationPopup from '../components/ObsPopup'
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Textfit } from 'react-textfit';
+import PuffLoader from "react-spinners/PuffLoader";
 
 // Sample observations for testing
 const sampleObservationList = [
@@ -51,7 +52,7 @@ function Observation(props) {
               {<Textfit max="15" mode="single">{props.title || "Species"}</Textfit>}
             </div>
             <div className="observation-image-mask">
-              <img src={props.image || "https://loremflickr.com/300/200/wildlife"} className="observation-image" alt={props.name}/>
+              <img src={props.image || "https://via.placeholder.com/200.png?text=Photo"} className="observation-image" alt={props.name}/>
             </div>
           </Card>
         </div>
@@ -143,7 +144,13 @@ function Observations() {
   } 
   // Loading State
   else if (!isLoaded) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loader">
+        <div className="loader-icon">
+          <PuffLoader color={"rgb(58, 134, 255, 1)"} size={80} />
+        </div>
+      </div>
+    );
   } 
   // Loaded State
   else {
@@ -169,7 +176,7 @@ function Observations() {
           key={observation.key}
           name={observation.species_guess}
           title={observation.taxon.name}
-          image={observation.photos.length !== 0 ? convertToLarge(observation.photos[0].url) : "https://loremflickr.com/300/200/wildlife"}
+          image={observation.photos.length !== 0 ? convertToLarge(observation.photos[0].url) : "https://via.placeholder.com/200.png?text=Photo"}
           body={observation.place_guess}
           quality={observation.quality_grade}
           comment={observation.description}

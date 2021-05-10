@@ -124,3 +124,21 @@ and (max-width : 992px) {
     }
 }
 
+.loader{
+    right: 40px;
+    width: calc(97% - 270px);
+    height: calc(100vh);
+    background-color: #f5f3f3;
+    z-index: 1000000000;
+    position: absolute;
+}
+
+.loader-icon{
+    position: absolute;
+    left: calc(50% - 40px);
+    top: calc(50% - 40px);
+    width: 80px;
+    height: 80px;
+}
+
+
