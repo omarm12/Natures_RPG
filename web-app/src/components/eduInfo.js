@@ -1,5 +1,5 @@
 import React from 'react'
-import './eduInfo.css'
+import './EduInfo.css'
 
 function GetObsdata(props) {
 
@@ -14,4 +14,4 @@ function GetObsdata(props) {
     )
   }
   
-  export default GetObsdata;
+export default GetObsdata;
