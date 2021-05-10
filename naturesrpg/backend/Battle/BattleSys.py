@@ -23,23 +23,29 @@ SPD_STAT = 5
 PERCENT = 100 # multiply by 100 to get percent
 
 class Battle:
-    def __init__(self, obs = []):
+    def __init__(self, obs = [], turn = 0, p1_move = None, p2_move = None, p1_active_obs = 0, p2_active_obs = 3,\
+                p1_move_prev = None, p2_move_prev = None, move_choice = 0, switch = -1):
         self.observations = []
         self.observations.extend(obs)
-        self.turn = 0
-        self.p1_move = None
-        self.p2_move = None
-        self.p1_active_obs = 0
-        self.p2_active_obs = 3
-        self.p1_move_prev = None
-        self.p2_move_prev = None
-        self.move_choice = 0
-        self.switch = -1
+        self.turn = turn
+        self.p1_move = p1_move
+        self.p2_move = p2_move
+        self.p1_active_obs = p1_active_obs
+        self.p2_active_obs = p2_active_obs
+        self.p1_move_prev = p1_move_prev
+        self.p2_move_prev = p2_move_prev
+        self.move_choice = move_choice
+        self.switch = switch
 
     # move index should be in range 1-4
     def GetFlavorText(self, move_index):
         if(move_index >= 1 and move_index <= 4):
             return self.observations[self.p1_active_obs].moves[move_index - 1].get("flavor_text")
+
+    # move index should be in range 1-4
+    def GetMoveName(self, move_index):
+        if(move_index >= 1 and move_index <= 4):
+            return self.observations[self.p1_active_obs].moves[move_index - 1].get("name")
 
     # move index should be in range 1-4
     def GetBP(self, move_index):
@@ -89,6 +95,7 @@ class Battle:
             # wait for opponent to select move
             while(not (self.move_choice > 0 or (self.switch >= 0 \
                 and self.observations[self.switch].stats[HP_STAT] > 0))):
+                print("waiting")
                 time.sleep(0.1)
             if(len(self.observations) == NUM_OBS and self.switch >= 0):
                 self.p2_active_obs = self.switch
@@ -459,7 +466,7 @@ class Battle:
         while(self.turn <= MAX_TURN):
             # update turn counter
             self.turn += 1
-
+    
             # take player turns
             self.PlayerTurn()
             self.OpponentTurn(ai)

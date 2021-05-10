@@ -50,7 +50,7 @@ def LoadDatabase(u_id):
             o_type_obj = Type(taxon.get('id'), taxon.get('ancestor_ids'))
             o_type = o_type_obj.AssignType()
 
-            obs_name = taxon.get('preferred_common_name')
+            obs_name = taxon.get('name')
             num_of_confirms = obs.get('num_identification_agreements')
 
             wiki = taxon.get('wikipedia_url')
