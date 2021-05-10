@@ -7,6 +7,7 @@
     "@testing-library/jest-dom": "^5.11.10",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
+    "bootstrap": "^5.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-icons": "4.2.0",
@@ -14,7 +15,9 @@
     "react-rounded-image": "2.0.13",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
-    "react-textfit": "1.1.1"
+    "react-textfit": "1.1.1",
+    "reactstrap": "^8.9.0",
+    "shards-react": "^1.0.3"
   },
   "scripts": {
     "start": "react-scripts start",
