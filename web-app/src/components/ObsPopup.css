@@ -1,0 +1,38 @@
+.popup {
+    z-index: 10;
+    position: fixed;
+    width: calc(97% - 270px);
+    height: 100%;
+    top: 0px;
+    right: 40px;
+    background-color: #f5f3f3;
+}
+
+.popup-inner {
+    top: 40px;
+    position: absolute;
+    width: 100%;
+    height: calc(100vh - 80px);
+    background-color: rgba(red, green, blue, 1);
+    overflow-y: scroll;
+}
+
+.popup-inner .close-btn {
+    display: block;
+    position: fixed;
+    background-color: white;
+    top: 60px;
+    right: 60px;
+    border-color: transparent;
+}
+
+.close-btn-icon{
+    width: 40px;
+    height: 40px;
+}
+
+img {
+    max-width: 100%;
+    max-height: 40vh;
+    object-fit: contain;
+}

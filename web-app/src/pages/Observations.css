@@ -1,19 +1,126 @@
+.observation {
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease-out;
+    margin-bottom: 30px;
+    width: 100%;
+    border-width: 0px;
+    border-style: none;
+    background-color: inherit;
+}
+
+.observation-card{
+    background-color: white;
+    height: 120px;
+    overflow: hidden;
+    text-align: left;
+}
+/*
+
+.observation-name{
+    font-family: 'Lato', sans-serif;
+    font-weight: 700;
+    width: calc(100% - 175px);
+    position: absolute;
+    left: 145px;
+    top: 35px;
+    font-size: 20px;
+}
+
+.observation-taxon{
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    width: calc(100% - 175px);
+    position: absolute;
+    left: 145px;
+    top: 68px;
+    font-size: 15px;
+}
+
+.observation-image{
+    width: 120px;
+    height: 120px;
+    object-fit:cover;
+} */
+
+/* */
+.observation-name{
+    font-family: 'Lato', sans-serif;
+    font-weight: 500;
+    width: calc(100% - 150px);
+    position: absolute;
+    left: 120px;
+    top: 35px;
+    font-size: 20px;
+}
+
+.observation-taxon{
+    font-family: 'Lato', sans-serif;
+    font-weight: 300;
+    width: calc(100% - 150px);
+    position: absolute;
+    left: 120px;
+    top: 68px;
+    font-size: 15px;
+}
+
+.observation-image-mask{
+    position: absolute;
+    top:20px;
+    left: 20px;
+}
+
+.observation-image{
+    width:80px;
+    height:80px;
+    object-fit:cover;
+    border-radius:50%;
+    border-style: solid;
+    border-width: 3px;
+    border-color:rgb(204, 204, 204);
+}
+
+/* */
+
+.observation:hover {
+    transform: scale(1.03);
+}
+
 #observations{
     padding: 50px;
     overflow-y: hidden;
 }
 
-#observations .observation-card{
-    margin-left: 10px;
-    margin-right: 10px;
-    margin-bottom: 40px;
-}
-
 #observations .observations-header{
-    padding-bottom: 5px;
     color: rgb(58, 134, 255, 1);
     color: rgb(36, 36, 36);
     margin-top: 20px;
-    margin-left: 15px;
-    margin-bottom: 70px;
+    margin-bottom: 40px;
 }
+
+.btn{
+    width: 100%;
+}
+
+.dropDown{
+    border-radius: 7px;
+    box-shadow: 2px 2px 13px 0px rgba(0, 0, 0, 0.12);
+}
+
+@media only screen
+and (min-width : 992px) {
+    .observation-sort-drop{
+        position: absolute;
+        right: 15px;
+        bottom: 45px;
+    }
+}
+
+@media only screen
+and (max-width : 992px) {
+    .observation-sort-drop{
+        right: 15px;
+        padding-bottom: 25px;
+    }
+}
+
