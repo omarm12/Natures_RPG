@@ -17,7 +17,6 @@ function ProfileCard(props) {
             />
         </div>
         <div className="profile-username">{props.username}</div>
-        <div className="profile-level">Level {props.level}</div>
     </div>
   );
 }

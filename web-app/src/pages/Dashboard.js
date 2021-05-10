@@ -19,8 +19,8 @@ function Dashboard() {
                 <Textfit mode="single">Welcome Back</Textfit>
               </div>
               <div className="dashboard-header-text-text">
-                <Textfit mode="single">It looks like you have made <strong>2</strong> new </Textfit>
-                <Textfit mode="single"> observations while you were gone.</Textfit>
+                <Textfit mode="single">It looks like you have not made any <br/>
+                observations while you were gone.</Textfit>
               </div>
             </div>
             <img className="dashboard-header-image" src={header_svg} alt="Adventurous person" />
@@ -31,40 +31,20 @@ function Dashboard() {
           <Col sm="12" md="6" lg="6">
             <Card className="dashboard-card">
               <CardHeader>
-                Card Title
+                Observations
               </CardHeader>
               <CardBody>
-                Information
+                You don't have any recent observations
               </CardBody>
             </Card>
           </Col>
           <Col sm="12" md="6" lg="6">
             <Card className="dashboard-card">
               <CardHeader>
-                Card Title
+                Battles
               </CardHeader>
               <CardBody>
-                Information
-              </CardBody>
-            </Card>
-          </Col>
-          <Col sm="12" md="6" lg="6">
-            <Card className="dashboard-card">
-              <CardHeader>
-                Card Title
-              </CardHeader>
-              <CardBody>
-                Information
-              </CardBody>
-            </Card>
-          </Col>
-          <Col sm="12" md="6" lg="6">
-            <Card className="dashboard-card">
-              <CardHeader>
-                Card Title
-              </CardHeader>
-              <CardBody>
-                Information
+                You have not been in battle
               </CardBody>
             </Card>
           </Col>

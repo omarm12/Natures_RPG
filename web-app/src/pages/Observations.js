@@ -1,15 +1,16 @@
 import {
-  Card,
-  CardTitle,
-  CardImg,
-  CardBody
+  Card
 } from "shards-react";
 import { Container, Row, Col} from "shards-react";
-import React, { useEffect, useState } from "react";
+import React, {useState, useEffect} from "react";
+
 import axios from 'axios'
+
 import './Observations.css';
-import Observations from '../components/ObsPopup'
+import ObservationPopup from '../components/ObsPopup'
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
+import { Textfit } from 'react-textfit';
+import PuffLoader from "react-spinners/PuffLoader";
 
 // Sample observations for testing
 const sampleObservationList = [
@@ -29,7 +30,7 @@ const sortOptions = ["Order Observed", "Taxa", "Stats", "Quality", "A-Z", "Rever
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const username = urlParams.get('username');
+const u_id = urlParams.get('u');
 
 // Observation component
 // This is a basic component that gets populated with data
@@ -39,33 +40,39 @@ function Observation(props) {
 
   const [buttonPopup, setButtonPopup] = useState(false);
   return (
-    <Col sm="6" md="4" lg="3">
-      <button className="btn" onClick={() => setButtonPopup(true)}>
-        <div className="Observation" style={{ paddingBottom: "30px"}}>
-            <Card>
-                <CardImg src={props.image} top="true" />
-                <CardBody>
-                  <CardTitle>{props.name}</CardTitle>
-                  <p>{props.title}</p>
-                  <p>{props.body}</p>
-                </CardBody>
-            </Card>
-          </div>
+    <Col sm="12" md="12" lg="6" xl="6">
+      <button className="observation" onClick={() => setButtonPopup(true)}>
+        <div className="observation-container">
+          <Card className="observation-card">
+            <div className="observation-name">
+              {/*props.name || "Common Name"*/}
+              {<Textfit max="20" mode="single">{props.name || "Common Name"}</Textfit>}
+            </div>
+            <div className="observation-taxon">
+              {/*props.title || "Species"*/}
+              {<Textfit max="15" mode="single">{props.title || "Species"}</Textfit>}
+            </div>
+            <div className="observation-image-mask">
+              <img src={props.image || "https://via.placeholder.com/200.png?text=Photo"} className="observation-image" alt={props.name}/>
+            </div>
+          </Card>
+        </div>
       </button>
-      <Observations 
-        trigger={buttonPopup} 
-        setTrigger={setButtonPopup}
-        image={props.image}
-        name={props.name}
-        title={props.title}
-        body={props.body}
-        quality={props.quality}
-        comment={props.comment}
-        time={props.time}
-        wiki={props.wiki}
-        >
-      </Observations>
-    </Col>
+      
+        <ObservationPopup 
+          trigger={buttonPopup} 
+          setTrigger={setButtonPopup}
+          image={props.image}
+          name={props.name}
+          title={props.title}
+          body={props.body}
+          quality={props.quality}
+          comment={props.comment}
+          time={props.time}
+          wiki={props.wiki}
+          >
+        </ObservationPopup>
+      </Col>
   );
 }
 
@@ -87,8 +94,11 @@ function Observations() {
   const [dropdownOpen, setOpen] = useState(false);
   const [sortOption, setSort] = useState(sortOptions[0]);
 
-  const toggle = () => setOpen(!dropdownOpen)
-  
+  const [wow, setWow] = useState(false);
+  const toggleWow = () => setWow(!wow);
+
+  const toggle = () => setOpen(!dropdownOpen);
+
   useEffect(() => {
     //Order Observed
     if (sortOption === sortOptions[0]) {
@@ -108,13 +118,16 @@ function Observations() {
     else {
       items.reverse()
     }
+
+    toggleWow();
+
   }, [sortOption])
 
   useEffect(() => {
 
     async function fetchData() {
 
-      const request = await axios.get("https://api.inaturalist.org/v1/observations/?page=1&per_page=100&user_id=" + username);
+      const request = await axios.get("https://api.inaturalist.org/v1/observations/?page=1&per_page=100&user_id=" + u_id);
       console.log(request.data.results)
       setItems(request.data.results)
       setIsLoaded(true)
@@ -129,7 +142,13 @@ function Observations() {
   } 
   // Loading State
   else if (!isLoaded) {
-    return <div>Loading...</div>;
+    return (
+      <div className="loader">
+        <div className="loader-icon">
+          <PuffLoader color={"rgb(58, 134, 255, 1)"} size={80} />
+        </div>
+      </div>
+    );
   } 
   // Loaded State
   else {
@@ -137,7 +156,7 @@ function Observations() {
     var displayName = "Username";
 
     // Loads sample data into the observations variable if no username is provided
-    if(username === null || items === 0){
+    if(u_id === null || items === 0){
       observations = sampleObservationList.map((observation) =>
         <Observation
           key={observation.key}
@@ -150,12 +169,13 @@ function Observations() {
       
     // Loads user observation data into the observations variable
     } else {
-      observations = items.map(observation =>
+
+      observations = items.map((observation) =>
         <Observation
           key={observation.key}
           name={observation.species_guess}
           title={observation.taxon.name}
-          image={convertToLarge(observation.photos[0].url)}
+          image={observation.photos.length !== 0 ? convertToLarge(observation.photos[0].url) : "https://via.placeholder.com/200.png?text=Photo"}
           body={observation.place_guess}
           quality={observation.quality_grade}
           comment={observation.description}
@@ -167,53 +187,40 @@ function Observations() {
     }  
     
     return (
-      <div className="App">
-        <Container className="dr-example-container"  style={{ paddingBottom: "20px"}}>
-
-          {/* User Heading */}
-          <Row>
-            <h1 style={{ paddingBottom: "20px", paddingTop: "40px", paddingLeft: "10px"}}>User</h1>
-          </Row>
-
-          {/* User Card */}
-          <Row>
-            <Col sm="6" md="4" lg="4">
-              <Card>
-                <CardBody style={{marginTop: "10px"}}>
-
-                  {/* displayName is set to "Username" until data is successfully retrived from api */}
-                  <CardTitle>{displayName}</CardTitle>
-                </CardBody>
-              </Card>
-            </Col>
-          </Row>
-
+      <div id="observations">
+        <Container className="container" style={{ paddingBottom: "20px"}}>
           {/* Observations Heading */}
           <Row>
-            <h1 style={{ paddingBottom: "20px", paddingTop: "60px", paddingLeft: "10px"}}>Observations</h1>
+            <Col sm="12" md="12" lg="6" xl="6">
+              <h1 className="observations-header">Observations</h1>
+            </Col>
+            <Col sm="12" md="12" lg="6" xl="6">
+              <div className="observation-sort">
+                <div className="observation-sort-drop">
+                  <ButtonDropdown isOpen={dropdownOpen} toggle={toggle} className="dropDown">
+                    <DropdownToggle caret color="white" lassName="dropDown-button">
+                      {sortOption}
+                    </DropdownToggle>
+                    <DropdownMenu>
+                      <DropdownItem onClick={() => setSort(sortOptions[0])}>{sortOptions[0]}</DropdownItem>
+                      <DropdownItem onClick={() => setSort(sortOptions[1])}>{sortOptions[1]}</DropdownItem>
+                      <DropdownItem onClick={() => setSort(sortOptions[2])}>{sortOptions[2]}</DropdownItem>
+                      <DropdownItem onClick={() => setSort(sortOptions[3])}>{sortOptions[3]}</DropdownItem>
+                      <DropdownItem onClick={() => setSort(sortOptions[4])}>{sortOptions[4]}</DropdownItem>
+                      <DropdownItem onClick={() => setSort(sortOptions[5])}>{sortOptions[5]}</DropdownItem>
+                    </DropdownMenu>
+                  </ButtonDropdown>
+                </div>
+              </div>
+            </Col>
           </Row>
-
-          <ButtonDropdown isOpen={dropdownOpen} toggle={toggle} className="dropDown">
-            <DropdownToggle caret className="dropDown-button">
-              {sortOption}
-            </DropdownToggle>
-            <DropdownMenu>
-              <DropdownItem onClick={() => setSort(sortOptions[0])}>{sortOptions[0]}</DropdownItem>
-              <DropdownItem onClick={() => setSort(sortOptions[1])}>{sortOptions[1]}</DropdownItem>
-              <DropdownItem onClick={() => setSort(sortOptions[2])}>{sortOptions[2]}</DropdownItem>
-              <DropdownItem onClick={() => setSort(sortOptions[3])}>{sortOptions[3]}</DropdownItem>
-              <DropdownItem onClick={() => setSort(sortOptions[4])}>{sortOptions[4]}</DropdownItem>
-              <DropdownItem onClick={() => setSort(sortOptions[5])}>{sortOptions[5]}</DropdownItem>
-            </DropdownMenu>
-          </ButtonDropdown>
-          <br /><br />
           {/* <Sort 
             sort={sortOption}
             data={observations}
             items={setItems}/> */}
 
           {/* Observation Cards */}
-          <Row>{observations}</Row>
+          <Row className="observation-row">{observations}</Row>
         </Container>
       </div>
     );
