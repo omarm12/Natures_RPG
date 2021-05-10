@@ -46,7 +46,8 @@ def login(request):
 
     return render(request, 'backend/login.html', {'form': form})
 
-def create_updated_battle(request):
+
+def recreate_battle(request):
     p1_move = None
     p2_move = None
     p1_move_prev = None
@@ -80,10 +81,11 @@ def create_updated_battle(request):
 
         if request.data.get('p2_move_prev') == data['moves'][i]['name']:
             p2_move_prev = data['moves'][i]
-            
 
+
+    obs_objs = create_obs(request)
     battle = BattleSys.Battle(
-        request.data.get('observations'),
+        obs_objs,
         turn,
         p1_move,
         p2_move,
@@ -98,8 +100,38 @@ def create_updated_battle(request):
     return battle
 
 
+def create_obs(request):
+    obs = eval(request.data.get('observations'))
+    obs_objs = []
+    for i in range(len(obs)):
+        obs_id = obs[i]['obs_id']
+        obs_type = obs[i]['observation_type']
+        move_names = obs[i]['move_names']
+        stats = obs[i]['stats']
+        base_stats = obs[i]['base_stats']
+        stat_mod = obs[i]['stat_mod']
+        dot = obs[i]['dot']
+        heal_ot = obs[i]['heal_ot']
+        revive = obs[i]['revive']
+        retreat = obs[i]['retreat']
+        created = LoadObservation(obs_id, obs_type)
+        created.update(
+            move_names,
+            stats,
+            base_stats,
+            stat_mod,
+            dot,
+            heal_ot,
+            revive,
+            retreat
+        )
+        obs_objs.append(created)
+        
+    return obs_objs
+
+
 @api_view(['GET'])
-def load_obs(request, id):
+def load_obs_player(request, id):
     try:
         obs = Observation.objects.get(obs_id=id)
 
@@ -125,60 +157,102 @@ def load_obs(request, id):
     ]
 
     loaded = LoadObservation(id, taxa, moves, stats)
-    loaded.PopulateMoves()
 
-    json_str = json.dumps(loaded.__dict__, indent=4)
+    json_str = json.dumps(loaded.__dict__)
+    return Response(data=json_str, status=200)
+
+
+@api_view(['GET'])
+def load_obs_ai(request):
+    try:
+        id = int(request.data.get('id'))
+        hp = int(request.data.get('hp'))
+        attack = int(request.data.get('attack'))
+        defense = int(request.data.get('defense'))
+        speed = int(request.data.get('speed'))
+        evasion = int(request.data.get('evasion'))
+        acc = int(request.data.get('acc'))
+
+    except TypeError:
+        return Response(status=400)
+
+    taxa = request.data.get('type')
+    
+    moves = [
+        request.data.get('move1'),
+        request.data.get('move2'),
+        request.data.get('move3'),
+        request.data.get('move4')
+    ]
+
+    stats = [
+        hp,
+        attack,
+        defense,
+        speed,
+        evasion,
+        acc
+    ]
+
+    loaded = LoadObservation(id, taxa, moves, stats)
+
+    json_str = json.dumps(loaded.__dict__)
     return Response(data=json_str, status=200)
 
 
 @api_view(['GET'])
 def create_battle(request):
-    battle = BattleSys.Battle()
-    json_str = json.dumps(battle.__dict__, indent=4)
+    obs_objs = create_obs(request)
+    battle = BattleSys.Battle(obs_objs)
+    for i in range(len(battle.observations)):
+        battle.observations[i] = battle.observations[i].__dict__
+    json_str = json.dumps(battle.__dict__)
     return Response(data=json_str, status=200)
 
 
 @api_view(['GET'])
 def battle_loop(request):
-    battle = create_updated_battle(request)
+    battle = recreate_battle(request)
     if battle is None:
         return Response(status=400)
-    check = battle.BattleLoop(ai=True)
-    json_str = json.dumps(battle.__dict__, indent=4)
-    #gotta be a better way to do this
+    check = battle.BattleLoop(True)
+    json_str = json.dumps(battle.__dict__)
     return Response(data=check, status=200+check)
 
 
 @api_view(['GET'])
-def get_move_name(request):
-    battle = create_updated_battle(request)
+def get_move_name(request, index):
+    battle = recreate_battle(request)
     if battle is None:
         return Response(status=400)
+    name = battle.GetMoveName(index)
+    json_str = json.dumps(name, indent=4)
+    return Response(data=json_str, status=200)
 
 
 @api_view(['GET'])
 def get_flavor_text(request, index):
-    battle = create_updated_battle(request)
+    battle = recreate_battle(request)
     if battle is None:
         return Response(status=400)
     flavor = battle.GetFlavorText(index)
-    json_str = json.dumps(flavor, indent=4)
+    json_str = json.dumps(flavor)
     return Response(data=json_str, status=200)
 
 
 @api_view(['GET'])
 def get_bp(request, index):
-    battle = create_updated_battle(request)
+    battle = recreate_battle(request)
     if battle is None:
         return Response(status=400)
     bp = battle.GetBP(index)
-    json_str = json.dumps(bp, indent=4)
+    json_str = json.dumps(bp)
     return Response(data=json_str, status=200)
 
 
 @api_view(['GET'])
 def get_acc(request, index):
-    battle = create_updated_battle(request)
+    battle = recreate_battle(request)
     if battle is None:
         return Response(status=400)
     acc = battle.GetACC(index)
@@ -188,20 +262,22 @@ def get_acc(request, index):
 
 @api_view(['GET'])
 def set_switch(request, index):
-    battle = create_updated_battle(request)
+    battle = recreate_battle(request)
     if battle is None:
         return Response(status=400)
     battle.SetSwitch(index)
-    return Response(status=200)
+    json_str = json.dumps(battle.__dict__)
+    return Response(data=json_str, status=200)
 
 
 @api_view(['PATCH'])
 def set_move_choice(request, index):
-    battle = create_updated_battle(request)
+    battle = recreate_battle(request)
     if battle is None:
         return Response(status=400)
     battle.SetMoveChoice(index)
-    return Response(status=200)
+    json_str = json.dumps(battle.__dict__)
+    return Response(data=json_str, status=200)
 
 
 class PlayerList(generics.ListCreateAPIView):
