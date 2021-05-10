@@ -1,0 +1,617 @@
+{
+    "description":"contains all moves and effects",
+    "moves":[
+        {
+            "name":"Nature's Wrath",
+            "flavor_text":"The observation invokes nature’s wrath. Raises all stats by 20%.",
+            "priority":0,
+            "hp_mod":0.2,
+            "atk_mod":0.2,
+            "def_mod":0.2,
+            "acc_mod":0.2,
+            "eva_mod":0.2,
+            "spd_mod":0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Autotomy",
+            "flavor_text":"The observation sacrifices a limb. Lose 25% of max HP, and double evasion.",
+            "priority":0,
+            "eva_mod":1,
+            "user_dmg":0.25,
+            "sure_hit":1
+        },
+        {
+            "name":"Spine Shield",
+            "flavor_text":"The observation puts up a shield of spines. Reduce odds of taking damage by 50% and deal 25% of opponent’s max HP in damage if the opponent makes contact.",
+            "priority":3,
+            "miss_rate":0.5,
+            "opp_dmg":0.25,
+            "sure_hit":1,
+            "require_opp_contact":1
+        },
+        {
+            "name":"Foul Odor",
+            "flavor_text":"The observation releases a foul odor. Reduce the opponent’s accuracy and attack power by 20%.",
+            "priority":0,
+            "opp_atk_mod":-0.2,
+            "opp_acc_mod":-0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Run Away",
+            "flavor_text":"The observation attempts to flee. Reduce odds of taking damage by 50% and raise speed by 20%.",
+            "priority":3,
+            "spd_mod":0.2,
+            "miss_rate":0.5,
+            "sure_hit":1
+        },
+        {
+            "name":"Fly Off",
+            "flavor_text":"The observation flies away. Reduce odds of taking damage by 60%.",
+            "priority":3,
+            "miss_rate":0.6,
+            "sure_hit":1
+        },
+        {
+            "name":"Play Dead",
+            "flavor_text":"The observation plays dead and hopes the opponent loses interest. Lose 25% of max HP to avoid additional damage and raise speed by 20%.",
+            "priority":3,
+            "spd_mod":0.2,
+            "miss_rate":1,
+            "user_dmg":0.25,
+            "sure_hit":1
+        },
+        {
+            "name":"Bristle Coat",
+            "flavor_text":"The observation puffs out its bristle coat. Reduce incoming damage by 50% and lower opponent’s attack by 30%.",
+            "priority":3,
+            "opp_atk_mod":-0.3,
+            "reduce_dmg":0.5,
+            "sure_hit":1,
+            "require_opp_contact":1
+        },
+        {
+            "name":"Warning Colors",
+            "flavor_text":"The observation flashes warning colors at the opponent. Reduce opponent’s attack and defense by 20%.",
+            "priority":0,
+            "opp_atk_mod":-0.2,
+            "opp_def_mod":-0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Irritant Compound",
+            "flavor_text":"The observation releases an irritating compound that wears down the opponent. Opponent loses 12.5% of their max HP per turn.",
+            "priority":0,
+            "acc":100,
+            "opp_dot":0.125
+        },
+        {
+            "name":"Mimesis",
+            "flavor_text":"The observation blends in with its surrounding then strikes.",
+            "priority":0,
+            "bp":60,
+            "acc":100
+        },
+        {
+            "name":"Chemical Spray",
+            "flavor_text":"The observation sprays the opponent with harmful chemicals.",
+            "priority":0,
+            "bp":80,
+            "acc":100
+        },
+        {
+            "name":"Explosive Reaction",
+            "flavor_text":"The observation uses chemicals inside its body to create a small explosion. This also damages the user.",
+            "priority":0,
+            "bp":120,
+            "acc":100,
+            "user_dmg":0.5
+        },
+        {
+            "name":"Sticky Compound",
+            "flavor_text":"The observation releases a sticky compound to slow the opponent, then strikes.",
+            "priority":0,
+            "bp":40,
+            "acc":100,
+            "opp_spd_mod":-0.1
+        },
+        {
+            "name":"Urticating Hairs",
+            "flavor_text":"Sharp hairs on the observation’s body puncture the opponent and release a harmful compound.",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Stinging Venom",
+            "flavor_text":"The observation injects the opponent with strong venom, dealing damage.",
+            "priority":0,
+            "bp":100,
+            "acc":80
+        },
+        {
+            "name":"Hiss",
+            "flavor_text":"The observation lets out a sharp hiss, reducing all the opponent’s stats by 10%.",
+            "priority":0,
+            "opp_hp_mod":-0.1,
+            "opp_atk_mod":-0.1,
+            "opp_def_mod":-0.1,
+            "opp_acc_mod":-0.1,
+            "opp_eva_mod":-0.1,
+            "opp_spd_mod":-0.1,
+            "sure_hit":1
+        },
+        {
+            "name":"Embiggen",
+            "flavor_text":"The observation puffs out its body, lowering the opponent’s attack and defense by 20%.",
+            "priority":0,
+            "opp_atk_mod":-0.2,
+            "opp_def_mod":-0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Sacrificial Tail",
+            "flavor_text":"The observation sacrifices its own tail to avoid additional damage and retreat. Observation loses 25% of max HP.",
+            "priority":3,
+            "user_dmg":0.25,
+            "free_switch":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Tail Whap",
+            "flavor_text":"The observation swings its heavy tail at the opponent.",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Spines",
+            "flavor_text":"The observation punctures the opponent with its spines.",
+            "priority":0,
+            "bp":80,
+            "acc":100
+        },
+        {
+            "name":"Element of Surprise",
+            "flavor_text":"The observation lowers the opponent’s guard, then strikes.",
+            "priority":0,
+            "bp":60,
+            "acc":100
+        },
+        {
+            "name":"Rapid Lunge",
+            "flavor_text":"The observation lunges at the opponent, raising its speed in the process.",
+            "priority":0,
+            "bp":40,
+            "acc":100,
+            "spd_mod":0.2
+        },
+        {
+            "name":"Cold Blooded",
+            "flavor_text":"The observation attacks its opponent without mercy.",
+            "priority":0,
+            "bp":100,
+            "acc":80
+        },
+        {
+            "name":"Daily Migration",
+            "flavor_text":"The observation moves locations to avoid detection. Doubles evasion.",
+            "priority":0,
+            "eva_mod":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Cognitive Mapping",
+            "flavor_text":"The observation studies its surroundings, raising its evasion and accuracy by 60%.",
+            "priority":0,
+            "acc_mod":0.6,
+            "eva_mod":0.6,
+            "sure_hit":1
+        },
+        {
+            "name":"Benthic Camouflage",
+            "flavor_text":"The observation camouflages itself in the benthos, raising its attack, defense, and speed by 20%.",
+            "priority":0,
+            "atk_mod":0.2,
+            "def_mod":0.2,
+            "spd_mod":0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Shoal Up",
+            "flavor_text":"The observation forms a shoal and attacks, doubling HP in the process.",
+            "priority":1,
+            "hp_mod":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Territory Defense",
+            "flavor_text":"The observation fights furiously to defend its territory.",
+            "priority":0,
+            "bp":100,
+            "acc":80
+        },
+        {
+            "name":"Wrassling",
+            "flavor_text":"The observation calls its Wrass buddies to ward off the opponent.",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Loud Roar",
+            "flavor_text":"The observation terrifies the opponent with a loud roar. Reduces the opponent’s attack and defense by 30%.",
+            "priority":0,
+            "opp_atk_mod":-0.3,
+            "opp_def_mod":-0.3,
+            "sure_hit":1
+        },
+        {
+            "name":"Night Vision",
+            "flavor_text":"The observation uses its night vision to ensure the next move will hit.",
+            "priority":0,
+            "next_sure_hit":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Passive Aggression",
+            "flavor_text":"The observation makes the opponent lose the will to fight. The opponent switches with a party member in waiting.",
+            "priority":0,
+            "force_switch":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Prehensile Tail",
+            "flavor_text":"The observation uses its prehensile tail to improve mobility. Doubles evasion.",
+            "priority":0,
+            "eva_mod":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Multiply",
+            "flavor_text":"The observation’s family comes to its defense.",
+            "priority":0,
+            "bp":60,
+            "acc":100
+        },
+        {
+            "name":"Nail Scratch",
+            "flavor_text":"The observation scratches the opponent with sharp nails.",
+            "priority":0,
+            "bp":100,
+            "acc":80
+        },
+        {
+            "name":"Sharp Teeth",
+            "flavor_text":"The observation bites the opponent with sharp teeth.",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Develop Tools",
+            "flavor_text":"The observation develops a tool that will guarantee a knock out.",
+            "priority":0,
+            "acc":0,
+            "opp_dmg":1
+        },
+        {
+            "name":"Strong Kick",
+            "flavor_text":"The observation uses its strong legs to deliver a powerful kick.",
+            "priority":0,
+            "bp":140,
+            "acc":70
+        },
+        {
+            "name":"Secrete Mucous",
+            "flavor_text":"The observation secretes a healing mucous that heals 25% of max HP every turn.",
+            "priority":0,
+            "heal_ot":0.25,
+            "sure_hit":1
+        },
+        {
+            "name":"Poison Skin",
+            "flavor_text":"The observation makes contact with the opponent, poisoning them.",
+            "priority":0,
+            "opp_dot":0.125,
+            "sure_hit":1
+        },
+        {
+            "name":"Regenerate",
+            "flavor_text":"The observation regenerates a lost limb and fully heals. Only usable after Autotomy.",
+            "priority":0,
+            "user_dmg":-1,
+            "sure_hit":1,
+            "require_move":"Autotomy"
+        },
+        {
+            "name":"Neurotoxin",
+            "flavor_text":"The observation sacrifices itself to deal massive damage.",
+            "priority":1,
+            "bp":200,
+            "acc":100,
+            "user_dmg":1
+        },
+        {
+            "name":"Writhe",
+            "flavor_text":"The observation writhes about, damaging the opponent.",
+            "priority":0,
+            "bp":80,
+            "acc":100
+        },
+        {
+            "name":"Tail Lash",
+            "flavor_text":"The observation lashes out with its tail.",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Venom Glands",
+            "flavor_text":"The observation injects its opponent with a powerful venom.",
+            "priority":0,
+            "bp":90,
+            "acc":100
+        },
+        {
+            "name":"Sclerotised Pharynx",
+            "flavor_text":"The observation sucks its opponent into its mouth.",
+            "priority":0,
+            "bp":100,
+            "acc":90
+        },
+        {
+            "name":"Stinger",
+            "flavor_text":"The observation lashes out with a sharp stinger.",
+            "priority":0,
+            "bp":120,
+            "acc":80
+        },
+        {
+            "name":"Leap On",
+            "flavor_text":"The observation leaps onto the opponent and starts attacking.",
+            "priority":0,
+            "bp":140,
+            "acc":70
+        },
+        {
+            "name":"Hide and Strike",
+            "flavor_text":"The observation camouflages itself, then leaps out at its opponent. This move always goes first.",
+            "priority":2,
+            "bp":40,
+            "acc":100
+        },
+        {
+            "name":"Spidey Sense",
+            "flavor_text":"The observation avoids the opponent’s attack and counterattacks. Fails if the user does not move first.",
+            "priority":0,
+            "bp":20,
+            "acc":100,
+            "miss_rate":1
+        },
+        {
+            "name":"Den Trap",
+            "flavor_text":"The observation lays a trap for the opponent, dealing massive damage if they make contact. Fails if the user does not move first.",
+            "priority":0,
+            "bp":150,
+            "acc":100,
+            "require_opp_contact":1,
+            "require_priority":1
+        },
+        {
+            "name":"Tail Feathers",
+            "flavor_text":"The observation uses its tail feathers as a rudder, raising its accuracy by 60%.",
+            "priority":0,
+            "acc_mod":0.6,
+            "sure_hit":1
+        },
+        {
+            "name":"Flight Feathers",
+            "flavor_text":"The observation uses its fight feathers to increase its speed by 60%.",
+            "priority":0,
+            "spd_mod":0.6,
+            "sure_hit":1
+        },
+        {
+            "name":"Sustained Flight",
+            "flavor_text":"The observation prepares for a long flight, resting occasionally to restore HP.",
+            "priority":0,
+            "heal_ot":0.125,
+            "sure_hit":1
+        },
+        {
+            "name":"Talon Grab",
+            "flavor_text":"The observation grabs the opponent in its talons, preventing it from attacking next turn.",
+            "priority":0,
+            "next_atk_lock":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Drop",
+            "flavor_text":"Can only be used after Talon Grab. Drops the opponent from high up for massive damage.",
+            "priority":0,
+            "bp":100,
+            "acc":100,
+            "require_move":"Talon Grab"
+        },
+        {
+            "name":"Puncture",
+            "flavor_text":"The observation breaks through the opponents defenses with its strong beak. Reduces opponent's defense by 50%.",
+            "priority":0,
+            "bp":40,
+            "acc":100,
+            "opp_def_mod":-0.5
+        },
+        {
+            "name":"Swoop In",
+            "flavor_text":"The observation closes the distance between it and its opponent, then strikes. This move always hits.",
+            "priority":0,
+            "bp":60,
+            "sure_hit":1
+        },
+        {
+            "name":"Hard Shell",
+            "flavor_text":"The observation uses its hard shell to max out its defense.",
+            "priority":0,
+            "def_mod":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Seafood Surprise",
+            "flavor_text":"The observation surprises the opponent by using a random move.",
+            "priority":0,
+            "rand_move":1
+        },
+        {
+            "name":"Jet Propulsion",
+            "flavor_text":"The observation uses its jet propulsion to ram the opponent. This move always goes first.",
+            "priority":2,
+            "bp":40,
+            "acc":100
+        },
+        {
+            "name":"Extra Membrane",
+            "flavor_text":"The observation uses its extra membrane to avoid taking damage for 2 turns. Only usable on the first turn.",
+            "priority":3,
+            "reduce_dmg":1,
+            "sure_hit":1,
+            "next_reduce_dmg":1,
+            "require_first_turn":1
+        },
+        {
+            "name":"Chlorophyll c",
+            "flavor_text":"The observation absorbs light and fully heals itself.",
+            "priority":0,
+            "user_dmg":-1,
+            "sure_hit":1
+        },
+        {
+            "name":"Cilia",
+            "flavor_text":"The observation teaches its team about movement, increasing speed by 20%.",
+            "priority":0,
+            "team_spd_mod":0.2,
+            "sure_hit":1
+        },
+        {
+            "name":"Avoid Detection",
+            "flavor_text":"The observation hides in plain sight. Reduce incoming damage by 50% for 2 turns.",
+            "priority":0,
+            "reduce_dmg":0.5,
+            "sure_hit":1,
+            "next_reduce_dmg":0.5
+        },
+        {
+            "name":"Dazzle",
+            "flavor_text":"The observation dazzles the opponent, lowering its attack and defense by 30%.",
+            "priority":0,
+            "opp_atk_mod":-0.3,
+            "opp_def_mod":-0.3,
+            "sure_hit":1
+        },
+        {
+            "name":"Nature's Beauty",
+            "flavor_text":"The observation sacrifices itself to provide nutrition for its team. Increase team’s attack and defense by 20%.",
+            "priority":0,
+            "team_atk_mod":0.2,
+            "team_def_mod":0.2,
+            "user_dmg":1,
+            "sure_hit":1
+        },
+        {
+            "name":"Cell Wall",
+            "flavor_text":"The observation’s sturdy cell wall increases its defense by 40%.",
+            "priority":0,
+            "def_mod":0.4,
+            "sure_hit":1
+        },
+        {
+            "name":"Deep Roots",
+            "flavor_text":"The observation spreads its roots, draining the opponent’s energy. Makes the user unable to retreat.",
+            "priority":0,
+            "opp_dot":0.25,
+            "sure_hit":1,
+            "no_retreat":1
+        },
+        {
+            "name":"Tap Root",
+            "flavor_text":"The observation extends its tap root deep into the earth, drawing up nutrients and healing up to 50% of its max HP.",
+            "priority":0,
+            "user_dmg":-0.5,
+            "sure_hit":1
+        },
+        {
+            "name":"Edible Arrangement",
+            "flavor_text":"The observation makes a decorative basket of itself, fully healing all team members.",
+            "priority":0,
+            "user_dmg":1,
+            "sure_hit":1,
+            "team_heal":1
+        },
+        {
+            "name":"Thorns",
+            "flavor_text":"The observation’s thorns deal massive damage if the opponent makes contact.",
+            "priority":0,
+            "bp":100,
+            "acc":100,
+            "require_opp_contact":1
+        },
+        {
+            "name":"Symbiotic Relationship",
+            "flavor_text":"The observation plays host to other observations which defend it from attacks.",
+            "priority":0,
+            "bp":90,
+            "acc":90
+        },
+        {
+            "name":"Toxic Spores",
+            "flavor_text":"The observation releases spores that prevent the use of the opponent’s next move.",
+            "priority":0,
+            "sure_hit":1,
+            "next_atk_lock":1
+        },
+        {
+            "name":"Pathogenic Fungus",
+            "flavor_text":"The observation takes control of insects, destroying them from the inside.",
+            "priority":0,
+            "sure_hit":1,
+            "ko_type":"Insecta"
+        },
+        {
+            "name":"Polyketides",
+            "flavor_text":"The observation produces metabolites that destroy other Fungi.",
+            "priority":0,
+            "sure_hit":1,
+            "ko_type":"Fungi"
+        },
+        {
+            "name":"Host Control",
+            "flavor_text":"The observation uses one of the opponent’s attacks against it.",
+            "priority":0,
+            "use_opp_atk":1
+        },
+        {
+            "name":"Rapid Spread",
+            "flavor_text":"The observation spreads to cover a large area becoming harder to knock out.",
+            "priority":0,
+            "sure_hit":1,
+            "revive_with_hp":0.5
+        },
+        {
+            "name":"Yeast",
+            "flavor_text":"The observation switches with a party member in waiting and prevents the opponent from attacking next turn.",
+            "priority":0,
+            "sure_hit":1,
+            "next_atk_lock":1,
+            "free_switch":1
+        },
+        {
+            "name":"Adaptation",
+            "flavor_text":"The observation uses a strong attack that will always hit when used consecutively.",
+            "priority":0,
+            "bp":120,
+            "acc":50,
+            "next_sure_hit":1
+        }
+    ]
+}

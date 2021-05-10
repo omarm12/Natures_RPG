@@ -14,16 +14,16 @@ import PuffLoader from "react-spinners/PuffLoader";
 
 // Sample observations for testing
 const sampleObservationList = [
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=1", description:"Description", key:1},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=2", description:"Description", key:2},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=3", description:"Description", key:3},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=4", description:"Description", key:4},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=5", description:"Description", key:5},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=6", description:"Description", key:6},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=7", description:"Description", key:7},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=8", description:"Description", key:8},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=9", description:"Description", key:9},
-  {title:"Observation Name", image:"https://loremflickr.com/300/200/wildlife?random=10", description:"Description", key:10}
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=1", description:"Description", key:1},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=2", description:"Description", key:2},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=3", description:"Description", key:3},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=4", description:"Description", key:4},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=5", description:"Description", key:5},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=6", description:"Description", key:6},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=7", description:"Description", key:7},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=8", description:"Description", key:8},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=9", description:"Description", key:9},
+  {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=10", description:"Description", key:10}
 ];
 
 const sortOptions = ["Order Observed", "Taxa", "Stats", "Quality", "A-Z", "Reverse"];
@@ -35,6 +35,7 @@ const u_id = urlParams.get('u');
 // Observation component
 // This is a basic component that gets populated with data
 // to be used in the list of observations
+
 function Observation(props) {
 
   const [buttonPopup, setButtonPopup] = useState(false);
@@ -84,7 +85,6 @@ function convertToLarge(url){
   }
 }
 
-
 // Essentially the app in its entirety, returning JSX to be rendered in the browser
 function Observations() {
 
@@ -98,8 +98,6 @@ function Observations() {
   const toggleWow = () => setWow(!wow);
 
   const toggle = () => setOpen(!dropdownOpen);
-
-
 
   useEffect(() => {
     //Order Observed
@@ -155,6 +153,7 @@ function Observations() {
   // Loaded State
   else {
     var observations = <div></div>;
+    var displayName = "Username";
 
     // Loads sample data into the observations variable if no username is provided
     if(u_id === null || items === 0){
@@ -183,9 +182,10 @@ function Observations() {
           time={observation.observed_on_string}
           wiki={observation.taxon.wikipedia_url}
         />
-      );
+      ); 
+      displayName = username;
     }  
-
+    
     return (
       <div id="observations">
         <Container className="container" style={{ paddingBottom: "20px"}}>
@@ -214,8 +214,6 @@ function Observations() {
               </div>
             </Col>
           </Row>
-
-          
           {/* <Sort 
             sort={sortOption}
             data={observations}
