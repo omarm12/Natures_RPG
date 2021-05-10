@@ -57,6 +57,10 @@ class Battle:
         if(move_index >= 1 and move_index <= 4):
             return self.observations[self.p1_active_obs].moves[move_index - 1].get("acc")
 
+    # get current state of battle
+    def GetSelf(self):
+        return self
+
     # switch should be in range 0-5
     def SetSwitch(self, switch):
         if(switch >= 0 and switch <= 5):
