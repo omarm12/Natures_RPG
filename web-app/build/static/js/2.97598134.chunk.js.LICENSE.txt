@@ -11,6 +11,14 @@ object-assign
   */
 
 /*!
+  Copyright (c) 2017 Jed Watson.
+  Licensed under the MIT License (MIT), see
+  http://jedwatson.github.io/classnames
+*/
+
+<<<<<<< HEAD:naturesrpg/staticfiles/js/2.1114d7b8.chunk.js.LICENSE.txt
+/*!
+<<<<<<< HEAD:web-app/build/static/js/2.78374ac0.chunk.js.LICENSE.txt
   Copyright (c) 2018 Jed Watson.
   Licensed under the MIT License (MIT), see
   http://jedwatson.github.io/classnames
@@ -23,7 +31,26 @@ object-assign
  * @license  MIT
  */
 
+=======
+>>>>>>> parent of 16cb5a9... Front end now calls Django instead of iNaturalist:web-app/build/static/js/2.97598134.chunk.js.LICENSE.txt
 /*! nouislider - 12.1.0 - 10/25/2018 */
+
+/** @license React v0.19.1
+ * scheduler.production.min.js
+<<<<<<< HEAD:naturesrpg/staticfiles/js/2.1114d7b8.chunk.js.LICENSE.txt
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+=======
+ * Determine if an object is a Buffer
+>>>>>>> djcall_cleanup:naturesrpg/staticfiles/js/2.1114d7b8.chunk.js.LICENSE.txt
+=======
+>>>>>>> parent of 16cb5a9... Front end now calls Django instead of iNaturalist:web-app/build/static/js/2.97598134.chunk.js.LICENSE.txt
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
 
 /** @license React v0.20.2
  * scheduler.production.min.js
@@ -36,6 +63,24 @@ object-assign
 
 /** @license React v16.13.1
  * react-is.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.14.0
+ * react-dom.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/** @license React v16.14.0
+ * react.production.min.js
  *
  * Copyright (c) Facebook, Inc. and its affiliates.
  *

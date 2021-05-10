@@ -1,6 +1,7 @@
 {
   "files": {
 <<<<<<< HEAD
+<<<<<<< HEAD
     "main.css": "./static/css/main.71ccbda7.chunk.css",
     "main.js": "./static/js/main.52a58225.chunk.js",
     "main.js.map": "./static/js/main.52a58225.chunk.js.map",
@@ -17,22 +18,34 @@
     "main.css": "./static/css/main.a5427019.chunk.css",
     "main.js": "./static/js/main.411c6131.chunk.js",
     "main.js.map": "./static/js/main.411c6131.chunk.js.map",
+=======
+    "main.css": "./static/css/main.513e57ce.chunk.css",
+    "main.js": "./static/js/main.38907ac6.chunk.js",
+    "main.js.map": "./static/js/main.38907ac6.chunk.js.map",
+>>>>>>> parent of 16cb5a9... Front end now calls Django instead of iNaturalist
     "runtime-main.js": "./static/js/runtime-main.0b36e30c.js",
     "runtime-main.js.map": "./static/js/runtime-main.0b36e30c.js.map",
-    "static/css/2.f0a26a32.chunk.css": "./static/css/2.f0a26a32.chunk.css",
-    "static/js/2.4d54e6d5.chunk.js": "./static/js/2.4d54e6d5.chunk.js",
-    "static/js/2.4d54e6d5.chunk.js.map": "./static/js/2.4d54e6d5.chunk.js.map",
+    "static/css/2.708acd36.chunk.css": "./static/css/2.708acd36.chunk.css",
+    "static/js/2.97598134.chunk.js": "./static/js/2.97598134.chunk.js",
+    "static/js/2.97598134.chunk.js.map": "./static/js/2.97598134.chunk.js.map",
     "index.html": "./index.html",
+<<<<<<< HEAD
     "static/css/2.f0a26a32.chunk.css.map": "./static/css/2.f0a26a32.chunk.css.map",
     "static/css/main.a5427019.chunk.css.map": "./static/css/main.a5427019.chunk.css.map",
     "static/js/2.4d54e6d5.chunk.js.LICENSE.txt": "./static/js/2.4d54e6d5.chunk.js.LICENSE.txt",
 >>>>>>> djcall_cleanup
+=======
+    "static/css/2.708acd36.chunk.css.map": "./static/css/2.708acd36.chunk.css.map",
+    "static/css/main.513e57ce.chunk.css.map": "./static/css/main.513e57ce.chunk.css.map",
+    "static/js/2.97598134.chunk.js.LICENSE.txt": "./static/js/2.97598134.chunk.js.LICENSE.txt",
+>>>>>>> parent of 16cb5a9... Front end now calls Django instead of iNaturalist
     "static/media/header.85432ce2.svg": "./static/media/header.85432ce2.svg",
     "static/media/prof.238d0e09.jpg": "./static/media/prof.238d0e09.jpg",
     "static/media/Welcome.css": "./static/media/welcome_background2.304e0211.jpeg"
   },
   "entrypoints": [
     "static/js/runtime-main.0b36e30c.js",
+<<<<<<< HEAD
 <<<<<<< HEAD
     "static/css/2.96e287f6.chunk.css",
     "static/js/2.78374ac0.chunk.js",
@@ -44,5 +57,11 @@
     "static/css/main.a5427019.chunk.css",
     "static/js/main.411c6131.chunk.js"
 >>>>>>> djcall_cleanup
+=======
+    "static/css/2.708acd36.chunk.css",
+    "static/js/2.97598134.chunk.js",
+    "static/css/main.513e57ce.chunk.css",
+    "static/js/main.38907ac6.chunk.js"
+>>>>>>> parent of 16cb5a9... Front end now calls Django instead of iNaturalist
   ]
 }

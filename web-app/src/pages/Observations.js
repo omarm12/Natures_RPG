@@ -7,13 +7,10 @@ import React, {useState, useEffect} from "react";
 import axios from 'axios'
 
 import './Observations.css';
-import ObsPopup from '../components/ObsPopup'
+import Observations from '../components/ObsPopup'
 import { ButtonDropdown, DropdownToggle, DropdownMenu, DropdownItem } from 'reactstrap';
 import { Textfit } from 'react-textfit';
 import PuffLoader from "react-spinners/PuffLoader";
-
-const player_url = "http://127.0.0.1:8000/info/players/"
-const observations_url = "http://127.0.0.1:8000/info/obs/"
 
 // Sample observations for testing
 const sampleObservationList = [
@@ -29,12 +26,11 @@ const sampleObservationList = [
   {title:"Observation Name", name:"name", image:"https://loremflickr.com/300/200/wildlife?random=10", description:"Description", key:10}
 ];
 
-const sortOptions = ["Order Observed", "Taxa", "Stats", "Quality", "A-Z", "HP", "Attack", "Level", "Reverse"];
+const sortOptions = ["Order Observed", "Taxa", "Stats", "Quality", "A-Z", "Reverse"];
 
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
-const userid = urlParams.get('u');
-
+const username = urlParams.get('username');
 
 // Observation component
 // This is a basic component that gets populated with data
@@ -52,33 +48,24 @@ function Observation(props) {
                 <CardBody>
                   <CardTitle>{props.name}</CardTitle>
                   <p>{props.title}</p>
+                  <p>{props.body}</p>
                 </CardBody>
             </Card>
           </div>
       </button>
-      <ObsPopup 
+      <Observations 
         trigger={buttonPopup} 
         setTrigger={setButtonPopup}
+        image={props.image}
         name={props.name}
         title={props.title}
-        image={props.image}
-        hp={props.hp}
-        attack={props.attack}
-        defense={props.defense}
-        evasion={props.evasion}
-        accuracy={props.accuracy}
-        speed={props.speed}
-        xp={props.xp}
-        level={props.level}
-        conf={props.conf}
-        m1={props.m1}
-        m2={props.m2}
-        m3={props.m3}
-        m4={props.m4}
+        body={props.body}
         quality={props.quality}
+        comment={props.comment}
+        time={props.time}
         wiki={props.wiki}
         >
-      </ObsPopup>
+      </Observations>
     </Col>
   );
 }
@@ -100,7 +87,6 @@ function Observations() {
   const [items, setItems] = useState([]);
   const [dropdownOpen, setOpen] = useState(false);
   const [sortOption, setSort] = useState(sortOptions[0]);
-  const [username, setUsername] = useState("username");
 
   const [wow, setWow] = useState(false);
   const toggleWow = () => setWow(!wow);
@@ -108,28 +94,19 @@ function Observations() {
   const toggle = () => setOpen(!dropdownOpen);
 
   useEffect(() => {
-    // //Order Observed
-    // if (sortOption === sortOptions[0]) {
-    //   items.sort((a, b) => (a.created_at > b.created_at) ? -1 : 1)
-    // }
+    //Order Observed
+    if (sortOption === sortOptions[0]) {
+      items.sort((a, b) => (a.created_at > b.created_at) ? -1 : 1)
+    }
     //Taxa alphabetical
-    if (sortOption === sortOptions[1]) {
-      items.sort((a, b) => (a.taxa > b.taxa) ? 1 : -1)
+    else if (sortOption === sortOptions[1]) {
+      items.sort((a, b) => (a.taxon.name > b.taxon.name) ? 1 : -1)
     }
     else if (sortOption === sortOptions[3]) {
-      items.sort((a, b) => (a.quality > b.quality) ? -1 : 1)
+      items.sort((a, b) => (a.quality_grade > b.quality_grade) ? -1 : 1)
     }
     else if (sortOption === sortOptions[4]) {
-      items.sort((a, b) => (a.name > b.name) ? 1 : -1)
-    }
-    else if (sortOption === sortOptions[5]) {
-      items.sort((a, b) => (a.hp > b.hp) ? -1 : 1)
-    }
-    else if (sortOption === sortOptions[6]) {
-      items.sort((a, b) => (a.attack > b.attack) ? -1 : 1)
-    }
-    else if (sortOption === sortOptions[7]) {
-      items.sort((a, b) => (a.level > b.level) ? -1 : 1)
+      items.sort((a, b) => (a.species_guess > b.species_guess) ? 1 : -1)
     }
     //reverse
     else {
@@ -143,13 +120,10 @@ function Observations() {
   useEffect(() => {
 
     async function fetchData() {
-      console.log(userid)
-      const request = await axios.get(observations_url + userid + '/');
-      const requestName = await axios.get(player_url + userid + '/');
-      console.log(request)
-      console.log(requestName.data.username)
-      setItems(request.data)
-      setUsername(requestName.data.username)
+
+      const request = await axios.get("https://api.inaturalist.org/v1/observations/?page=1&per_page=100&user_id=" + username);
+      console.log(request.data.results)
+      setItems(request.data.results)
       setIsLoaded(true)
     }
     fetchData()
@@ -192,25 +166,15 @@ function Observations() {
 
       observations = items.map((observation) =>
         <Observation
-          key={observation.obs_id}
-          name={observation.name}
-          title={observation.taxa}
-          image={convertToLarge(observation.image_link)}
-          hp={observation.hp}
-          attack={observation.attack}
-          defense={observation.defense}
-          evasion={observation.evasion}
-          accuracy={observation.accuracy}
-          speed={observation.speed}
-          xp={observation.total_xp}
-          level={observation.level}
-          conf={observation.num_of_confirmations}
-          m1={observations.move_1}
-          m2={observations.move_2}
-          m3={observations.move_3}
-          m4={observations.move_4}
-          quality={observation.quality}
-          wiki={observation.wiki_link}
+          key={observation.key}
+          name={observation.species_guess}
+          title={observation.taxon.name}
+          image={convertToLarge(observation.photos[0].url)}
+          body={observation.place_guess}
+          quality={observation.quality_grade}
+          comment={observation.description}
+          time={observation.observed_on_string}
+          wiki={observation.taxon.wikipedia_url}
         />
       ); 
       displayName = username;
@@ -250,16 +214,12 @@ function Observations() {
               {sortOption}
             </DropdownToggle>
             <DropdownMenu>
-              {/* <DropdownItem onClick={() => setSort(sortOptions[0])}>{sortOptions[0]}</DropdownItem> */}
+              <DropdownItem onClick={() => setSort(sortOptions[0])}>{sortOptions[0]}</DropdownItem>
               <DropdownItem onClick={() => setSort(sortOptions[1])}>{sortOptions[1]}</DropdownItem>
               <DropdownItem onClick={() => setSort(sortOptions[2])}>{sortOptions[2]}</DropdownItem>
               <DropdownItem onClick={() => setSort(sortOptions[3])}>{sortOptions[3]}</DropdownItem>
               <DropdownItem onClick={() => setSort(sortOptions[4])}>{sortOptions[4]}</DropdownItem>
               <DropdownItem onClick={() => setSort(sortOptions[5])}>{sortOptions[5]}</DropdownItem>
-              <DropdownItem onClick={() => setSort(sortOptions[6])}>{sortOptions[6]}</DropdownItem>
-              <DropdownItem onClick={() => setSort(sortOptions[7])}>{sortOptions[7]}</DropdownItem>
-              <DropdownItem onClick={() => setSort(sortOptions[8])}>{sortOptions[8]}</DropdownItem>
-
             </DropdownMenu>
           </ButtonDropdown>
           <br /><br />
