@@ -8,9 +8,6 @@
 - .env file must be imported into the project, placed in the Nature's_RPG/naturesrpg folder. The .env file is pinned in #text for our group in discord
 - From the naturesrpg directory, run the command 'manage.py test'
 
-## Running the battle simulator
-- From the naturesrpg directory, run the command 'python3 -m backend.Battle.BattleSim'
-
 ###### Changelog:
 - *Danielle Dishop* added Stats class to TypeAssign
 - *Danielle Dishop* fixed the mod stat dictionary to be the correct stats
