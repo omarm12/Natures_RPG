@@ -8,11 +8,12 @@ import Observations from './Observations';
 import Battle from './Battle';
 
 
-function Desktop() {
+function Desktop(props) {
+
   return (
     <div className="desktop-container">
       <Router>
-        <Navbar collaspe={true}/>
+        <Navbar username={props.username} profile_pic={props.profile_pic} collaspe={true}/>
         <div className="desktop-body">
           <Switch >
             <Route path='/' exact component={Dashboard} />

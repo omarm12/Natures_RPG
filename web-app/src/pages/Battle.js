@@ -72,14 +72,10 @@ class Battle extends React.Component {
           <Container>
             <Row>
               <Col sm="12" md="6">
-                <div className="observation-card">
-                  <ObservationBattleCard startHealth="150" health="110" level="12" name="Jules the cat" image="https://loremflickr.com/300/200/wildlife?random=1"/>
-                </div>
+                  <ObservationBattleCard startHealth="150" health="110" level="5" name="Cat" image="http://placekitten.com/200/200"/>
               </Col>
               <Col sm="12" md="6">
-                <div className="observation-card">
-                  <ObservationBattleCard />
-                </div>
+                <ObservationBattleCard startHealth="200" health="20" level="12" name="Dog" image="https://placedog.net/200/200"/>
               </Col>
             </Row>
             <Row>
