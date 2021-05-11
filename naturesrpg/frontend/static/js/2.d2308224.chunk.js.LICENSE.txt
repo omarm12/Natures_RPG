@@ -17,28 +17,7 @@ object-assign
 */
 
 /*!
-<<<<<<< HEAD:web-app/build/static/js/2.78374ac0.chunk.js.LICENSE.txt
-  Copyright (c) 2018 Jed Watson.
-  Licensed under the MIT License (MIT), see
-  http://jedwatson.github.io/classnames
-*/
-
-/*!
  * Determine if an object is a Buffer
- *
- * @author   Feross Aboukhadijeh <https://feross.org>
- * @license  MIT
- */
-
-/*! nouislider - 12.1.0 - 10/25/2018 */
-
-/** @license React v0.19.1
- * scheduler.production.min.js
- *
- * Copyright (c) Facebook, Inc. and its affiliates.
-=======
- * Determine if an object is a Buffer
->>>>>>> djcall_cleanup:naturesrpg/staticfiles/js/2.1114d7b8.chunk.js.LICENSE.txt
  *
  * @author   Feross Aboukhadijeh <https://feross.org>
  * @license  MIT

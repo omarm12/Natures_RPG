@@ -16,9 +16,19 @@
     "react-rounded-image": "2.0.13",
     "react-router-dom": "5.2.0",
     "react-scripts": "4.0.3",
+<<<<<<< HEAD
+<<<<<<< HEAD
     "react-spinners": "0.10.6",
     "react-textfit": "1.1.1",
     "reactstrap": "8.9.0"
+=======
+    "react-textfit": "1.1.1",
+    "reactstrap": "^8.9.0",
+    "shards-react": "^1.0.3"
+>>>>>>> djcall_cleanup
+=======
+    "react-textfit": "1.1.1"
+>>>>>>> parent of 16cb5a9... Front end now calls Django instead of iNaturalist
   },
   "scripts": {
     "start": "react-scripts start",
